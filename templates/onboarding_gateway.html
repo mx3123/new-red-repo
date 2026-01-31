@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started | Creative Swop</title>
+    <meta name="description" content="Join South Africa's premier influencer marketing platform. Sign up as a creator or register your agency today.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                        'brand-black': '#09090b',
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'slide-up': 'slideUp 0.6s ease-out forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: #09090b;
+            overflow-x: hidden;
+        }
+
+        /* Cinematic Split Screen Logic */
+        .split-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .split {
+            position: relative;
+            width: 50%;
+            height: 100%;
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        /* Logo Background */
+        .logo-bg {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.08;
+            transition: all 0.8s ease;
+        }
+
+        .logo-bg svg {
+            width: 60%;
+            height: 60%;
+            max-width: 400px;
+            max-height: 400px;
+        }
+
+        /* Hover Effects (Desktop) */
+        @media (min-width: 768px) {
+            .split-container:hover .split {
+                width: 45%;
+                filter: brightness(0.6);
+            }
+            .split-container .split:hover {
+                width: 55%;
+                filter: brightness(1.1);
+                z-index: 10;
+            }
+            .split:hover .logo-bg {
+                opacity: 0.15;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Mobile View with Touch Interaction */
+        @media (max-width: 768px) {
+            .split-container {
+                flex-direction: column;
+            }
+            .split {
+                width: 100% !important;
+                height: 50%;
+                transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            }
+            
+            /* Active state for mobile */
+            .split.mobile-active {
+                height: 60% !important;
+                filter: brightness(1.1);
+                z-index: 10;
+            }
+            
+            .split.mobile-inactive {
+                height: 40% !important;
+                filter: brightness(0.6);
+            }
+            
+            .split.mobile-active .logo-bg {
+                opacity: 0.15;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Gradient Backgrounds */
+        .split-left {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
+        }
+        
+        .split-right {
+            background: linear-gradient(135deg, rgba(107, 33, 168, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
+        }
+
+        /* Overlays */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            opacity: 0.4;
+            transition: opacity 0.5s;
+        }
+        .split-left .overlay { background: linear-gradient(135deg, #DC2626 0%, transparent 100%); }
+        .split-right .overlay { background: linear-gradient(135deg, #6B21A8 0%, transparent 100%); }
+
+        /* Content Container */
+        .content-layer {
+            position: relative;
+            z-index: 20;
+            text-align: center;
+            padding: 2rem;
+            transition: transform 0.6s ease, opacity 0.6s ease;
+        }
+
+        /* Form Overlay Modal */
+        .form-modal {
+            position: fixed;
+            inset: 0;
+            background: #09090b;
+            z-index: 50;
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.83, 0, 0.17, 1);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-modal.active {
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* Form Elements */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: currentColor;
+            outline: none;
+            box-shadow: 0 0 20px rgba(107, 33, 168, 0.2);
+        }
+        
+        /* Checkbox customization */
+        .custom-checkbox:checked + div {
+            border-color: currentColor;
+            background-color: rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="fixed top-0 w-full z-40 px-6 py-6 pointer-events-none">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2 pointer-events-auto">
+                <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center shadow-lg shadow-purple-900/50">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <span class="text-2xl font-bold text-white hidden md:block">Creative Swop</span>
+            </div>
+            
+            <a href="/creative-swop/home" class="pointer-events-auto text-white/70 hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group">
+                <span class="group-hover:-translate-x-1 transition-transform">←</span> Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <div class="split-container" id="splitContainer">
+        
+        <div class="split split-left group" data-type="creator">
+            <div class="logo-bg">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="text-brand-red">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </div>
+            <div class="overlay group-hover:opacity-60"></div>
+            <div class="content-layer">
+                <span class="inline-block px-4 py-1 mb-4 border border-red-500/50 rounded-full text-red-400 text-xs font-bold tracking-wider uppercase bg-black/50 backdrop-blur-sm">
+                    For Influencers
+                </span>
+                <h2 class="text-4xl md:text-6xl font-black text-white mb-2 leading-tight">
+                    Get Paid<br>To Post.
+                </h2>
+                <p class="text-gray-300 text-lg md:text-xl font-light opacity-80 group-hover:opacity-100 transition-opacity">
+                    Stop creating for free. <br>Join the vetted network.
+                </p>
+                <div class="mt-8 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                    <button class="px-8 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg shadow-lg shadow-red-900/50 transition-all">
+                        Apply as Creator
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="split split-right group" data-type="agency">
+            <div class="logo-bg">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="text-brand-purple">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </div>
+            <div class="overlay group-hover:opacity-60"></div>
+            <div class="content-layer">
+                <span class="inline-block px-4 py-1 mb-4 border border-purple-500/50 rounded-full text-purple-400 text-xs font-bold tracking-wider uppercase bg-black/50 backdrop-blur-sm">
+                    For Agencies & Brands
+                </span>
+                <h2 class="text-4xl md:text-6xl font-black text-white mb-2 leading-tight">
+                    Hire Vetted<br>Creators.
+                </h2>
+                <p class="text-gray-300 text-lg md:text-xl font-light opacity-80 group-hover:opacity-100 transition-opacity">
+                    Real ROI. Zero Admin. <br>Secure your campaign today.
+                </p>
+                <div class="mt-8 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                    <button class="px-8 py-3 bg-brand-purple hover:bg-brand-purple-dark text-white font-bold rounded-lg shadow-lg shadow-purple-900/50 transition-all">
+                        Start Hiring
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="creatorModal" class="form-modal bg-zinc-900">
+        <div class="min-h-screen flex flex-col relative">
+            <button onclick="closeForm()" class="absolute top-6 right-6 z-50 p-2 text-white/50 hover:text-white transition-colors">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div class="flex flex-col lg:flex-row flex-grow">
+                <div class="lg:w-1/3 bg-brand-red/10 p-10 lg:p-16 flex flex-col justify-center border-r border-white/5">
+                    <div class="animate-slide-up">
+                        <div class="w-12 h-12 bg-brand-red rounded-xl flex items-center justify-center mb-8 shadow-lg shadow-red-900/30">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h2 class="text-3xl font-bold text-white mb-6">Why Join Creative Swop?</h2>
+                        <ul class="space-y-6 text-zinc-300">
+                            <li class="flex items-start">
+                                <span class="text-brand-red mr-3 font-bold">✓</span>
+                                <span><b>100% Free to Join.</b> No hidden fees. We charge the agencies, not you.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-brand-red mr-3 font-bold">✓</span>
+                                <span><b>Guaranteed Payments.</b> Funds are secured before you post.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-brand-red mr-3 font-bold">✓</span>
+                                <span><b>Top SA Brands.</b> Work with vetted companies serious about ROI.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="lg:w-2/3 p-8 lg:p-16 flex items-center justify-center">
+                    <div class="w-full max-w-lg animate-slide-up" style="animation-delay: 0.2s;">
+                        <h3 class="text-2xl font-bold text-white mb-2">Apply for Verification</h3>
+                        <p class="text-zinc-500 mb-8">Join the exclusive network of South African creators.</p>
+
+                        <form id="creatorForm" class="space-y-5">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-zinc-400 mb-1 uppercase">Full Name</label>
+                                    <input type="text" name="full_name" required class="glass-input w-full rounded-lg px-4 py-3 text-white focus:border-brand-red">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-zinc-400 mb-1 uppercase">Email Address</label>
+                                    <input type="email" name="email_address" required class="glass-input w-full rounded-lg px-4 py-3 text-white focus:border-brand-red">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-zinc-400 mb-3 uppercase">Primary Platform (Select One)</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <label class="relative cursor-pointer group">
+                                        <input type="checkbox" name="platforms" value="TikTok" class="custom-checkbox sr-only">
+                                        <div class="flex items-center space-x-3 p-3 border border-white/10 rounded-lg group-hover:border-white/30 transition-all text-brand-red">
+                                            <svg class="w-5 h-5 text-zinc-400 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                                            <span class="text-zinc-300">TikTok</span>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer group">
+                                        <input type="checkbox" name="platforms" value="Instagram" class="custom-checkbox sr-only">
+                                        <div class="flex items-center space-x-3 p-3 border border-white/10 rounded-lg group-hover:border-white/30 transition-all text-brand-red">
+                                            <svg class="w-5 h-5 text-zinc-400 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
+                                            <span class="text-zinc-300">Instagram</span>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer group">
+                                        <input type="checkbox" name="platforms" value="YouTube" class="custom-checkbox sr-only">
+                                        <div class="flex items-center space-x-3 p-3 border border-white/10 rounded-lg group-hover:border-white/30 transition-all text-brand-red">
+                                            <svg class="w-5 h-5 text-zinc-400 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/></svg>
+                                            <span class="text-zinc-300">YouTube</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                <p id="creatorPlatformError" class="text-brand-red text-xs mt-2 hidden">Please select at least one.</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-zinc-400 mb-1 uppercase">Top Performance Link</label>
+                                <input type="url" name="performance_link" required class="glass-input w-full rounded-lg px-4 py-3 text-white focus:border-brand-red" placeholder="https://">
+                                <p class="text-xs text-zinc-500 mt-1">Link to your best performing content.</p>
+                            </div>
+
+                            <button type="submit" id="creatorSubmitBtn" class="w-full py-4 mt-6 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg shadow-lg shadow-red-900/40 transition-all transform hover:scale-[1.02]">
+                                Submit Application
+                            </button>
+                            
+                            <div id="creatorSuccess" class="hidden p-4 bg-green-900/30 border border-green-500/30 rounded-lg">
+                                <p class="text-green-400 text-sm text-center">Application received! Check your email for verification steps.</p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="agencyModal" class="form-modal bg-zinc-900">
+        <div class="min-h-screen flex flex-col relative">
+            <button onclick="closeForm()" class="absolute top-6 right-6 z-50 p-2 text-white/50 hover:text-white transition-colors">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div class="flex flex-col lg:flex-row flex-grow">
+                <div class="lg:w-1/3 bg-brand-purple/10 p-10 lg:p-16 flex flex-col justify-center border-r border-white/5">
+                    <div class="animate-slide-up">
+                        <div class="w-12 h-12 bg-brand-purple rounded-xl flex items-center justify-center mb-8 shadow-lg shadow-purple-900/30">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        </div>
+                        <h2 class="text-3xl font-bold text-white mb-6">The Precision Advantage</h2>
+                        <ul class="space-y-6 text-zinc-300">
+                            <li class="flex items-start">
+                                <span class="text-brand-purple mr-3 font-bold">✓</span>
+                                <span><b>2.8x Better ROI.</b> Shift from paying for fleeting reach to paying for action.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-brand-purple mr-3 font-bold">✓</span>
+                                <span><b>End-to-End Compliance.</b> We handle contracts and disclosure adherence.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-brand-purple mr-3 font-bold">✓</span>
+                                <span><b>Cultural Mastery.</b> Deep local relevance with vetted SA creators.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="lg:w-2/3 p-8 lg:p-16 flex items-center justify-center">
+                    <div class="w-full max-w-lg animate-slide-up" style="animation-delay: 0.2s;">
+                        <h3 class="text-2xl font-bold text-white mb-2">Initialize Agency Account</h3>
+                        <p class="text-zinc-500 mb-8">Set up your profile to access the creator marketplace.</p>
+
+                        <form id="agencyForm" class="space-y-5">
+                            <div>
+                                <label class="block text-xs font-semibold text-zinc-400 mb-1 uppercase">Business Name</label>
+                                <input type="text" name="business_name" required class="glass-input w-full rounded-lg px-4 py-3 text-white focus:border-brand-purple">
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-zinc-400 mb-1 uppercase">Work Email</label>
+                                    <input type="email" name="work_email_address" required class="glass-input w-full rounded-lg px-4 py-3 text-white focus:border-brand-purple">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-zinc-400 mb-1 uppercase">Phone Number</label>
+                                    <input type="tel" name="work_phone_number" required class="glass-input w-full rounded-lg px-4 py-3 text-white focus:border-brand-purple">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-zinc-400 mb-1 uppercase">Website URL</label>
+                                <input type="url" name="website_url" class="glass-input w-full rounded-lg px-4 py-3 text-white focus:border-brand-purple" placeholder="https://">
+                            </div>
+
+                            <div class="pt-4 border-t border-white/10">
+                                <label class="block text-xs font-semibold text-zinc-500 mb-1 uppercase">Referral / Affiliate Code (Optional)</label>
+                                <input type="text" id="agency_affiliate_code" name="affiliate_code" class="glass-input w-full rounded-lg px-4 py-3 text-white focus:border-brand-purple bg-transparent border-dashed">
+                                <input type="hidden" id="agency_affiliate_link_source" name="affiliate_link_source" value="">
+                            </div>
+
+                            <button type="submit" id="agencySubmitBtn" class="w-full py-4 mt-6 bg-brand-purple hover:bg-brand-purple-dark text-white font-bold rounded-lg shadow-lg shadow-purple-900/40 transition-all transform hover:scale-[1.02]">
+                                Create Agency Portal
+                            </button>
+
+                            <div id="agencySuccess" class="hidden p-4 bg-green-900/30 border border-green-500/30 rounded-lg">
+                                <p class="text-green-400 text-sm text-center">Request received. Check your email to schedule your onboarding.</p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const splitContainer = document.getElementById('splitContainer');
+        const creatorModal = document.getElementById('creatorModal');
+        const agencyModal = document.getElementById('agencyModal');
+        const splits = document.querySelectorAll('.split');
+        
+        let isMobile = window.innerWidth <= 768;
+        
+        // Update mobile flag on resize
+        window.addEventListener('resize', () => {
+            isMobile = window.innerWidth <= 768;
+            // Reset states on resize to prevent CSS issues
+            splits.forEach(split => {
+                split.classList.remove('mobile-active', 'mobile-inactive');
+            });
+        });
+
+        // Mobile touch interaction
+        splits.forEach(split => {
+            split.addEventListener('touchstart', function(e) {
+                if (!isMobile) return;
+                
+                // Toggle active state logic
+                const isActive = this.classList.contains('mobile-active');
+                
+                // If it is NOT active, we prevent default (which prevents the click)
+                // and expand the accordion.
+                if (!isActive) {
+                    e.preventDefault();
+                    
+                    // Reset all splits
+                    splits.forEach(s => {
+                        s.classList.remove('mobile-active', 'mobile-inactive');
+                    });
+
+                    // Activate this split
+                    this.classList.add('mobile-active');
+                    
+                    // Make other split inactive
+                    splits.forEach(s => {
+                        if (s !== this) {
+                            s.classList.add('mobile-inactive');
+                        }
+                    });
+                }
+                // If it IS active, we allow the event to propagate, which triggers the 'click' listener below
+            });
+            
+            // Click handler for form opening (works for both desktop and mobile)
+            split.addEventListener('click', function(e) {
+                const type = this.getAttribute('data-type');
+                openForm(type);
+            });
+        });
+
+        function openForm(type) {
+            if(type === 'creator') {
+                creatorModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                agencyModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeForm() {
+            creatorModal.classList.remove('active');
+            agencyModal.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scroll
+        }
+
+        // --- Tracking Logic ---
+        function initializeAffiliateTracking() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const affiliateCode = urlParams.get('affiliate_code');
+            
+            if (affiliateCode) {
+                localStorage.setItem('agency_affiliate_code', affiliateCode);
+                const hiddenField = document.getElementById('agency_affiliate_link_source');
+                if(hiddenField) hiddenField.value = affiliateCode;
+                // Auto-fill visible field too for transparency
+                const visibleField = document.getElementById('agency_affiliate_code');
+                if(visibleField) visibleField.value = affiliateCode;
+            } else {
+                const storedCode = localStorage.getItem('agency_affiliate_code');
+                if (storedCode) {
+                    const hiddenField = document.getElementById('agency_affiliate_link_source');
+                    if(hiddenField) hiddenField.value = storedCode;
+                    const visibleField = document.getElementById('agency_affiliate_code');
+                    if(visibleField) visibleField.value = storedCode;
+                }
+            }
+        }
+        document.addEventListener('DOMContentLoaded', initializeAffiliateTracking);
+
+        // --- Form Handling Logic ---
+        
+        // Creator Submission
+        document.getElementById('creatorForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const checkboxes = this.querySelectorAll('input[name="platforms"]:checked');
+            const platformError = document.getElementById('creatorPlatformError');
+            
+            if (checkboxes.length === 0) {
+                platformError.classList.remove('hidden');
+                return;
+            } else {
+                platformError.classList.add('hidden');
+            }
+            
+            const submitBtn = document.getElementById('creatorSubmitBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Verifying...';
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/api/onboard/creator', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('creatorSuccess').classList.remove('hidden');
+                    this.reset();
+                    setTimeout(closeForm, 3000);
+                } else {
+                    alert(result.error || 'Submission failed');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Connection error. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+
+        // Agency Submission
+        document.getElementById('agencyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('agencySubmitBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/api/onboard/agency', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('agencySuccess').classList.remove('hidden');
+                    this.reset();
+                    localStorage.removeItem('agency_affiliate_code');
+                    setTimeout(closeForm, 3000);
+                } else {
+                    alert(result.error || 'Submission failed');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Connection error. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+    </script>
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='Images/favicon.ico') }}">
+    
+    <title>Affiliate Ambassador Program | Earn 30% Commission</title>
+    <meta name="description" content="Join the Creative Swop Affiliate Ambassador Program. Earn 30% revenue share by referring marketing agencies. High-ticket commissions for industry connectors.">
+    <meta name="keywords" content="affiliate program South Africa, marketing agency referral fee, earn commissions, passive income for marketers, B2B affiliate program, Creative Swop ambassador">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://redsystems.co.za/creative-swop/affiliate">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://redsystems.co.za/creative-swop/affiliate">
+    <meta property="og:title" content="Earn 30% Commission | Creative Swop Affiliate Program">
+    <meta property="og:description" content="Partner with the future of influence. Refer agencies and earn 30% of revenue. Apply for your code today.">
+    <meta property="og:image" content="https://redsystems.co.za/static/Images/favicon.ico">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #6B21A8 0%, #DC2626 100%);
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 3s infinite;
+        }
+    </style>
+</head>
+<body class="bg-white text-zinc-900">
+    
+    <!-- Navigation -->
+<nav class="fixed top-0 w-full bg-white/90 backdrop-blur-lg border-b border-zinc-200 z-50">
+    <div class="container mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+            
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <span class="text-2xl font-bold text-brand-purple">Creative Swop</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="/creative-swop/home" class="text-zinc-600 hover:text-brand-purple transition-colors">Home</a>
+                <a href="/creative-swop/affiliate" class="text-zinc-600 hover:text-brand-purple transition-colors">Affiliate</a>
+                <a href="/creative-swop/influencers" class="text-zinc-600 hover:text-brand-purple transition-colors">Influencers</a>
+                <a href="/login" class="text-zinc-600 hover:text-brand-purple transition-colors">Login</a>
+                <a href="/join-swop" class="px-6 py-2 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-semibold transition-colors">
+                    Join Creative Swop — It's Free
+                </a>
+            </div>
+
+            <button id="mobileMenuButton" class="md:hidden p-2 rounded-md text-zinc-700 hover:text-brand-purple hover:bg-gray-100 transition-colors" aria-label="Toggle Menu">
+                <svg id="menuIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+                <svg id="closeIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden transition-all duration-300 ease-in-out">
+        <div class="px-2 pt-2 pb-3 space-y-2 border-t border-zinc-200">
+            <a href="/creative-swop/home" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:bg-gray-50 hover:text-brand-purple">Home</a>
+            <a href="/creative-swop/affiliate" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:bg-gray-50 hover:text-brand-purple">Affiliate</a>
+            <a href="/creative-swop/influencers" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:bg-gray-50 hover:text-brand-purple">Influencers</a>
+            <a href="/login" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:bg-gray-50 hover:text-brand-purple">login</a>
+            <a href="/join-swop" class="block w-full text-center px-4 py-3 mt-4 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-md font-semibold transition-colors">
+                Join Creative Swop — It's Free
+            </a>
+        </div>
+    </div>
+</nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 relative overflow-hidden">
+        <div class="absolute inset-0 gradient-bg opacity-5"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="mb-6 inline-block">
+                    <span class="px-4 py-2 bg-brand-purple/10 text-brand-purple rounded-full text-sm font-semibold">
+                        Exclusive Opportunity
+                    </span>
+                </div>
+                
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
+                    Creative Swop<br>
+                    <span class="text-brand-purple">Affiliate Ambassador Program</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-zinc-600 mb-8 leading-relaxed">
+                    Partner with the Future of Influence. Earn <span class="text-brand-red font-bold text-3xl">30%</span> of the Revenue from every agency's first successful campaign.
+                </p>
+
+                <div class="bg-gradient-to-br from-brand-purple to-brand-red rounded-2xl p-8 text-white mb-12 shadow-2xl">
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                        <div class="text-center">
+                            <div class="text-6xl font-black text-white mb-2">30%</div>
+                            <div class="text-lg font-medium">Commission Rate</div>
+                        </div>
+                        <div class="hidden md:block w-px h-16 bg-white/30"></div>
+                        <div class="text-center">
+                            <div class="text-6xl font-black mb-2">∞</div>
+                            <div class="text-lg font-medium">No Referral Limits</div>
+                        </div>
+                        <div class="hidden md:block w-px h-16 bg-white/30"></div>
+                        <div class="text-center">
+                            <div class="text-6xl font-black mb-2">30</div>
+                            <div class="text-lg font-medium">Day Payout Cycle</div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-lg text-zinc-700 max-w-3xl mx-auto">
+                    We're looking for individuals who can introduce strategic partners (marketing agencies and SMEs) to our hyper-vetted creator ecosystem.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Creative Swop Does -->
+    <section id="how-it-works" class="py-20 bg-zinc-50">
+        <div class="container mx-auto px-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-black mb-4">What You'll Be Promoting</h2>
+                    <p class="text-xl text-zinc-600">A platform that solves real problems for two distinct audiences</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- For Agencies -->
+                    <div class="bg-white rounded-2xl shadow-lg p-8 border-2 border-transparent hover:border-brand-purple transition-all">
+                        <div class="w-16 h-16 bg-brand-purple rounded-2xl flex items-center justify-center mb-6">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold mb-4">For Marketing Agencies & SMEs</h3>
+                        <p class="text-brand-purple font-semibold mb-4">Precision ROI & Risk Mitigation</p>
+                        
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-brand-purple mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-zinc-700">Unparalleled access to a diverse, vetted network of global creators</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-brand-purple mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-zinc-700">Transparent, performance-driven campaigns that beat traditional ads</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-brand-purple mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-zinc-700">Seamless legal and payment compliance management</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-brand-purple mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-zinc-700">Real-time analytics and budget control dashboards</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-brand-purple mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-zinc-700">Superior cost efficiency compared to inflated ad exchange rates</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- For Creators -->
+                    <div class="bg-white rounded-2xl shadow-lg p-8 border-2 border-transparent hover:border-brand-purple transition-all">
+                        <div class="w-16 h-16 bg-brand-red rounded-2xl flex items-center justify-center mb-6">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold mb-4">For Content Creators & Voices</h3>
+                        <p class="text-brand-red font-semibold mb-4">Professional Monetization</p>
+                        
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-brand-red mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-zinc-700">Connect with high-calibre, paid brand opportunities</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-brand-red mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-zinc-700">Fair, transparent compensation (CPM/Flat Fees)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-brand-red mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-zinc-700">All paperwork and contracts handled seamlessly</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-brand-red mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-zinc-700">Focus purely on content creation</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-brand-red mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-zinc-700">Guaranteed payment security and timely payouts</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reward Structure -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl font-black mb-4">The Reward Structure</h2>
+                    <p class="text-xl text-zinc-600">Transparent and Enticing</p>
+                </div>
+
+                <div class="bg-zinc-50 rounded-2xl p-8 md:p-12 border-2 border-zinc-200">
+                    <div class="flex items-start mb-8">
+                        <div class="w-12 h-12 bg-brand-red rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-bold mb-3">Your Commission</h3>
+                            <p class="text-lg text-zinc-700 leading-relaxed">
+                                You will receive <span class="text-brand-red font-bold text-2xl">30%</span> of the net revenue Creative Swop generates from the <span class="font-semibold">first campaign</span> launched by any marketing agency or SME you successfully onboard using your unique affiliate code.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-zinc-300 my-8"></div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-brand-purple/10 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <svg class="w-5 h-5 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-brand-purple mb-2">Payout Cycle</h4>
+                                <p class="text-zinc-600">Commissions are verified and paid out within 30 days following the successful completion and final payment of the agency's first campaign.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-brand-purple/10 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <svg class="w-5 h-5 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-brand-purple mb-2">No Limits</h4>
+                                <p class="text-zinc-600">There are no limits on the number of agencies you can refer. The more you bring, the more you earn.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 p-6 bg-white rounded-xl border-2 border-brand-purple/20">
+                        <h4 class="font-bold text-lg mb-3">Example Earnings</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-zinc-600">Agency's First Campaign Budget:</span>
+                                <span class="font-semibold">R 100,000</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-zinc-600">Creative Swop Platform Fee (20%):</span>
+                                <span class="font-semibold">R 20,000</span>
+                            </div>
+                            <div class="h-px bg-zinc-200 my-2"></div>
+                            <div class="flex justify-between text-lg">
+                                <span class="font-bold text-brand-purple">Your 30% Commission:</span>
+                                <span class="font-bold text-brand-red text-xl">R 6,000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+ <!-- Reward Structure for Marketers-->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl font-black mb-4">The Reward Structure For marketing team members</h2>
+                    <p class="text-xl text-zinc-600">Transparent and Enticing</p>
+                </div>
+
+                <div class="bg-zinc-50 rounded-2xl p-8 md:p-12 border-2 border-zinc-200">
+                    <div class="flex items-start mb-8">
+                        <div class="w-12 h-12 bg-brand-red rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-bold mb-3">Your Commission</h3>
+                            <p class="text-lg text-zinc-700 leading-relaxed">
+                                As a marketing team member, you will receive <span class="text-brand-red font-bold text-2xl">R100</span> for every campaign your team launches using the Creative Swop platform. This incentive applies for a period of <span class="font-semibold">6 months</span> from your registration date.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-zinc-300 my-8"></div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-brand-purple/10 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <svg class="w-5 h-5 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-brand-purple mb-2">Duration</h4>
+                                <p class="text-zinc-600">This incentive program is valid for 6 months from your registration date. All campaigns launched by your team during this period qualify.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-brand-purple/10 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <svg class="w-5 h-5 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-brand-purple mb-2">No Limits</h4>
+                                <p class="text-zinc-600">There are no limits on the number of campaigns your team can launch or the amount you can earn. The more campaigns, the more you earn.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 p-6 bg-white rounded-xl border-2 border-brand-purple/20">
+                        <h4 class="font-bold text-lg mb-3">Example Earnings</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-zinc-600">Campaigns launched in Month 1:</span>
+                                <span class="font-semibold">10 campaigns</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-zinc-600">Your earnings for Month 1:</span>
+                                <span class="font-semibold">R 1,000</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-zinc-600">Campaigns launched in Month 2:</span>
+                                <span class="font-semibold">15 campaigns</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-zinc-600">Your earnings for Month 2:</span>
+                                <span class="font-semibold">R 1,500</span>
+                            </div>
+                            <div class="h-px bg-zinc-200 my-2"></div>
+                            <div class="flex justify-between text-lg">
+                                <span class="font-bold text-brand-purple">Total 6-month earnings (est.):</span>
+                                <span class="font-bold text-brand-red text-xl">R 9,000+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form -->
+    <section id="apply" class="py-20 bg-zinc-50">
+        <div class="container mx-auto px-6">
+            <div class="max-w-2xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl font-black mb-4">Begin Your Application</h2>
+                    <p class="text-xl text-zinc-600">Join our exclusive network of affiliate ambassadors</p>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+                    <form id="affiliateForm" class="space-y-6" novalidate>
+                        <!-- Full Name -->
+                        <div>
+                            <label for="fullName" class="block text-sm font-semibold mb-2">Full Name <span class="text-brand-red">*</span></label>
+                            <input 
+                                type="text" 
+                                id="fullName"
+                                name="fullName"
+                                required
+                                class="w-full px-4 py-3 border-2 border-zinc-300 rounded-lg focus:outline-none focus:border-brand-purple transition-colors"
+                                placeholder="John Doe"
+                            >
+                            <p class="text-xs text-red-600 mt-1 hidden" id="fullNameError">Please enter your full name</p>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-semibold mb-2">Email Address <span class="text-brand-red">*</span></label>
+                            <input 
+                                type="email" 
+                                id="email"
+                                name="email"
+                                required
+                                class="w-full px-4 py-3 border-2 border-zinc-300 rounded-lg focus:outline-none focus:border-brand-purple transition-colors"
+                                placeholder="john@example.com"
+                            >
+                            <p class="text-xs text-zinc-500 mt-1">Your affiliate code and communications will be sent here</p>
+                            <p class="text-xs text-red-600 mt-1 hidden" id="emailError">Please enter a valid email address</p>
+                        </div>
+
+                        <!-- Social Media Link -->
+                        <div>
+                            <label for="socialLink" class="block text-sm font-semibold mb-2">Highest Reach Social Media Link</label>
+                            <input 
+                                type="url" 
+                                id="socialLink"
+                                name="socialLink"
+                                class="w-full px-4 py-3 border-2 border-zinc-300 rounded-lg focus:outline-none focus:border-brand-purple transition-colors"
+                                placeholder="https://instagram.com/yourhandle"
+                            >
+                            <p class="text-xs text-zinc-500 mt-1">Optional but highly encouraged - helps us gauge your network influence</p>
+                        </div>
+
+                        <!-- Referral Audience -->
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Referral Audience <span class="text-brand-red">*</span></label>
+                            <div class="space-y-2">
+                                <label class="flex items-center p-4 border-2 border-zinc-300 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+                                    <input type="checkbox" name="audience" value="Marketing Agencies" class="w-5 h-5 text-brand-purple rounded">
+                                    <span class="ml-3 font-medium">Marketing Agencies</span>
+                                </label>
+                                <label class="flex items-center p-4 border-2 border-zinc-300 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+                                    <input type="checkbox" name="audience" value="Small Business Owners" class="w-5 h-5 text-brand-purple rounded">
+                                    <span class="ml-3 font-medium">Small Business Owners / SMEs</span>
+                                </label>
+                                <label class="flex items-center p-4 border-2 border-zinc-300 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+                                    <input type="checkbox" name="audience" value="Large Brands" class="w-5 h-5 text-brand-purple rounded">
+                                    <span class="ml-3 font-medium">Large Brands / Enterprises</span>
+                                </label>
+                                <label class="flex items-center p-4 border-2 border-zinc-300 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+                                    <input type="checkbox" name="audience" value="Content Creators" class="w-5 h-5 text-brand-purple rounded">
+                                    <span class="ml-3 font-medium">Content Creators / Influencers</span>
+                                </label>
+                            </div>
+                            <p class="text-xs text-zinc-500 mt-2">Select all that apply</p>
+                            <p class="text-xs text-red-600 mt-1 hidden" id="audienceError">Please select at least one audience</p>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button 
+                            type="submit"
+                            id="submitBtn"
+                            class="w-full py-4 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        >
+                            Generate My Affiliate Code
+                        </button>
+
+                        <p class="text-xs text-center text-zinc-500">
+                            By submitting, you agree to our affiliate terms and conditions
+                        </p>
+                    </form>
+
+                    <!-- Success Message (Hidden) -->
+                    <div id="successMessage" class="hidden">
+                        <div class="text-center py-8">
+                            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4">Application Submitted!</h3>
+                            <p class="text-zinc-600 mb-6">Your unique affiliate code has been generated</p>
+                            <div class="p-6 bg-zinc-50 rounded-xl mb-6">
+                                <p class="text-sm text-zinc-600 mb-2">Your Affiliate Code:</p>
+                                <div class="flex items-center justify-center gap-3">
+                                    <code id="affiliateCode" class="text-2xl font-bold text-brand-purple">CS-XXXXXXXX</code>
+                                    <button onclick="copyCode()" class="p-2 hover:bg-zinc-200 rounded-lg transition-colors" title="Copy code">
+                                        <svg class="w-5 h-5 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="text-sm text-zinc-600">Check your email for further instructions and marketing materials.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-zinc-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold">Creative Swop</span>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <p class="text-zinc-400 mb-2">Partner with the Future of Influence</p>
+                    <div class="flex items-center justify-center md:justify-end space-x-6 text-sm text-zinc-500">
+                        <a href="/terms-and-conditions" class="hover:text-brand-purple transition-colors">Affiliate Terms</a>
+                        <a href="/terms-and-conditions" class="hover:text-brand-purple transition-colors">Privacy</a>
+                        <a href="/form" class="hover:text-brand-purple transition-colors">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Form validation and submission
+        // Form validation and submission
+document.getElementById('affiliateForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Clear previous errors
+    document.querySelectorAll('.text-red-600').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('input').forEach(input => {
+        input.classList.remove('border-red-500');
+    });
+    
+    // Collect form data - ensure all values are simple types
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const socialLink = document.getElementById('socialLink').value.trim();
+    
+    // Get checked audience options as an array of strings
+    const audienceElements = document.querySelectorAll('input[name="audience"]:checked');
+    const audience = Array.from(audienceElements).map(cb => cb.value);
+    
+    // Validate
+    let isValid = true;
+    
+    if (!fullName) {
+        document.getElementById('fullName').classList.add('border-red-500');
+        document.getElementById('fullNameError').classList.remove('hidden');
+        isValid = false;
+    }
+    
+    if (!email || !email.includes('@')) {
+        document.getElementById('email').classList.add('border-red-500');
+        document.getElementById('emailError').classList.remove('hidden');
+        isValid = false;
+    }
+    
+    if (audience.length === 0) {
+        document.getElementById('audienceError').classList.remove('hidden');
+        isValid = false;
+    }
+    
+    if (!isValid) {
+        return;
+    }
+    
+    // Create clean form data object - only simple types
+    const formData = {
+        fullName: fullName,
+        email: email,
+        socialLink: socialLink,
+        audience: audience  // This is an array of strings
+    };
+    
+    console.log('Submitting form data:', formData);
+    
+    // Disable submit button
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+    
+    try {
+        // Submit to backend
+        const response = await fetch('/api/submit-affiliate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        const result = await response.json();
+        console.log('Server response:', result);
+        
+        if (result.success) {
+            // Hide form and show success message
+            document.getElementById('affiliateForm').classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
+            document.getElementById('affiliateCode').textContent = result.affiliate_code;
+            
+            // Scroll to success message
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            // Show error message
+            alert(result.message || 'There was an error submitting your application. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Generate My Affiliate Code';
+        }
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        alert('There was an error submitting your application. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Generate My Affiliate Code';
+    }
+});
+        
+        function copyCode() {
+            const code = document.getElementById('affiliateCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Affiliate code copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+document.addEventListener('DOMContentLoaded', function() {
+        const button = document.getElementById('mobileMenuButton');
+        const menu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
+        const closeIcon = document.getElementById('closeIcon');
+
+        button.addEventListener('click', function() {
+            // Toggle menu visibility
+            menu.classList.toggle('hidden');
+            
+            // Toggle icons
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+    });
+    </script>
+</body>
+
+</html>
+
+
+

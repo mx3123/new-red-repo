@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Campaigns | Creator Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                        'brand-green': '#059669',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .expanded-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+        
+        .expanded-content.open {
+            max-height: 3000px;
+        }
+        
+        .rotate-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .rotate-icon.open {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen">
+    
+    <!-- Navigation -->
+    <nav class="sticky top-0 bg-zinc-900 border-b border-zinc-800 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="text-xl font-bold text-brand-purple">Creative Swop</div>
+                    <nav class="hidden md:flex space-x-6 text-sm">
+                        <a href="/creator" class="text-zinc-400 hover:text-white">Opportunities</a>
+                        <a href="/my_campaign" class="text-white font-medium">My Campaigns</a>
+                        <a href="/analytics" class="text-zinc-400 hover:text-white">Analytics</a>
+                        <a href="/settings" class="text-zinc-400 hover:text-white">settings</a>
+                    </nav>
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <div class="relative group">
+                        <button class="w-9 h-9 rounded-full bg-brand-purple flex items-center justify-center font-semibold hover:bg-brand-purple-dark transition-colors text-sm">
+                            TC
+                        </button>
+                        
+                        <div class="absolute right-0 mt-2 w-48 bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="p-2">
+                                <button onclick="logout()" class="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-zinc-700 rounded-md transition-colors">
+                                    Log Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button class="md:hidden text-zinc-400 hover:text-white" onclick="toggleMobileMenu()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="md:hidden mt-4 border-t border-zinc-800 pt-4 hidden">
+            <div class="space-y-2">
+                <a href="/creator" class="block py-2 text-zinc-400 hover:text-white">Opportunities</a>
+                <a href="/my_campaign" class="block py-2 text-white font-medium">My Campaigns</a>
+                <a href="/#" class="block py-2 text-zinc-400 hover:text-white">Analytics</a>
+                <a href="/settings" class="block py-2 text-zinc-400 hover:text-white">settings</a>
+                <button onclick="logout()" class="block py-2 text-red-400 hover:text-red-300 w-full text-left">
+                    Log Out
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+        
+        <!-- Page Header -->
+        <div class="mb-6">
+            <h1 class="text-3xl md:text-5xl font-black mb-2">My Campaigns</h1>
+            <p class="text-zinc-400 text-sm md:text-base">Track your campaigns and submit your content</p>
+        </div>
+
+        <!-- Status Filter Tabs -->
+        <div class="mb-6 border-b border-zinc-800 overflow-x-auto">
+            <div class="flex space-x-4 min-w-max">
+                <button 
+                    class="tab-button pb-3 px-2 font-semibold text-brand-purple border-b-2 border-brand-purple whitespace-nowrap text-sm"
+                    onclick="filterCampaigns('accepted')"
+                    data-tab="accepted">
+                    Active
+                </button>
+                <button 
+                    class="tab-button pb-3 px-2 font-semibold text-zinc-500 border-b-2 border-transparent hover:text-brand-purple hover:border-zinc-700 transition-colors whitespace-nowrap text-sm"
+                    onclick="filterCampaigns('pending')"
+                    data-tab="pending">
+                    Pending Review
+                </button>
+                <button 
+                    class="tab-button pb-3 px-2 font-semibold text-zinc-500 border-b-2 border-transparent hover:text-brand-purple hover:border-zinc-700 transition-colors whitespace-nowrap text-sm"
+                    onclick="filterCampaigns('rejected')"
+                    data-tab="rejected">
+                    Rejected
+                </button>
+                <button 
+                    class="tab-button pb-3 px-2 font-semibold text-zinc-500 border-b-2 border-transparent hover:text-brand-purple hover:border-zinc-700 transition-colors whitespace-nowrap text-sm"
+                    onclick="filterCampaigns('affiliate')"
+                    data-tab="affiliate">
+                    Affiliate Codes
+                </button>
+            </div>
+        </div>
+
+        <!-- Campaign Cards Container -->
+        <div id="campaignsContainer" class="space-y-4">
+            <div class="flex items-center justify-center py-12">
+                <div class="text-zinc-400">Loading campaigns...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Post Modal -->
+    <div id="submitPostModal" class="fixed inset-0 bg-zinc-950 bg-opacity-70 flex items-center justify-center z-50 hidden transition-opacity duration-300 p-4">
+        <div class="bg-zinc-900 rounded-xl shadow-2xl w-full max-w-lg mx-auto p-4 md:p-6 border border-zinc-800 transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto">
+            
+            <div class="flex justify-between items-center pb-3 border-b border-zinc-700 mb-4">
+                <h3 class="text-lg md:text-xl font-bold text-white">Submit Content for: <span id="modalCampaignTitle" class="text-brand-purple">Campaign Title</span></h3>
+                <button onclick="closeSubmitModal()" class="text-zinc-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <form id="submitForm" class="space-y-4" data-campaign-id="">
+                
+                <div>
+                    <label for="postPlatform" class="block text-sm font-medium text-zinc-300 mb-1">Platform</label>
+                    <select id="postPlatform" required class="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:ring-brand-purple focus:border-brand-purple text-sm md:text-base">
+                        <option value="">Select Platform</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="TikTok">TikTok</option>
+                        <option value="YouTube">YouTube</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="postUrl" class="block text-sm font-medium text-zinc-300 mb-1">Post URL/Link</label>
+                    <input type="url" id="postUrl" required placeholder="https://tiktok.com/@creator/video/..." class="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:ring-brand-purple focus:border-brand-purple text-sm md:text-base">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="postViews" class="block text-sm font-medium text-zinc-300 mb-1">Views/Reach (Optional)</label>
+                        <input type="number" id="postViews" placeholder="e.g., 50000" class="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:ring-brand-purple focus:border-brand-purple text-sm md:text-base">
+                    </div>
+                    <div>
+                        <label for="postEngagement" class="block text-sm font-medium text-zinc-300 mb-1">Engagement (Optional)</label>
+                        <input type="number" id="postEngagement" placeholder="e.g., 2500" class="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:ring-brand-purple focus:border-brand-purple text-sm md:text-base">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="postDescription" class="block text-sm font-medium text-zinc-300 mb-1">Notes/Description (Optional)</label>
+                    <textarea id="postDescription" rows="3" placeholder="Any specific details about the content or performance..." class="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:ring-brand-purple focus:border-brand-purple text-sm md:text-base"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-2 px-4 bg-brand-purple text-white font-semibold rounded-lg hover:bg-brand-purple-dark transition-colors text-sm md:text-base">
+                    Submit Post for Review
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="successModal" class="fixed inset-0 bg-zinc-950 bg-opacity-70 flex items-center justify-center z-50 hidden transition-opacity duration-300 p-4" onclick="closeSubmitModal()">
+        <div class="bg-zinc-900 rounded-xl shadow-2xl w-full max-w-sm mx-auto p-4 md:p-6 text-center border border-zinc-800" onclick="event.stopPropagation()">
+            <svg class="w-10 h-10 md:w-12 md:h-12 text-brand-green mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2m4-4l-2 2m-4-4l-2 2m4-4l-2 2m-4-4l-2 2m18 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <h3 class="text-lg md:text-xl font-bold text-white mb-2">Submission Successful!</h3>
+            <p class="text-zinc-300 mb-4 text-sm md:text-base">Your content link has been submitted for approval. We will notify you once reviewed.</p>
+            <button onclick="closeSubmitModal()" class="w-full py-2 px-4 bg-brand-purple text-white font-semibold rounded-lg hover:bg-brand-purple-dark transition-colors text-sm md:text-base">
+                Close
+            </button>
+        </div>
+    </div>
+
+<script>
+    // Tailwind config remains the same
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'brand-purple': '#6B21A8',
+                    'brand-purple-dark': '#581C87',
+                    'brand-red': '#DC2626',
+                    'brand-green': '#059669',
+                }
+            }
+        }
+    }
+
+    let allCampaigns = [];
+    let currentFilter = 'accepted'; // Default filter to 'Active'
+
+    // --- Status Mapping ---
+    // Defines how each application status should look
+    const statusMap = {
+        'pending': { text: 'Pending Review', color: 'bg-yellow-600', textColor: 'text-yellow-100', icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.332 16c-.77 1.333.192 3 1.732 3z"></path></svg>` },
+        'accepted': { text: 'Active Campaign', color: 'bg-brand-purple', textColor: 'text-white', icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2m4-4l-2 2m-4-4l-2 2m4-4l-2 2m-4-4l-2 2m18 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>` },
+        'rejected': { text: 'Application Rejected', color: 'bg-brand-red', textColor: 'text-white', icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>` },
+        'approved': { text: 'Content Approved', color: 'bg-brand-green', textColor: 'text-white', icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2m4-4l-2 2m-4-4l-2 2m4-4l-2 2m-4-4l-2 2m18 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>` },
+        'drafting_content': { text: 'Drafting Content', color: 'bg-blue-600', textColor: 'text-white', icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>`},
+        'completed': { text: 'Campaign Complete', color: 'bg-zinc-700', textColor: 'text-zinc-200', icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2m4-4l-2 2m-4-4l-2 2m4-4l-2 2m-4-4l-2 2m18 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>` },
+    };
+
+    function getStatusDetails(status) {
+        return statusMap[status] || { text: 'Unknown Status', color: 'bg-zinc-600', textColor: 'text-white', icon: '' };
+    }
+
+    // --- Modal and Accordion Functions ---
+
+    function toggleDetails(campaignId) {
+        const content = document.getElementById(`content-${campaignId}`);
+        const icon = document.getElementById(`icon-${campaignId}`);
+
+        // Close others
+        document.querySelectorAll('.expanded-content.open').forEach(item => {
+            if (item.id !== `content-${campaignId}`) {
+                item.classList.remove('open');
+                document.getElementById(`icon-${item.id.replace('content-', 'icon-')}`).classList.remove('open');
+            }
+        });
+
+        content.classList.toggle('open');
+        icon.classList.toggle('open');
+    }
+
+    function openSubmitModal(campaignId) {
+        document.getElementById('submitForm').setAttribute('data-campaign-id', campaignId);
+        const campaign = allCampaigns.find(c => c.campaign_id === campaignId);
+        if (campaign) {
+            document.getElementById('modalCampaignTitle').textContent = campaign.title;
+        }
+        document.getElementById('submitPostModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSubmitModal() {
+        document.getElementById('submitPostModal').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        document.getElementById('submitForm').reset();
+        document.getElementById('successModal').classList.add('hidden'); 
+    }
+    
+    // --- Rendering Functions ---
+
+    // Renders the list of campaigns based on the current filter
+    function renderCampaigns(campaigns) {
+        const container = document.getElementById('campaignsContainer');
+        if (!container) return;
+
+        if (campaigns.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-full py-12 text-center">
+                    <p class="text-xl font-bold text-zinc-600 mb-2">Nothing to see here</p>
+                    <p class="text-zinc-500 text-sm">No campaigns found for the selected status.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = campaigns.map(campaign => {
+            // Data sanitation and extraction
+            const campaignId = campaign.campaign_id;
+            const appStatus = campaign.application_status || 'pending';
+            const statusDetails = getStatusDetails(appStatus);
+            
+            // Numeric data handling
+            const totalBudget = parseFloat(campaign.total_budget) || 0;
+            const budgetUsedPercentage = parseFloat(campaign.budget_used_percentage) || 0;
+            const daysRemaining = parseInt(campaign.days_remaining) || 0;
+            const totalEarned = parseFloat(campaign.total_earned) || 0;
+
+            // Date and text data handling
+            const campaignTitle = campaign.title || 'Untitled Campaign';
+            const clientCompany = campaign.client_company || 'Unknown Client';
+            const agency = campaign.agency || 'Unknown Agency';
+            const description = campaign.description || 'No description provided.';
+            const compensationModel = campaign.compensation_model || 'N/A';
+            const startDate = campaign.start_date ? campaign.start_date.split('T')[0] : 'N/A';
+            const endDate = campaign.end_date ? campaign.end_date.split('T')[0] : 'N/A';
+            const platforms = Array.isArray(campaign.platforms) ? campaign.platforms : [];
+            const categories = Array.isArray(campaign.categories) ? campaign.categories : [];
+            const postsSubmitted = parseInt(campaign.posts_submitted) || 0;
+            const cpmRate = parseFloat(campaign.cpm_rate) || 0;
+
+            const progressColor = budgetUsedPercentage > 70 ? 'bg-brand-red' : 'bg-brand-purple';
+
+            // Conditional buttons based on application status
+            let actionButton = '';
+            if (['accepted', 'approved', 'drafting_content'].includes(appStatus)) {
+                actionButton = `
+                    <button 
+                        onclick="openSubmitModal(${campaignId})"
+                        class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-brand-purple text-white hover:bg-brand-purple-dark transition-colors"
+                    >
+                        <svg class="w-4 h-4 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 3h4m-4 7h4m-5-7V5a2 2 0 012-2h4a2 2 0 012 2v6m-9-2a2 2 0 012-2h4a2 2 0 012 2v6m-3-6a3 3 0 01-3 3H9a3 3 0 01-3-3v-2a3 3 0 013-3h3a3 3 0 013 3v2z"></path></svg>
+                        Submit Content
+                    </button>
+                `;
+            } else if (appStatus === 'pending') {
+                actionButton = `
+                    <button disabled class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-zinc-700 text-zinc-400 cursor-not-allowed">
+                        Awaiting Approval
+                    </button>
+                `;
+            } else if (appStatus === 'completed') {
+                actionButton = `
+                    <button disabled class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-zinc-700 text-zinc-400 cursor-not-allowed">
+                        Campaign Finished
+                    </button>
+                `;
+            }
+
+            return `
+                <div class="campaign-card bg-zinc-900 rounded-xl shadow-lg border border-zinc-800 transition-all duration-300 hover:border-brand-purple-dark">
+                    <div class="p-4 md:p-6">
+                        <div class="flex flex-col justify-between items-start">
+                            <h2 class="text-xl md:text-2xl font-bold mb-1">${campaignTitle}</h2>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs md:text-sm font-medium rounded-full ${statusDetails.color} ${statusDetails.textColor} mt-2 md:mt-0">
+                                ${statusDetails.icon}
+                                ${statusDetails.text}
+                            </span>
+                        </div>
+                        <div class="text-zinc-400 text-sm mb-4 mt-1">${clientCompany} · ${agency}</div>
+                        
+                        <div class="grid grid-cols-2 gap-3 mb-4 text-xs md:text-sm">
+                            <div class="bg-zinc-800 rounded-lg p-3">
+                                <div class="text-zinc-400 text-xs mb-1">Total Earned</div>
+                                <div class="font-semibold text-white text-sm">R ${totalEarned.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                            </div>
+                            <div class="bg-zinc-800 rounded-lg p-3">
+                                <div class="text-zinc-400 text-xs mb-1">Compensation</div>
+                                <div class="font-semibold text-white text-sm">${compensationModel}</div>
+                            </div>
+                            <div class="bg-zinc-800 rounded-lg p-3">
+                                <div class="text-zinc-400 text-xs mb-1">Posts Submitted</div>
+                                <div class="font-semibold text-white text-sm">${postsSubmitted}</div>
+                            </div>
+                            <div class="bg-zinc-800 rounded-lg p-3">
+                                <div class="text-zinc-400 text-xs mb-1">Days Remaining</div>
+                                <div class="font-semibold text-white text-sm">${daysRemaining}</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="font-medium text-zinc-400">Budget Consumed</span>
+                                <span class="font-medium ${progressColor}">${budgetUsedPercentage.toFixed(1)}% used</span>
+                            </div>
+                            <div class="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                <div class="h-full ${progressColor} rounded-full transition-all" style="width: ${budgetUsedPercentage}%"></div>
+                            </div>
+                        </div>
+
+                        <button 
+                            onclick="toggleDetails(${campaignId})" 
+                            class="w-full text-center py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors flex items-center justify-center gap-2 mt-2"
+                        >
+                            View Details
+                            <svg id="icon-${campaignId}" class="w-4 h-4 rotate-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div id="content-${campaignId}" class="expanded-content bg-zinc-800/50 border-t border-zinc-800">
+                        <div class="p-4 md:p-6">
+                            <p class="text-zinc-300 text-sm md:text-base mb-4 whitespace-pre-wrap">${description}</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <p class="text-zinc-400 text-sm mb-1">Platforms:</p>
+                                    <div class="flex flex-wrap gap-1">
+                                        ${platforms.map(p => `<span class="text-xs bg-zinc-700 text-zinc-200 px-2 py-0.5 rounded">${p}</span>`).join('')}
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-zinc-400 text-sm mb-1">Categories:</p>
+                                    <div class="flex flex-wrap gap-1">
+                                        ${categories.map(c => `<span class="text-xs bg-zinc-700 text-zinc-200 px-2 py-0.5 rounded">${c}</span>`).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4 text-xs md:text-sm">
+                                <div><span class="text-zinc-400">Start Date:</span> <span class="font-medium block">${startDate}</span></div>
+                                <div><span class="text-zinc-400">End Date:</span> <span class="font-medium block">${endDate}</span></div>
+                                <div><span class="text-zinc-400">Target CPM:</span> <span class="font-medium block">R ${cpmRate.toFixed(2)}</span></div>
+                                <div><span class="text-zinc-400">Total Budget:</span> <span class="font-medium block">R ${totalBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
+                            </div>
+
+                            ${actionButton}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // --- Filtering Logic ---
+
+    // Logic to determine which campaigns match a status tab
+    function filterCampaignsByStatus(status) {
+        // 'accepted' tab is treated as 'Active', grouping accepted, approved, and drafting statuses
+        if (status === 'accepted') {
+            return allCampaigns.filter(campaign => {
+                const appStatus = campaign.application_status || 'pending';
+                return ['accepted', 'approved', 'drafting_content'].includes(appStatus);
+            });
+        }
+
+        // Filter for other specific statuses (Pending, Rejected, Completed)
+        return allCampaigns.filter(campaign => {
+            const appStatus = campaign.application_status || 'pending';
+            return appStatus === status;
+        });
+    }
+
+// --- MODIFIED filterCampaigns FUNCTION ---
+function filterCampaigns(status) {
+    // Update the current filter status
+    currentFilter = status;
+
+    // Update tab styling
+    document.querySelectorAll('.tab-button').forEach(button => {
+        const tabStatus = button.getAttribute('data-tab');
+        if (tabStatus === status) {
+            button.className = 'tab-button pb-3 px-2 font-semibold text-brand-purple border-b-2 border-brand-purple whitespace-nowrap text-sm';
+        } else {
+            button.className = 'tab-button pb-3 px-2 font-semibold text-zinc-500 border-b-2 border-transparent hover:text-brand-purple hover:border-zinc-700 transition-colors whitespace-nowrap text-sm';
+        }
+    });
+
+    // Check if the new 'affiliate' tab is selected
+    if (status === 'affiliate') {
+        loadAffiliateCampaigns();
+    } else {
+        // Existing logic for core campaigns
+        const filteredCampaigns = allCampaigns.filter(c => c.application_status === status);
+        renderCampaigns(filteredCampaigns);
+    }
+}
+
+// --- NEW AFFILIATE FUNCTIONS ---
+
+// Function to load affiliate data from the new endpoint
+async function loadAffiliateCampaigns() {
+    const container = document.getElementById('campaignsContainer');
+    // Show loading state
+    container.innerHTML = `<div class="flex items-center justify-center py-12"><div class="text-brand-purple animate-spin h-6 w-6 border-4 border-t-transparent border-brand-purple rounded-full"></div><span class="ml-3 text-zinc-400 text-sm">Loading affiliate campaigns...</span></div>`;
+
+    try {
+        const response = await fetch('/api/creator/affiliate-codes');
+        if (!response.ok) {
+            throw new Error('Failed to fetch affiliate campaigns');
+        }
+        // The response is an array of affiliate codes
+        const affiliateCampaigns = await response.json(); 
+        renderAffiliateCampaigns(affiliateCampaigns);
+    } catch (error) {
+        console.error("Error loading affiliate campaigns:", error);
+        container.innerHTML = `
+            <div class="col-span-full py-12 text-center">
+                <p class="text-xl font-bold text-brand-red mb-2">Error Loading Data</p>
+                <p class="text-zinc-500 text-sm">Could not retrieve your affiliate campaigns. Please try again later.</p>
+            </div>
+        `;
+    }
+}
+
+// Function to render affiliate campaign cards
+function renderAffiliateCampaigns(affiliateCampaigns) {
+    const container = document.getElementById('campaignsContainer');
+
+    if (affiliateCampaigns.length === 0) {
+        container.innerHTML = `
+            <div class="col-span-full py-12 text-center">
+                <p class="text-xl font-bold text-zinc-600 mb-2">No Affiliate Campaigns</p>
+                <p class="text-zinc-500 text-sm">You have not joined any affiliate campaigns yet.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="space-y-4">
+            ${affiliateCampaigns.map(code => {
+                // Ensure numeric values are parsed
+                const clicks = parseInt(code.use_count) || 0;
+                const fee = parseFloat(code.flat_fee) || 0.00;
+                
+                // Calculate expected payment: fee * clicks
+                const expectedPayment = clicks * fee;
+
+                return `
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 md:p-6 shadow-lg hover:border-brand-purple transition-all duration-200">
+                        <div class="flex flex-col justify-between items-start mb-4">
+                            <h2 class="text-xl md:text-2xl font-bold text-brand-purple mb-1">${code.product_name}</h2>
+                            <span class="text-xs md:text-sm font-medium text-zinc-400 mt-1">Brand: ${code.brand}</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 text-xs md:text-sm">
+                            <div class="bg-zinc-800 rounded-lg p-3">
+                                <div class="text-zinc-400 text-xs mb-1">Your Code</div>
+                                <div class="font-mono font-semibold text-green-400 text-sm">${code.affiliate_code}</div>
+                            </div>
+                            
+                            <div class="bg-zinc-800 rounded-lg p-3">
+                                <div class="text-zinc-400 text-xs mb-1">Total Clicks</div>
+                                <div class="font-semibold text-white text-sm">${clicks.toLocaleString()}</div>
+                            </div>
+                            
+                            <div class="bg-zinc-800 rounded-lg p-3">
+                                <div class="text-zinc-400 text-xs mb-1">Expected Earnings</div>
+                                <div class="font-bold text-green-500 text-sm md:text-base">R ${expectedPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                <div class="text-zinc-400 text-xs mt-1">(R ${fee.toLocaleString('en-US', { minimumFractionDigits: 2 })} per click)</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+    // --- Data Loading and Initialization ---
+
+    async function loadCampaigns() {
+        try {
+            // Fetch data from the new creator-specific endpoint
+            const response = await fetch('/api/creator/my-campaigns');
+            if (!response.ok) {
+                throw new Error('Failed to fetch campaigns');
+            }
+            const data = await response.json();
+            // Store all fetched campaigns globally
+            allCampaigns = data.campaigns;
+
+            // Apply the default filter to render the initial view
+            filterCampaigns(currentFilter); 
+
+        } catch (error) {
+            console.error('Error loading campaigns:', error);
+            document.getElementById('campaignsContainer').innerHTML = '<p class="text-red-400 text-center py-8 text-sm">Could not load campaigns. Please try again.</p>';
+        }
+    }
+
+    // --- Event Listeners ---
+
+    // Form submission listener for submitting a post
+document.getElementById('submitForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const campaignId = this.getAttribute('data-campaign-id');
+        
+        // Get values directly from the input elements
+        const data = {
+            campaign_id: parseInt(campaignId),
+            platform: document.getElementById('postPlatform').value,
+            post_url: document.getElementById('postUrl').value,
+            // Ensure views and engagement are sent as null or 0 if empty
+            views: parseInt(document.getElementById('postViews').value) || 0,
+            engagement: parseInt(document.getElementById('postEngagement').value) || 0,
+            post_description: document.getElementById('postDescription').value || '',
+        };
+        
+        // Check for basic required fields one more time before sending
+        if (!data.campaign_id || !data.platform || !data.post_url) {
+            alert('Please ensure Campaign ID, Platform, and Post URL are provided.');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/creator/submit-post', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                // Close the submit modal and show success modal
+                document.getElementById('submitPostModal').classList.add('hidden');
+                document.getElementById('successModal').classList.remove('hidden');
+                // Reset form
+                this.reset();
+            } else {
+                alert('Error submitting post. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error submitting post:', error);
+            alert('Error submitting post. Please try again.');
+        }
+    });
+
+    // --- Utility Functions ---
+
+    function logout() {
+        fetch('/api/auth/logout', { method: 'POST' })
+            .then(() => window.location.href = '/login')
+            .catch(error => console.error('Logout failed:', error));
+        }
+    
+
+    function toggleMobileMenu() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenu.classList.toggle('hidden');
+    }
+
+    // Initialize the page when loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCampaigns();
+    });
+</script>
+</body>
+</html>
+

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator Database | Creative Swop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .creator-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); 
+            border-color: #6B21A8;
+        }
+        .creator-card { transition: all 0.3s ease; }
+
+        /* Custom Scrollbar for Dark Mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #18181b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b; 
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen">
+
+    <nav class="fixed top-0 w-full bg-zinc-900/90 backdrop-blur-lg border-b border-zinc-800 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <span class="text-2xl font-bold text-brand-purple">Creative Swop</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/all_campaigns" class="text-zinc-400 hover:text-white transition-colors">Campaigns</a>
+                    <a href="/campaign_analytics" class="text-zinc-400 hover:text-white transition-colors">Analytics</a>
+                    <a href="/affiliate-analytics" class="text-zinc-400 hover:text-white transition-colors">Affiliate Analytics</a>
+                    <a href="/media_dashboard" class="text-zinc-400 hover:text-white transition-colors">New campaign</a>
+                    <a href="/creator-database" class="text-white font-medium border-b-2 border-brand-purple">Creator Search</a>
+                    <button onclick="logout()" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 rounded-lg text-sm font-medium transition-colors">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 pt-32 pb-16">
+        
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-black text-white mb-4">Creator Database</h1>
+            <p class="text-zinc-400 max-w-2xl mx-auto">Discover the perfect talent for your next campaign. Search by name, niche, or location.</p>
+        </div>
+
+        <div class="bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-800 mb-10">
+            <div class="grid md:grid-cols-4 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold text-zinc-500 mb-1">SEARCH</label>
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="Search by name or handle..." class="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:ring-2 focus:ring-brand-purple focus:border-transparent outline-none">
+                        <svg class="w-5 h-5 text-zinc-500 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-500 mb-1">CATEGORY</label>
+                    <select id="categoryInput" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:ring-2 focus:ring-brand-purple focus:border-transparent outline-none">
+                        <option value="">All Niches</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                        <option value="Tech">Tech</option>
+                        <option value="Fashion">Fashion</option>
+                        <option value="Beauty">Beauty</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Fitness">Fitness</option>
+                        <option value="Food">Food</option>
+                        <option value="Gaming">Gaming</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-500 mb-1">LOCATION</label>
+                    <input type="text" id="locationInput" placeholder="e.g. Cape Town" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:ring-2 focus:ring-brand-purple focus:border-transparent outline-none">
+                </div>
+            </div>
+            <div class="mt-4 flex justify-end">
+                <button onclick="performSearch()" class="px-8 py-2 bg-brand-purple text-white font-semibold rounded-lg hover:bg-brand-purple-dark transition-all shadow-lg shadow-brand-purple/20">
+                    Find Creators
+                </button>
+            </div>
+        </div>
+
+        <div id="resultsGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="col-span-full text-center py-12 text-zinc-500">
+                Type in the search bar to find creators.
+            </div>
+        </div>
+    </div>
+
+    <div id="creatorModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all">
+                
+                <div class="bg-brand-purple p-6 text-white relative">
+                    <button onclick="closeModal()" class="absolute top-4 right-4 text-white/80 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-brand-purple font-bold text-2xl" id="modalInitials">
+                            </div>
+                        <div>
+                            <h2 class="text-2xl font-bold" id="modalName">Loading...</h2>
+                            <div class="flex items-center space-x-2 text-purple-200 text-sm">
+                                <span id="modalLocation">...</span> • <span id="modalCategory">...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="modalLoader" class="hidden py-20 flex justify-center items-center">
+                    <div class="flex flex-col items-center">
+                        <svg class="animate-spin h-10 w-10 text-brand-purple mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <p class="text-zinc-500 font-medium">Fetching profile details...</p>
+                    </div>
+                </div>
+
+                <div id="modalContent" class="p-6">
+                    <div class="mb-6">
+                        <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">About</h3>
+                        <p class="text-zinc-300 leading-relaxed" id="modalBio">Description...</p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 mb-6">
+                        <div class="bg-zinc-800 p-4 rounded-xl text-center border border-zinc-700">
+                            <div class="text-2xl font-black text-white" id="modalProfileScore">0</div>
+                            <div class="text-xs text-zinc-500 font-medium uppercase">Trust Score</div>
+                        </div>
+                        <div class="bg-zinc-800 p-4 rounded-xl text-center border border-zinc-700">
+                            <div class="text-2xl font-black text-brand-purple" id="modalTotalViews">0</div>
+                            <div class="text-xs text-zinc-500 font-medium uppercase">Generated Views</div>
+                        </div>
+                        <div class="bg-zinc-800 p-4 rounded-xl text-center border border-zinc-700">
+                            <div class="text-2xl font-black text-white" id="modalCampaigns">0</div>
+                            <div class="text-xs text-zinc-500 font-medium uppercase">Campaigns</div>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Social Handles</h3>
+                            <div class="space-y-2 text-sm text-zinc-300" id="modalSocials">
+                                </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Best Performing Content</h3>
+                            <a id="modalBestContent" href="#" target="_blank" class="flex items-center space-x-2 p-3 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg transition-colors group">
+                                <span class="w-8 h-8 bg-brand-purple/20 text-brand-purple rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9v6l5-3-5-3zm-1-9C4.029 0 0 4.029 0 9s4.029 9 9 9 9-4.029 9-9-4.029-9-9-9zm0 16.5c-4.142 0-7.5-3.358-7.5-7.5s3.358-7.5 7.5-7.5 7.5 3.358 7.5 7.5-3.358 7.5-7.5 7.5z"/></svg>
+                                </span>
+                                <span class="text-zinc-300 font-medium group-hover:text-white">View Top Post</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-zinc-800 p-4 border-t border-zinc-700 flex justify-end">
+                    <button onclick="closeModal()" class="px-6 py-2 text-zinc-400 hover:text-white font-medium transition-colors">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>            
+
+    <script>
+    // Global store for creators to enable instant-load
+    let creatorsCache = {}; 
+
+    // Helper: Clean and Parse Categories
+    function parseCategories(categoryInput) {
+        if (!categoryInput) return ['General'];
+        
+        // 1. Try parsing as JSON array first (e.g., '["Tech", "Business"]')
+        try {
+            const parsed = JSON.parse(categoryInput);
+            if (Array.isArray(parsed)) {
+                return parsed;
+            }
+        } catch (e) {
+            // Not strictly JSON, continue to string cleaning
+        }
+
+        // 2. Handle string format: Remove brackets and quotes, then split by comma
+        // Example: '["Tech", "Business"]' -> 'Tech, Business' -> ['Tech', 'Business']
+        let cleaned = categoryInput.toString().replace(/[\[\]"]/g, '');
+        
+        return cleaned.split(',').map(c => c.trim()).filter(c => c);
+    }
+
+    // --- Search Logic ---
+    async function performSearch() {
+        const query = document.getElementById('searchInput').value;
+        const location = document.getElementById('locationInput').value;
+        const category = document.getElementById('categoryInput').value;
+        
+        const grid = document.getElementById('resultsGrid');
+        grid.innerHTML = '<div class="col-span-full text-center py-12"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-purple mx-auto"></div></div>';
+
+        try {
+            const params = new URLSearchParams({ q: query, location: location, category: category });
+            const response = await fetch(`/api/creators/search?${params.toString()}`);
+            const data = await response.json();
+
+            if (data.creators.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-12 text-zinc-500">No creators found matching your criteria.</div>';
+                return;
+            }
+
+            // Clear previous cache and rebuild grid
+            creatorsCache = {};
+            
+            grid.innerHTML = data.creators.map(creator => {
+                // Store in cache
+                creatorsCache[creator.id] = creator;
+
+                // CLEAN CATEGORIES
+                const categories = parseCategories(creator.category);
+                
+                // Create Badges
+                const categoryBadges = categories.map(cat => 
+                    `<span class="px-2 py-0.5 bg-zinc-800 text-zinc-400 border border-zinc-700 text-xs font-medium rounded-full">${cat}</span>`
+                ).join(' ');
+
+                return `
+                <div class="creator-card bg-zinc-900 border border-zinc-800 rounded-xl p-6 cursor-pointer" onclick="openCreatorModal(${creator.id})">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-tr from-brand-purple to-purple-900 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-inner">
+                            ${creator.name.substring(0,2).toUpperCase()}
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-lg">${creator.name}</h3>
+                            <div class="text-xs text-zinc-400 flex items-center space-x-1 mt-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                <span>${creator.location}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4 flex flex-wrap gap-2">
+                        ${categoryBadges}
+                    </div>
+
+                    <div class="space-y-2 mb-4">
+                        ${creator.instagram ? `<div class="text-sm text-zinc-400 flex items-center"><span class="w-6 text-zinc-600">IG:</span> @${creator.instagram}</div>` : ''}
+                    </div>
+                    
+                    <div class="pt-4 border-t border-zinc-800 flex justify-between items-center">
+                        <div class="text-xs text-zinc-500">Trust Score</div>
+                        <span class="px-2 py-1 bg-brand-purple/20 text-brand-purple text-xs font-bold rounded-full border border-brand-purple/30">${creator.profile_score}/100</span>
+                    </div>
+                </div>
+            `}).join('');
+        } catch (error) {
+            console.error('Search error:', error);
+            grid.innerHTML = '<div class="col-span-full text-center py-12 text-brand-red">Error loading creators.</div>';
+        }
+    }
+
+    // --- Modal Logic ---
+    async function openCreatorModal(id) {
+        const modal = document.getElementById('creatorModal');
+        const loader = document.getElementById('modalLoader');
+        const content = document.getElementById('modalContent');
+        
+        // 1. Show Modal & Loader, Hide Content immediately
+        modal.classList.remove('hidden');
+        loader.classList.remove('hidden');
+        content.classList.add('hidden');
+        document.body.style.overflow = 'hidden';
+
+        document.getElementById('modalName').textContent = "Loading...";
+        document.getElementById('modalInitials').textContent = "...";
+        
+        try {
+            const response = await fetch(`/api/creators/${id}/details`);
+            const data = await response.json();
+            
+            // 2. Populate Data
+            document.getElementById('modalName').textContent = data.name;
+            document.getElementById('modalInitials').textContent = data.name.substring(0,2).toUpperCase();
+            document.getElementById('modalLocation').textContent = data.details.location || "Remote";
+            
+            // Handle Multiple Categories in Modal Header using the Helper
+            const categories = parseCategories(data.details.category);
+            document.getElementById('modalCategory').textContent = categories.join(' • ');
+            
+            document.getElementById('modalBio').textContent = data.details.bio || "No bio available.";
+            document.getElementById('modalProfileScore').textContent = data.stats.profile_score || 0;
+            
+            // Format Views
+            const views = data.stats.total_views_generated || 0;
+            const fmtViews = views > 1000000 ? (views/1000000).toFixed(1) + 'M' : (views > 1000 ? (views/1000).toFixed(1) + 'K' : views);
+            document.getElementById('modalTotalViews').textContent = fmtViews;
+            
+            document.getElementById('modalCampaigns').textContent = data.stats.total_campaigns || 0;
+
+            // Handle Socials
+            let socialHtml = '';
+            if(data.handles.instagram) socialHtml += `<div class="flex justify-between border-b border-zinc-800 pb-2 mb-2 last:border-0"><span>Instagram</span><span class="font-medium text-white">@${data.handles.instagram}</span></div>`;
+            if(data.handles.tiktok) socialHtml += `<div class="flex justify-between border-b border-zinc-800 pb-2 mb-2 last:border-0"><span>TikTok</span><span class="font-medium text-white">${data.handles.tiktok}</span></div>`;
+            if(data.handles.youtube) socialHtml += `<div class="flex justify-between border-b border-zinc-800 pb-2 mb-2 last:border-0"><span>YouTube</span><span class="font-medium text-white">${data.handles.youtube}</span></div>`;
+            
+            if(!socialHtml) socialHtml = '<div class="text-zinc-500 italic">No handles linked</div>';
+            document.getElementById('modalSocials').innerHTML = socialHtml;
+
+            // Handle Best Content Link
+            const linkBtn = document.getElementById('modalBestContent');
+            if (data.details.best_content_link) {
+                linkBtn.href = data.details.best_content_link;
+                linkBtn.classList.remove('opacity-50', 'pointer-events-none');
+                linkBtn.querySelector('span:last-child').textContent = "View Top Post";
+            } else {
+                linkBtn.href = "#";
+                linkBtn.classList.add('opacity-50', 'pointer-events-none');
+                linkBtn.querySelector('span:last-child').textContent = "No Content Link";
+            }
+
+            // 3. Hide Loader, Show Content
+            loader.classList.add('hidden');
+            content.classList.remove('hidden');
+
+        } catch (e) {
+            console.error(e);
+            alert("Failed to load creator details.");
+            closeModal();
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('creatorModal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    async function logout() {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        window.location.href = '/login';
+    }
+    
+    // Initial load
+    performSearch();
+</script>
+</body>
+</html>

@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Builder | Agency Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script async src="https://www.tiktok.com/embed.js"></script>
+    <script async src="//www.instagram.com/embed.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: #27272a;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #6B21A8;
+            border-radius: 50%;
+            border: 2px solid #581C87;
+            margin-top: -5px;
+            box-shadow: 0 0 0 2px #0a0a0a;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #6B21A8;
+            border-radius: 50%;
+            border: 2px solid #581C87;
+            box-shadow: 0 0 0 2px #0a0a0a;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            opacity: 0.8;
+            cursor: pointer;
+        }
+        input[type="date"]::-moz-calendar-picker-indicator {
+            filter: invert(1); 
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
+        /* Custom Scrollbar for Creator Lists */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #18181b; /* zinc-900 */
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #3f3f46; /* zinc-700 */
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #52525b; /* zinc-600 */
+}
+
+        @media (max-width: 767px) {
+            .age-sliders-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+
+        .campaign-type-tab {
+            transition: all 0.3s ease;
+        }
+        .campaign-type-tab.active {
+            background: #6B21A8;
+            color: white;
+        }
+        
+        /* Modal Transition */
+        #countrySelectionModal {
+            transition: opacity 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white">
+    
+    <div id="countrySelectionModal" class="fixed inset-0 bg-black/90 z-[100] hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-8 max-w-md w-full shadow-2xl relative">
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-brand-purple rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Select Target Region</h3>
+                <p class="text-zinc-400 text-sm">To provide the relevant targeting options, please select where your campaign will primarily take place.</p>
+            </div>
+            
+            <div class="space-y-3">
+                <button onclick="selectCountry('South Africa')" class="w-full p-4 rounded-lg border border-zinc-700 bg-zinc-800/50 hover:border-brand-purple hover:bg-zinc-800 transition-all flex items-center justify-between group">
+                    <div class="flex items-center">
+                        <span class="text-2xl mr-3">🇿🇦</span>
+                        <div class="text-left">
+                            <span class="block font-medium text-white">South Africa</span>
+                            <span class="text-xs text-zinc-500">Provinces & Metros</span>
+                        </div>
+                    </div>
+                    <span class="text-zinc-500 group-hover:text-brand-purple transition-colors">→</span>
+                </button>
+                
+                <button onclick="selectCountry('Namibia')" class="w-full p-4 rounded-lg border border-zinc-700 bg-zinc-800/50 hover:border-brand-purple hover:bg-zinc-800 transition-all flex items-center justify-between group">
+                    <div class="flex items-center">
+                        <span class="text-2xl mr-3">🇳🇦</span>
+                        <div class="text-left">
+                            <span class="block font-medium text-white">Namibia</span>
+                            <span class="text-xs text-zinc-500">Regions & Major Cities</span>
+                        </div>
+                    </div>
+                    <span class="text-zinc-500 group-hover:text-brand-purple transition-colors">→</span>
+                </button>
+            </div>
+            <div class="mt-6 text-center">
+                 <p class="text-xs text-zinc-600">This preference will be saved for future campaigns.</p>
+            </div>
+        </div>
+    </div>
+
+    <header class="sticky top-0 z-50 bg-zinc-900 border-b border-zinc-800">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-2xl font-bold text-brand-purple">Creative Swop</span>
+                    </div>
+                    <nav class="hidden md:flex space-x-6 text-sm">
+                        <a href="/me" class="text-white font-medium">New Campaign</a>
+                        <a href="/all_campaigns" class="text-zinc-400 hover:text-white">All Campaigns</a>
+                        <a href="/campaign_analytics" class="text-zinc-400 hover:text-white">Analytics</a>
+                        <a href="/affiliate-analytics" class="text-zinc-400 hover:text-white">Affiliate analytics</a>
+                        <a href="/creator-database" class="text-zinc-400 hover:text-white">Creator Search</a>
+                    </nav>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <div>
+                        <span class="px-3 py-1 bg-yellow-500/10 text-yellow-500 rounded-full text-sm font-medium" id="campaignStatus">Draft</span>
+                    </div>
+                    <button onclick="logout()" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm font-medium transition-colors">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="bg-zinc-900 border-b border-zinc-800">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex space-x-4 max-w-md mx-auto">
+                <button onclick="switchCampaignType('standard')" id="standardTab" class="campaign-type-tab active flex-1 px-6 py-3 rounded-lg font-semibold bg-brand-purple text-white">
+                    Standard Campaign
+                </button>
+                <button onclick="switchCampaignType('affiliate')" id="affiliateTab" class="campaign-type-tab flex-1 px-6 py-3 rounded-lg font-semibold bg-zinc-800 text-zinc-400">
+                    Affiliate Campaign
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="standardProgress" class="bg-zinc-900 border-b border-zinc-800">
+        <div class="container mx-auto px-6 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex-1 flex items-center">
+                    <div class="flex items-center flex-1 lg:max-w-4xl mx-auto"> 
+                        <div class="flex items-center flex-1 min-w-0">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-brand-purple text-white font-semibold step-indicator" data-step="1">1</div>
+                            <div class="ml-3 step-label hidden sm:block" data-step="1">
+                                <div class="text-sm font-semibold text-white">Details</div>
+                                <div class="text-xs text-zinc-400">Campaign info</div>
+                            </div>
+                        </div>
+                        <div class="h-px bg-zinc-700 flex-1 mx-2 sm:mx-4 step-connector" data-step="1"></div>
+                        
+                        <div class="flex items-center flex-1 min-w-0">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 text-zinc-400 font-semibold step-indicator" data-step="2">2</div>
+                            <div class="ml-3 step-label hidden sm:block" data-step="2">
+                                <div class="text-sm font-semibold text-zinc-400">Targeting</div>
+                                <div class="text-xs text-zinc-500">Who & where</div>
+                            </div>
+                        </div>
+                        <div class="h-px bg-zinc-700 flex-1 mx-2 sm:mx-4 step-connector" data-step="2"></div>
+                        
+                        <div class="flex items-center flex-1 min-w-0">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 text-zinc-400 font-semibold step-indicator" data-step="3">3</div>
+                            <div class="ml-3 step-label hidden sm:block" data-step="3">
+                                <div class="text-sm font-semibold text-zinc-400">Budget</div>
+                                <div class="text-xs text-zinc-500">How much</div>
+                            </div>
+                        </div>
+                        <div class="h-px bg-zinc-700 flex-1 mx-2 sm:mx-4 step-connector" data-step="3"></div>
+                        
+                        <div class="flex items-center min-w-0">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 text-zinc-400 font-semibold step-indicator" data-step="4">4</div>
+                            <div class="ml-3 step-label hidden sm:block" data-step="4">
+                                <div class="text-sm font-semibold text-zinc-400">Review</div>
+                                <div class="text-xs text-zinc-500">Launch</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="container mx-auto px-6 py-8">
+        <div class="max-w-4xl mx-auto">
+            
+            <div id="standardCampaign" class="campaign-content">
+                <div id="step1" class="step-content">
+                    <h2 class="text-2xl font-bold mb-2">Campaign Fundamentals</h2>
+                    <p class="text-zinc-400 mb-8">Define the core details of your campaign</p>
+
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="campaignTitle">Campaign Title <span class="text-brand-red">*</span></label>
+                            <input 
+                                type="text" 
+                                id="campaignTitle"
+                                placeholder="e.g., Q4 Festive Season Skincare Push"
+                                class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple"
+                                required
+                            >
+                            <p class="text-xs text-zinc-500 mt-1">Internal name for easy identification</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="clientCompany">End Client Company <span class="text-brand-red">*</span></label>
+                            <input 
+                                type="text" 
+                                id="clientCompany"
+                                placeholder="e.g., Takealot, Woolworths, MTN, etc."
+                                class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple"
+                                required
+                            >
+                            <p class="text-xs text-zinc-500 mt-1">The final brand this campaign represents</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="campaignDescription">Campaign Description <span class="text-brand-red">*</span></label>
+                            <textarea 
+                                id="campaignDescription"
+                                rows="6"
+                                placeholder="Describe the campaign goals, key messaging, brand tone, and creator expectations..."
+                                class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple resize-none"
+                                maxlength="2000"
+                                required
+                            ></textarea>
+                            <div class="flex justify-between items-center mt-1">
+                                <p class="text-xs text-zinc-500">This description will be visible to creators</p>
+                                <span class="text-xs text-zinc-500"><span id="charCount">0</span>/2000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end mt-8">
+                        <button onclick="nextStep(2)" class="px-8 py-3 bg-brand-purple hover:bg-brand-purple-dark rounded-lg font-semibold transition-colors">
+                            Continue to Targeting →
+                        </button>
+                    </div>
+                </div>
+
+<div id="step2" class="step-content hidden">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <div>
+            <h2 class="text-2xl font-bold mb-1">Targeting & Profile</h2>
+            <p class="text-zinc-400">Define who creates and where content reaches</p>
+        </div>
+        <button type="button" onclick="toggleCreatorColumn()" id="togglePreviewBtn" class="group flex items-center px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 rounded-lg text-sm font-medium transition-all text-zinc-300 hover:text-white hover:border-brand-purple">
+            <svg id="hideIcon" class="w-4 h-4 mr-2 text-zinc-400 group-hover:text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
+            <svg id="showIcon" class="w-4 h-4 mr-2 text-zinc-400 group-hover:text-brand-purple hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+            <span id="toggleBtnText">Hide Preview</span>
+        </button>
+    </div>
+    
+    <div id="step2Grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 transition-all duration-300 ease-in-out">
+        
+        <div class="space-y-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+    <label class="flex items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+        <input type="checkbox" name="category" value="Lifestyle" onchange="updateCreatorPreview()" class="w-4 h-4 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+        <span class="ml-3 text-sm">Lifestyle</span>
+    </label>
+    
+    <label class="flex items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+        <input type="checkbox" name="category" value="Tech" onchange="updateCreatorPreview()" class="w-4 h-4 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+        <span class="ml-3 text-sm">Tech</span>
+    </label>
+    
+    <label class="flex items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+        <input type="checkbox" name="category" value="Fashion" onchange="updateCreatorPreview()" class="w-4 h-4 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+        <span class="ml-3 text-sm">Fashion</span>
+    </label>
+    
+    <label class="flex items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+        <input type="checkbox" name="category" value="Beauty" onchange="updateCreatorPreview()" class="w-4 h-4 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+        <span class="ml-3 text-sm">Beauty</span>
+    </label>
+    
+    <label class="flex items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+        <input type="checkbox" name="category" value="Travel" onchange="updateCreatorPreview()" class="w-4 h-4 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+        <span class="ml-3 text-sm">Travel</span>
+    </label>
+    
+    <label class="flex items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+        <input type="checkbox" name="category" value="Fitness" onchange="updateCreatorPreview()" class="w-4 h-4 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+        <span class="ml-3 text-sm">Fitness</span>
+    </label>
+    
+    <label class="flex items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+        <input type="checkbox" name="category" value="Food" onchange="updateCreatorPreview()" class="w-4 h-4 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+        <span class="ml-3 text-sm">Food</span>
+    </label>
+    
+    <label class="flex items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+        <input type="checkbox" name="category" value="Gaming" onchange="updateCreatorPreview()" class="w-4 h-4 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+        <span class="ml-3 text-sm">Gaming</span>
+    </label>
+
+    <label class="flex items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+        <input type="checkbox" name="category" value="Comedy" onchange="updateCreatorPreview()" class="w-4 h-4 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+        <span class="ml-3 text-sm">Comedy</span>
+    </label> 
+    
+    <label class="flex items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+        <input type="checkbox" name="category" value="business" onchange="updateCreatorPreview()" class="w-4 h-4 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+        <span class="ml-3 text-sm">Business</span>
+    </label>
+
+    <label class="flex items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+        <input type="checkbox" name="category" value="Music" onchange="updateCreatorPreview()" class="w-4 h-4 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+        <span class="ml-3 text-sm">Music</span>
+    </label>
+</div>
+            <div>
+                <label class="block text-sm font-medium mb-4">Target Audience Demographics</label>
+                <div class="space-y-4 p-4 bg-zinc-900 rounded-lg border border-zinc-700">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm text-zinc-400">Age Range</span>
+                            <span class="text-sm text-white font-medium"><span id="ageMin">18</span> - <span id="ageMax">65</span> years</span>
+                        </div>
+                        <div class="flex gap-4 age-sliders-container"> 
+                            <input type="range" id="ageRangeMin" min="13" max="65" value="18" class="flex-1">
+                            <input type="range" id="ageRangeMax" min="13" max="65" value="65" class="flex-1">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Gender Split</label>
+                        <select name="genderSplit" id="genderSplit" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                            <option>All Genders</option>
+                            <option>Predominantly Female (60%+)</option>
+                            <option>Predominantly Male (60%+)</option>
+                            <option>Female Only</option>
+                            <option>Male Only</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Platform Requirements <span class="text-brand-red">*</span></label>
+                <div class="grid grid-cols-4 gap-2">
+                    <label class="flex flex-col items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+                        <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                        <input type="checkbox" name="platform" value="TikTok" class="mt-1">
+                    </label>
+                    <label class="flex flex-col items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+                        <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        <input type="checkbox" name="platform" value="Instagram" class="mt-1">
+                    </label>
+                    <label class="flex flex-col items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+                        <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        <input type="checkbox" name="platform" value="YouTube" class="mt-1">
+                    </label>
+                    <label class="flex flex-col items-center p-3 bg-zinc-900 border border-zinc-700 rounded-lg cursor-pointer hover:border-brand-purple transition-colors">
+                        <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        <input type="checkbox" name="platform" value="X (Twitter)" class="mt-1">
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <label id="geoLabel" class="block text-sm font-medium mb-2" for="geoRestriction">Geographic Restriction <span class="text-brand-red">*</span></label>
+                <select id="geoRestriction" class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                    <option value="">Select target location...</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-4">Creator Profile Score Required</label>
+                <div class="p-4 bg-zinc-900 rounded-lg border border-zinc-700">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm text-zinc-400">Minimum Profile Score</span>
+                        <span class="text-2xl font-bold text-brand-purple"><span id="vettingScore">70</span>%</span>
+                    </div>
+                    <input type="range" id="vettingSlider" min="50" max="95" value="70" step="5" class="w-full">
+                    <div id="vettingWarning" class="hidden mt-3 p-3 bg-brand-red/10 border border-brand-red/20 rounded text-sm text-brand-red">⚠️ High Profile scores may significantly limit your creator pool</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="previewCol" class="hidden lg:block pl-8 border-l border-zinc-800 transition-all duration-300">
+            <div class="flex space-x-4 mb-4 border-b border-zinc-800 pb-2">
+                <button onclick="switchPreviewTab('matches')" id="tabMatches" class="text-sm font-bold text-white border-b-2 border-brand-purple pb-2">
+                    Matches
+                </button>
+                <button onclick="switchPreviewTab('shortlist')" id="tabShortlist" class="text-sm font-medium text-zinc-400 hover:text-white pb-2 flex items-center gap-2">
+                    Shortlist <span id="shortlistCount" class="bg-zinc-800 text-xs px-2 py-0.5 rounded-full">0</span>
+                </button>
+            </div>
+
+            <div id="matchesContainer">
+                <p class="text-xs text-zinc-500 mb-4">Preview of creators in your selected category</p>
+                <div id="creatorPreviewContainer" class="space-y-4 max-h-[800px] overflow-y-auto pr-2 custom-scrollbar">
+                    <div id="creatorPreviewPlaceholder" class="flex flex-col items-center justify-center py-20 bg-zinc-900/50 rounded-lg border border-zinc-800 border-dashed">
+                        <div class="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                        <p class="text-zinc-400 text-sm font-medium">Select a category on the left</p>
+                        <p class="text-zinc-600 text-xs">to see real creator profiles</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="shortlistContainer" class="hidden">
+                <p class="text-xs text-zinc-500 mb-4">Creators added to this campaign</p>
+                <div id="shortlistList" class="space-y-4 max-h-[800px] overflow-y-auto pr-2 custom-scrollbar">
+                    <div class="text-center py-10 text-zinc-500 text-sm">No creators shortlisted yet.</div>
+                </div> 
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-between mt-8 pt-6 border-t border-zinc-800">
+        <button onclick="prevStep(1)" class="px-8 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-lg font-semibold transition-colors">← Back to Details</button>
+        <button onclick="nextStep(3)" class="px-8 py-3 bg-brand-purple hover:bg-brand-purple-dark rounded-lg font-semibold transition-colors">Continue to Budget →</button>
+    </div>
+</div>
+
+                <div id="step3" class="step-content hidden">
+                    <h2 class="text-2xl font-bold mb-2">Budget & Timeline</h2>
+                    <p class="text-zinc-400 mb-8">Define the investment and duration of your campaign</p>
+                
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="totalBudgetInput">Total Campaign Budget (R) <span class="text-brand-red">*</span></label>
+                            <input 
+                                type="number" 
+                                id="totalBudgetInput"
+                                placeholder="e.g., 50000.00"
+                                class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple"
+                                required
+                                min="1000"
+                                step="100"
+                            >
+                            <p class="text-xs text-zinc-500 mt-1">The maximum amount allocated for this campaign</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="compensationModel">Compensation Model <span class="text-brand-red">*</span></label>
+                            <select id="compensationModel" onchange="toggleCompensationDetails()" class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                                <option value="flat_fee">Flat Fee Per Post/Video</option>
+                                <option value="cpm">CPM (Cost Per Thousand Views)</option>
+                            </select>
+                        </div>
+
+                        <div id="compensationDetails" class="p-6 bg-zinc-900 rounded-lg border border-zinc-700 space-y-4">
+                            <div id="flatFeeDetails">
+                                <p class="text-sm text-zinc-400">Based on **Flat Fee Per Post/Video**. Creators are paid a fixed amount for approved deliverables.</p>
+                            </div>
+                            
+                            <div id="cpmDetails" class="hidden">
+                                <label class="block text-sm font-medium mb-2" for="cpmRate">Target CPM Rate (R) <span class="text-brand-red">*</span></label>
+                                <input 
+                                    type="number" 
+                                    id="cpmRate"
+                                    placeholder="e.g., 50.00"
+                                    class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple"
+                                    min="10"
+                                    step="0.50"
+                                >
+                                <p class="text-xs text-zinc-500 mt-1">Target Rand cost per 1000 views/impressions</p>
+
+                                <div>
+                                    <div class="flex justify-between items-center mb-3">
+                                        <span class="text-sm text-zinc-400">Budget Cap % of Total Budget</span>
+                                        <span class="text-2xl font-bold text-brand-purple"><span id="budgetCapValue">100</span>%</span>
+                                    </div>
+                                    <input type="range" id="budgetCapSlider" min="50" max="100" value="100" step="5" class="w-full">
+                                    <div class="flex justify-between text-xs text-zinc-500 mt-2">
+                                        <span>50% - Capped</span>
+                                        <span>100% - Full Budget</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-4">Campaign Duration <span class="text-brand-red">*</span></label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm text-zinc-400 mb-2" for="startDate">Start Date</label>
+                                    <input 
+                                        type="date" 
+                                        id="startDate"
+                                        class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple"
+                                        required
+                                    >
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-zinc-400 mb-2" for="endDate">End Date</label>
+                                    <input 
+                                        type="date" 
+                                        id="endDate"
+                                        class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple"
+                                        required
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between mt-8">
+                        <button onclick="prevStep(2)" class="px-8 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-lg font-semibold transition-colors">← Back to Targeting</button>
+                        <button onclick="nextStep(4)" class="px-8 py-3 bg-brand-purple hover:bg-brand-purple-dark rounded-lg font-semibold transition-colors">Continue to Review →</button>
+                    </div>
+                </div>
+
+                <div id="step4" class="step-content hidden">
+                    <h2 class="text-2xl font-bold mb-2">Review & Launch</h2>
+                    <p class="text-zinc-400 mb-8">Confirm all details before making your campaign live</p>
+                
+                    <div id="reviewSummary" class="p-6 bg-zinc-900 border border-zinc-700 rounded-lg space-y-4 text-sm">
+                        <p class="text-zinc-500">Loading campaign details for review...</p>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <h3 class="text-xl font-bold mb-4">Launch Compliance Checks</h3>
+                        <div class="space-y-3 p-6 bg-zinc-900 border border-zinc-700 rounded-lg">
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="compliance1" class="w-5 h-5 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+                                <span class="text-white">I confirm that the client has approved the campaign brief and budget.</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="compliance2" class="w-5 h-5 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+                                <span class="text-white">I have checked all geographic, demographic, and platform restrictions.</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="compliance3" class="w-5 h-5 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+                                <span class="text-white">The compensation model and total budget are correctly defined.</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="compliance4" class="w-5 h-5 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple">
+                                <span class="text-white">I acknowledge that once launched, the campaign is visible to creators.</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between mt-8">
+                        <button onclick="prevStep(3)" class="px-8 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-lg font-semibold transition-colors">← Back to Budget</button>
+                        <div class="space-x-4">
+                            <button onclick="saveDraft()" class="px-8 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-lg font-semibold transition-colors">Save Draft</button>
+                            <button onclick="launchCampaign()" class="px-8 py-3 bg-brand-red hover:bg-red-700 rounded-lg font-semibold transition-colors">Launch Campaign</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="affiliateCampaign" class="campaign-content hidden">
+                <h2 class="text-2xl font-bold mb-2">Create Affiliate Campaign</h2>
+                <p class="text-zinc-400 mb-8">Set up a performance-based affiliate marketing campaign</p>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2" for="affProductName">Product Name <span class="text-brand-red">*</span></label>
+                        <input 
+                            type="text" 
+                            id="affProductName"
+                            placeholder="e.g., Premium Wireless Headphones"
+                            class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple"
+                            required
+                        >
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2" for="affProductDescription">Product Description <span class="text-brand-red">*</span></label>
+                        <textarea 
+                            id="affProductDescription"
+                            rows="4"
+                            placeholder="Describe the product features, benefits, and selling points..."
+                            class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple resize-none"
+                            maxlength="1000"
+                            required
+                        ></textarea>
+                        <div class="flex justify-end items-center mt-1">
+                            <span class="text-xs text-zinc-500"><span id="affCharCount">0</span>/1000</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="affBrand">Brand <span class="text-brand-red">*</span></label>
+                            <input 
+                                type="text" 
+                                id="affBrand"
+                                placeholder="e.g., Sony, Apple, Nike"
+                                class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple"
+                                required
+                            >
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="affProductUrl">Product URL <span class="text-brand-red">*</span></label>
+                            <input 
+                                type="url" 
+                                id="affProductUrl"
+                                placeholder="https://example.com/product"
+                                class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2" for="affKpi">Key Performance Indicator (KPI) <span class="text-brand-red">*</span></label>
+                        <select id="affKpi" class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple" required>
+                            <option value="">Select KPI...</option>
+                            <option value="sales">Sales/Conversions</option>
+                            <option value="clicks">Link Clicks</option>
+                            <option value="signups">Sign-ups/Registrations</option>
+                            <option value="leads">Qualified Leads</option>
+                            <option value="downloads">App Downloads</option>
+                        </select>
+                        <p class="text-xs text-zinc-500 mt-1">How will you measure campaign success?</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="affMaxInfluencers">Maximum Influencers <span class="text-brand-red">*</span></label>
+                            <input 
+                                type="number" 
+                                id="affMaxInfluencers"
+                                placeholder="e.g., 50"
+                                min="1"
+                                max="1000"
+                                class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple"
+                                required
+                            >
+                            <p class="text-xs text-zinc-500 mt-1">Maximum number of influencers who can join</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="affFlatFee">Commission Per Sale (R) <span class="text-brand-red">*</span></label>
+                            <input 
+                                type="number" 
+                                id="affFlatFee"
+                                placeholder="e.g., 150.00"
+                                min="1"
+                                step="0.01"
+                                class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple"
+                                required
+                            >
+                            <p class="text-xs text-zinc-500 mt-1">Amount paid per successful conversion</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-4">Minimum Profile Score Required <span class="text-brand-red">*</span></label>
+                        <div class="p-6 bg-zinc-900 rounded-lg border border-zinc-700">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-sm text-zinc-400">Minimum Quality Score</span>
+                                <span class="text-2xl font-bold text-brand-purple"><span id="affMinScore">60</span>%</span>
+                            </div>
+                            <input type="range" id="affMinScoreSlider" min="40" max="95" value="60" step="5" class="w-full">
+                            <div class="flex justify-between text-xs text-zinc-500 mt-2">
+                                <span>40% - More Reach</span>
+                                <span>95% - Premium Creators Only</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 p-6 bg-zinc-900/50 border border-zinc-700 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Affiliate Campaign Summary
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="text-zinc-400">Campaign Type:</span>
+                                <span class="text-white font-medium ml-2">Performance-Based Affiliate</span>
+                            </div>
+                            <div>
+                                <span class="text-zinc-400">Payment Structure:</span>
+                                <span class="text-white font-medium ml-2">Commission Per Conversion</span>
+                            </div>
+                            <div>
+                                <span class="text-zinc-400">Tracking:</span>
+                                <span class="text-white font-medium ml-2">Unique Affiliate Links</span>
+                            </div>
+                            <div>
+                                <span class="text-zinc-400">Status:</span>
+                                <span class="text-yellow-500 font-medium ml-2">Draft</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-8 space-x-4">
+                    <button onclick="saveAffiliateDraft()" class="px-8 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-lg font-semibold transition-colors">
+                        Save Draft
+                    </button>
+                    <button onclick="launchAffiliateCampaign()" class="px-8 py-3 bg-brand-red hover:bg-red-700 rounded-lg font-semibold transition-colors">
+                        Launch Campaign
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="tncModal" class="fixed inset-0 bg-black/90 z-[100] hidden flex items-center justify-center backdrop-blur-sm">
+    <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-8 max-w-lg w-full shadow-2xl relative">
+        <div class="mb-6">
+            <h3 class="text-xl font-bold text-white mb-2">Terms and Conditions</h3>
+            <p class="text-zinc-400 text-sm">
+                Before your campaign can go live, you must agree to the Creative Swop platform rules and campaign policies.
+            </p>
+        </div>
+        
+        <div class="bg-zinc-800/50 rounded-lg p-4 border border-zinc-700 mb-6">
+            <div class="flex items-start gap-3">
+                <input type="checkbox" id="tncCheckbox" class="mt-1 w-5 h-5 text-brand-purple bg-zinc-800 border-zinc-600 rounded focus:ring-brand-purple cursor-pointer">
+                <label for="tncCheckbox" class="text-sm text-zinc-300 cursor-pointer select-none">
+                    I have read and agree to the <a href="/terms-and-conditions" target="_blank" class="text-brand-purple hover:text-brand-purple-dark underline font-medium">Terms and Conditions</a>. I understand that launching this campaign constitutes a binding agreement.
+                </label>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-3">
+            <button onclick="closeTnCModal()" class="px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm font-medium transition-colors">
+                Cancel
+            </button>
+            <button onclick="confirmLaunch()" class="px-6 py-2 bg-brand-purple hover:bg-brand-purple-dark rounded-lg text-sm font-medium text-white transition-colors">
+                Confirm & Launch
+            </button>
+        </div>
+    </div>
+</div>
+    </main>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+        let campaignData = { id: null };
+        let currentCampaignType = 'standard';
+        let debounceTimer;
+        let shortlistedCreators = new Map(); // Stores full creator objects by ID
+
+        // --- NEW: Geographic Location Data ---
+        const locationData = {
+            "South Africa": [
+                "National (All of South Africa)",
+                "Gauteng Only",
+                "Western Cape Only",
+                "KwaZulu-Natal Only",
+                "Eastern Cape Only",
+                "Gauteng & Western Cape",
+                "Major Metros (JHB, CPT, DBN)"
+            ],
+            "Namibia": [
+                "National (All of Namibia)",
+                "All Major Cities (Windhoek, Walvis Bay, Swakopmund)",
+                "Khomas Region (Windhoek Area)",
+                "Erongo Region (Coastal)",
+                "Oshana Region",
+                "Ohangwena Region",
+                "Omusati Region",
+                "Oshikoto Region",
+                "Otjozondjupa Region",
+                "Kavango East & West",
+                "Zambezi Region",
+                "Karas Region",
+                "Hardap Region",
+                "Windhoek Only",
+                "Walvis Bay Only",
+                "Swakopmund Only"
+            ]
+        };
+
+        // --- NEW FUNCTIONS ---
+
+function switchPreviewTab(tab) {
+    const matchesDiv = document.getElementById('matchesContainer');
+    const shortlistDiv = document.getElementById('shortlistContainer');
+    const tabMatches = document.getElementById('tabMatches');
+    const tabShortlist = document.getElementById('tabShortlist');
+
+    if (tab === 'matches') {
+        matchesDiv.classList.remove('hidden');
+        shortlistDiv.classList.add('hidden');
+        
+        tabMatches.classList.add('text-white', 'border-b-2', 'border-brand-purple');
+        tabMatches.classList.remove('text-zinc-400');
+        
+        tabShortlist.classList.remove('text-white', 'border-b-2', 'border-brand-purple');
+        tabShortlist.classList.add('text-zinc-400');
+    } else {
+        matchesDiv.classList.add('hidden');
+        shortlistDiv.classList.remove('hidden');
+        
+        tabShortlist.classList.add('text-white', 'border-b-2', 'border-brand-purple');
+        tabShortlist.classList.remove('text-zinc-400');
+        
+        renderShortlist();
+    }
+}
+
+function toggleShortlist(creatorId, creatorDataString) {
+    const creator = JSON.parse(decodeURIComponent(creatorDataString));
+    
+    if (shortlistedCreators.has(creatorId)) {
+        shortlistedCreators.delete(creatorId);
+    } else {
+        shortlistedCreators.set(creatorId, creator);
+    }
+    
+    updateShortlistCount();
+    updateButtonState(creatorId);
+    
+    // If currently viewing shortlist, re-render it
+    if (!document.getElementById('shortlistContainer').classList.contains('hidden')) {
+        renderShortlist();
+    }
+}
+
+function updateShortlistCount() {
+    document.getElementById('shortlistCount').innerText = shortlistedCreators.size;
+}
+
+function updateButtonState(creatorId) {
+    // Update button in Matches list if present
+    const btn = document.getElementById(`btn-add-${creatorId}`);
+    if (btn) {
+        if (shortlistedCreators.has(creatorId)) {
+            btn.innerHTML = `<span class="text-green-400 flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Added</span>`;
+            btn.classList.add('bg-green-500/10', 'border-green-500/30');
+            btn.classList.remove('bg-zinc-800', 'hover:bg-zinc-700');
+        } else {
+            btn.innerHTML = `<span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Add</span>`;
+            btn.classList.remove('bg-green-500/10', 'border-green-500/30');
+            btn.classList.add('bg-zinc-800', 'hover:bg-zinc-700');
+        }
+    }
+}
+
+function renderShortlist() {
+    const container = document.getElementById('shortlistList');
+    container.innerHTML = '';
+
+    if (shortlistedCreators.size === 0) {
+        container.innerHTML = `<div class="text-center py-10 text-zinc-500 text-sm">No creators shortlisted yet.</div>`;
+        return;
+    }
+
+    shortlistedCreators.forEach((creator) => {
+        const creatorString = encodeURIComponent(JSON.stringify(creator));
+        const card = document.createElement('div');
+        card.className = 'bg-zinc-900 border border-zinc-700 rounded-lg p-3 flex items-center justify-between mb-2';
+        card.innerHTML = `
+             <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-purple to-pink-600 flex items-center justify-center text-xs font-bold text-white">
+                    ${creator.name ? creator.name.substring(0,2).toUpperCase() : '??'}
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm text-white">${creator.name}</h4>
+                    <div class="text-xs text-zinc-500">${creator.category || 'General'} • ${creator.profile_score}%</div>
+                </div>
+            </div>
+            <button onclick="toggleShortlist(${creator.id}, '${creatorString}')" class="text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 px-2 py-1 rounded transition-colors">
+                Remove
+            </button>
+        `;
+        container.appendChild(card);
+    });
+}
+
+        // --- NEW: Country Selection Logic ---
+        function checkCountrySelection() {
+            const cachedCountry = localStorage.getItem('campaign_target_country');
+            if (!cachedCountry) {
+                document.getElementById('countrySelectionModal').classList.remove('hidden');
+            } else {
+                populateLocations(cachedCountry);
+            }
+        }
+
+        function selectCountry(country) {
+            localStorage.setItem('campaign_target_country', country);
+            document.getElementById('countrySelectionModal').classList.add('hidden');
+            populateLocations(country);
+        }
+
+        function populateLocations(country) {
+            const select = document.getElementById('geoRestriction');
+            const options = locationData[country] || [];
+            
+            // Clear existing except placeholder
+            select.innerHTML = '<option value="">Select target location...</option>';
+            
+            options.forEach(opt => {
+                const el = document.createElement('option');
+                el.value = opt;
+                el.textContent = opt;
+                select.appendChild(el);
+            });
+            
+            // Update UI Label to allow switching
+            const label = document.getElementById('geoLabel');
+            if(label) {
+                const flag = country === "South Africa" ? "🇿🇦" : "🇳🇦";
+                label.innerHTML = `Geographic Restriction <span class="text-xs text-brand-purple ml-2 cursor-pointer hover:underline" onclick="resetCountry()">(${flag} Change Country)</span> <span class="text-brand-red">*</span>`;
+            }
+        }
+        
+        function resetCountry() {
+            localStorage.removeItem('campaign_target_country');
+            checkCountrySelection();
+        }
+
+        // Campaign Type Switching
+        function switchCampaignType(type) {
+            currentCampaignType = type;
+            
+            // Update tab styling
+            document.getElementById('standardTab').classList.toggle('active', type === 'standard');
+            document.getElementById('affiliateTab').classList.toggle('active', type === 'affiliate');
+            
+            // Show/hide content
+            document.getElementById('standardCampaign').classList.toggle('hidden', type !== 'standard');
+            document.getElementById('affiliateCampaign').classList.toggle('hidden', type !== 'affiliate');
+            
+            // Show/hide progress bar
+            document.getElementById('standardProgress').classList.toggle('hidden', type !== 'standard');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Affiliate Campaign Functions
+        function collectAffiliateData() {
+            return {
+                product_name: document.getElementById('affProductName').value.trim(),
+                product_description: document.getElementById('affProductDescription').value.trim(),
+                brand: document.getElementById('affBrand').value.trim(),
+                product_url: document.getElementById('affProductUrl').value.trim(),
+                kpi: document.getElementById('affKpi').value,
+                max_influencers: parseInt(document.getElementById('affMaxInfluencers').value),
+                flat_fee: parseFloat(document.getElementById('affFlatFee').value),
+                min_profile_score: parseInt(document.getElementById('affMinScoreSlider').value)
+            };
+        }
+
+        function validateAffiliateForm() {
+            const data = collectAffiliateData();
+            
+            if (!data.product_name || !data.product_description || !data.brand || 
+                !data.product_url || !data.kpi || !data.max_influencers || !data.flat_fee) {
+                alert('Please fill in all required fields');
+                return false;
+            }
+            
+            if (data.max_influencers < 1 || data.max_influencers > 1000) {
+                alert('Maximum influencers must be between 1 and 1000');
+                return false;
+            }
+            
+            if (data.flat_fee < 1) {
+                alert('Commission per sale must be at least R1.00');
+                return false;
+            }
+            
+            return true;
+        }
+
+        async function saveAffiliateCampaign(status) {
+            if (!validateAffiliateForm()) return null;
+            
+            const payload = {
+                ...collectAffiliateData(),
+                status: status
+            };
+            
+            try {
+                const response = await fetch('/api/affiliate-campaigns/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.status === 401) {
+                    throw new Error('Unauthorized or Session Expired. Please log in again.');
+                }
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    return data.campaign_id;
+                } else {
+                    throw new Error(data.message || 'Server error saving affiliate campaign');
+                }
+            } catch (error) {
+                console.error('Error saving affiliate campaign:', error);
+                alert(`Error: ${error.message}`);
+                return null;
+            }
+        }
+
+        async function saveAffiliateDraft() {
+            const campaignId = await saveAffiliateCampaign('draft');
+            if (campaignId) {
+                alert('Affiliate campaign saved as draft!');
+                document.getElementById('campaignStatus').textContent = 'Draft Saved';
+            }
+        }
+
+        async function launchAffiliateCampaign() {
+            const campaignId = await saveAffiliateCampaign('live');
+            if (campaignId) {
+                document.getElementById('campaignStatus').classList.remove('bg-yellow-500/10', 'text-yellow-500');
+                document.getElementById('campaignStatus').classList.add('bg-green-500/10', 'text-green-500');
+                document.getElementById('campaignStatus').textContent = 'Live';
+                
+                alert('Affiliate campaign launched successfully! Influencers can now apply.');
+            }
+        }
+
+        // Standard Campaign Functions (existing code)
+        function updateProgress() {
+            for (let i = 1; i <= totalSteps; i++) {
+                const indicator = document.querySelector(`.step-indicator[data-step="${i}"]`);
+                const label = document.querySelector(`.step-label[data-step="${i}"]`);
+                const connector = document.querySelector(`.step-connector[data-step="${i-1}"]`);
+
+                if (i < currentStep) {
+                    indicator.classList.remove('bg-zinc-800', 'text-zinc-400');
+                    indicator.classList.add('bg-brand-purple-dark', 'text-white');
+                    label.querySelectorAll('div').forEach(el => el.classList.remove('text-zinc-400', 'text-zinc-500'));
+                    label.querySelectorAll('div').forEach(el => el.classList.add('text-white'));
+                } else if (i === currentStep) {
+                    indicator.classList.remove('bg-zinc-800', 'text-zinc-400', 'bg-brand-purple-dark');
+                    indicator.classList.add('bg-brand-purple', 'text-white');
+                    label.querySelectorAll('div').forEach(el => el.classList.remove('text-zinc-400', 'text-zinc-500'));
+                    label.querySelectorAll('div').forEach(el => el.classList.add('text-white'));
+                } else {
+                    indicator.classList.remove('bg-brand-purple', 'text-white', 'bg-brand-purple-dark');
+                    indicator.classList.add('bg-zinc-800', 'text-zinc-400');
+                    label.querySelector('.text-sm').classList.remove('text-white');
+                    label.querySelector('.text-sm').classList.add('text-zinc-400');
+                    label.querySelector('.text-xs').classList.remove('text-white');
+                    label.querySelector('.text-xs').classList.add('text-zinc-500');
+                }
+
+                if (connector) {
+                    if (i <= currentStep) {
+                        connector.classList.remove('bg-zinc-700');
+                        connector.classList.add('bg-brand-purple');
+                    } else {
+                        connector.classList.remove('bg-brand-purple');
+                        connector.classList.add('bg-zinc-700');
+                    }
+                }
+            }
+
+            document.querySelectorAll('.step-content').forEach(content => content.classList.add('hidden'));
+            document.getElementById(`step${currentStep}`).classList.remove('hidden');
+
+            if (currentStep === 4) {
+                populateReviewSummary();
+            }
+        }
+
+        function validateStep(step) {
+            let isValid = true;
+            collectData();
+
+            const stepElement = document.getElementById(`step${step}`);
+            const requiredInputs = stepElement.querySelectorAll('[required]');
+
+            requiredInputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('border-brand-red');
+                    setTimeout(() => input.classList.remove('border-brand-red'), 3000);
+                }
+            });
+
+            if (step === 2) {
+                const selectedCategories = document.querySelectorAll('input[name="category"]:checked').length;
+                if (selectedCategories === 0) {
+                    alert('Please select at least one campaign category.');
+                    isValid = false;
+                }
+                const selectedPlatforms = document.querySelectorAll('input[name="platform"]:checked').length;
+                if (selectedPlatforms === 0) {
+                    alert('Please select at least one platform requirement.');
+                    isValid = false;
+                }
+            } else if (step === 3) {
+                const startDate = new Date(campaignData.start_date);
+                const endDate = new Date(campaignData.end_date);
+                if (startDate > endDate) {
+                    alert('The campaign start date cannot be after the end date.');
+                    isValid = false;
+                }
+            }
+
+            if (!isValid) {
+                alert('Please fill in all required fields and correct any errors.');
+            }
+            return isValid;
+        }
+
+        function nextStep(step) {
+            if (validateStep(currentStep)) {
+                currentStep = step;
+                updateProgress();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function prevStep(step) {
+            currentStep = step;
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function collectData() {
+            campaignData.title = document.getElementById('campaignTitle').value.trim();
+            campaignData.client_company = document.getElementById('clientCompany').value.trim();
+            campaignData.description = document.getElementById('campaignDescription').value.trim();
+            campaignData.categories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(el => el.value);
+            campaignData.age_min = document.getElementById('ageRangeMin').value;
+            campaignData.age_max = document.getElementById('ageRangeMax').value;
+            campaignData.gender_split = document.getElementById('genderSplit').value;
+            campaignData.platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(el => el.value);
+            campaignData.geographic_restriction = document.getElementById('geoRestriction').value;
+            campaignData.vetting_score = document.getElementById('vettingSlider').value;
+            campaignData.total_budget = parseFloat(document.getElementById('totalBudgetInput').value) || 0;
+            campaignData.compensation_model = document.getElementById('compensationModel').value;
+            campaignData.shortlisted_influencers = Array.from(shortlistedCreators.keys());
+
+            if (campaignData.compensation_model === 'cpm') {
+                campaignData.cpm_rate = parseFloat(document.getElementById('cpmRate').value) || 0;
+                campaignData.budget_cap_percentage = parseInt(document.getElementById('budgetCapSlider').value) || 100;
+            } else {
+                campaignData.cpm_rate = null;
+                campaignData.budget_cap_percentage = null;
+            }
+
+            campaignData.start_date = document.getElementById('startDate').value;
+            campaignData.end_date = document.getElementById('endDate').value;
+        }
+
+        function populateReviewSummary() {
+            collectData();
+
+            const formatR = (value) => `R ${parseFloat(value).toLocaleString('en-ZA', { minimumFractionDigits: 2 })}`;
+            const listItems = (arr) => arr.length > 0 ? arr.join(', ') : 'None Specified';
+
+            const summary = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-lg text-white border-b border-zinc-800 pb-2">Campaign Details</h4>
+                        <p><span class="text-zinc-400 font-medium">Title:</span> ${campaignData.title}</p>
+                        <p><span class="text-zinc-400 font-medium">Client:</span> ${campaignData.client_company}</p>
+                        <p><span class="text-zinc-400 font-medium">Description:</span> <span class="block mt-1 p-2 bg-zinc-800 rounded max-h-32 overflow-y-auto">${campaignData.description}</span></p>
+                        <p><span class="text-zinc-400 font-medium">Categories:</span> ${listItems(campaignData.categories)}</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-lg text-white border-b border-zinc-800 pb-2">Targeting & Budget</h4>
+                        <p><span class="text-zinc-400 font-medium">Age Range:</span> ${campaignData.age_min} - ${campaignData.age_max} years</p>
+                        <p><span class="text-zinc-400 font-medium">Gender Split:</span> ${campaignData.gender_split}</p>
+                        <p><span class="text-zinc-400 font-medium">Platforms:</span> ${listItems(campaignData.platforms)}</p>
+                        <p><span class="text-zinc-400 font-medium">Location:</span> ${campaignData.geographic_restriction}</p>
+                        <p><span class="text-zinc-400 font-medium">Profile Score:</span> ${campaignData.vetting_score}%</p>
+                        <p><span class="text-zinc-400 font-medium">Total Budget:</span> ${formatR(campaignData.total_budget)}</p>
+                        <p><span class="text-zinc-400 font-medium">Compensation:</span> ${campaignData.compensation_model === 'flat_fee' ? 'Flat Fee' : 'CPM'} ${campaignData.cpm_rate ? `(R${campaignData.cpm_rate})` : ''}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('reviewSummary').innerHTML = summary;
+        }
+
+        // Initialize event listeners
+document.addEventListener('DOMContentLoaded', function() {
+        // 1. Check for Campaign ID in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const campaignIdParam = urlParams.get('id');
+
+        if (campaignIdParam) {
+            campaignData.id = campaignIdParam; // Store ID globally
+            loadCampaignData(campaignIdParam); // Fetch and populate
+            document.getElementById('campaignStatus').innerText = "Loading Draft...";
+        } else {
+            // Check country preference if new campaign
+            checkCountrySelection();
+        }
+
+            // Character count for affiliate description
+            const affDescription = document.getElementById('affProductDescription');
+            const affCharCount = document.getElementById('affCharCount');
+            
+            affDescription.addEventListener('input', function() {
+                affCharCount.textContent = this.value.length;
+            });
+
+            // Min score slider for affiliate
+            const affMinScoreSlider = document.getElementById('affMinScoreSlider');
+            const affMinScore = document.getElementById('affMinScore');
+            
+            affMinScoreSlider.addEventListener('input', function() {
+                affMinScore.textContent = this.value;
+            });
+
+            // Existing event listeners for standard campaign
+            const description = document.getElementById('campaignDescription');
+            const charCount = document.getElementById('charCount');
+            
+            description.addEventListener('input', function() {
+                charCount.textContent = this.value.length;
+            });
+
+            // Age range sliders
+            const ageMinSlider = document.getElementById('ageRangeMin');
+            const ageMaxSlider = document.getElementById('ageRangeMax');
+            const ageMin = document.getElementById('ageMin');
+            const ageMax = document.getElementById('ageMax');
+
+            ageMinSlider.addEventListener('input', function() {
+                ageMin.textContent = this.value;
+                if (parseInt(this.value) > parseInt(ageMaxSlider.value)) {
+                    ageMaxSlider.value = this.value;
+                    ageMax.textContent = this.value;
+                }
+            });
+
+            ageMaxSlider.addEventListener('input', function() {
+                ageMax.textContent = this.value;
+                if (parseInt(this.value) < parseInt(ageMinSlider.value)) {
+                    ageMinSlider.value = this.value;
+                    ageMin.textContent = this.value;
+                }
+            });
+
+            // Vetting slider
+            const vettingSlider = document.getElementById('vettingSlider');
+            const vettingScore = document.getElementById('vettingScore');
+            const vettingWarning = document.getElementById('vettingWarning');
+
+            vettingSlider.addEventListener('input', function() {
+                vettingScore.textContent = this.value;
+                if (this.value >= 85) {
+                    vettingWarning.classList.remove('hidden');
+                } else {
+                    vettingWarning.classList.add('hidden');
+                }
+            });
+
+            // Budget cap slider
+            const budgetCapSlider = document.getElementById('budgetCapSlider');
+            const budgetCapValue = document.getElementById('budgetCapValue');
+
+            if (budgetCapSlider) {
+                budgetCapSlider.addEventListener('input', function() {
+                    budgetCapValue.textContent = this.value;
+                });
+            }
+
+            // Set minimum dates for date inputs
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').min = today;
+            document.getElementById('endDate').min = today;
+        });
+
+        function toggleCompensationDetails() {
+            const model = document.getElementById('compensationModel').value;
+            const flatFeeDetails = document.getElementById('flatFeeDetails');
+            const cpmDetails = document.getElementById('cpmDetails');
+
+            if (model === 'flat_fee') {
+                flatFeeDetails.classList.remove('hidden');
+                cpmDetails.classList.add('hidden');
+            } else {
+                flatFeeDetails.classList.add('hidden');
+                cpmDetails.classList.remove('hidden');
+            }
+        }
+
+        async function saveDraft() {
+            collectData();
+            campaignData.status = 'draft';
+            
+            try {
+                const response = await fetch('/api/campaigns/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(campaignData)
+                });
+
+                if (response.status === 401) {
+                    throw new Error('Unauthorized or Session Expired. Please log in again.');
+                }
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    campaignData.id = data.campaign_id;
+                    document.getElementById('campaignStatus').textContent = 'Draft Saved';
+                    alert('Campaign saved as draft!');
+                } else {
+                    throw new Error(data.message || 'Server error saving campaign');
+                }
+            } catch (error) {
+                console.error('Error saving campaign:', error);
+                alert(`Error: ${error.message}`);
+            }
+        }
+
+        async function launchCampaign() {
+            const compliance1 = document.getElementById('compliance1').checked;
+            const compliance2 = document.getElementById('compliance2').checked;
+            const compliance3 = document.getElementById('compliance3').checked;
+            const compliance4 = document.getElementById('compliance4').checked;
+
+            if (!compliance1 || !compliance2 || !compliance3 || !compliance4) {
+                alert('Please confirm all compliance checks.');
+                return;
+            }
+
+            collectData();
+            campaignData.status = 'live';
+            
+            const url = campaignData.id ? `/api/campaigns/${campaignData.id}` : '/api/campaigns/create';
+            const method = campaignData.id ? 'PUT' : 'POST';
+            
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(campaignData)
+                });
+
+                if (response.status === 401) throw new Error('Unauthorized');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Campaign launched successfully!');
+                    window.location.href = '/all_campaigns'; // Redirect after launch
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error('Error launching:', error);
+                alert(`Error: ${error.message}`);
+            }
+        }
+
+async function updateCreatorPreview() {
+    // 1. Get the last selected category
+    const checkedBoxes = Array.from(document.querySelectorAll('input[name="category"]:checked'));
+    const container = document.getElementById('creatorPreviewContainer');
+    const placeholder = document.getElementById('creatorPreviewPlaceholder');
+    
+    // If no category selected, show placeholder
+    if (checkedBoxes.length === 0) {
+        if(placeholder) placeholder.classList.remove('hidden');
+        // Clear only the dynamic cards, keep placeholder
+        const dynamicCards = container.querySelectorAll('.creator-card-preview');
+        dynamicCards.forEach(card => card.remove());
+        return;
+    }
+
+    if(placeholder) placeholder.classList.add('hidden');
+
+    // Use the last clicked category
+    const categoriesToSearch = checkedBoxes.map(cb => cb.value).join(',');
+
+    // Show Loading Skeleton
+    container.innerHTML = `
+        <div class="animate-pulse space-y-4">
+            <div class="bg-zinc-900 h-64 rounded-lg"></div>
+            <div class="bg-zinc-900 h-64 rounded-lg"></div>
+        </div>
+    `;
+
+    // Debounce the API call
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(async () => {
+        try {
+            // --- CHANGE: Send the comma-separated list ---
+            const response = await fetch(`/api/creators/search?category=${encodeURIComponent(categoriesToSearch)}`);
+            const data = await response.json();
+            
+            // Clear loading state
+            container.innerHTML = '';
+
+            if (!data.creators || data.creators.length === 0) {
+                 container.innerHTML = `
+                    <div class="p-8 text-center bg-zinc-900 rounded-lg border border-zinc-800">
+                        <p class="text-zinc-400">No public creators found in this specific category yet.</p>
+                    </div>
+                 `;
+                 return;
+            }
+
+            // Render matched creators
+            data.creators.slice(0, 5).forEach(creator => {
+                const card = document.createElement('div');
+                card.className = 'creator-card-preview bg-zinc-900 border border-zinc-700 rounded-lg overflow-hidden transition-all hover:border-brand-purple mb-4';
+                
+                const contentLink = creator.best_content_link || '';
+                
+                // --- NEW: Generate Playable Embed HTML ---
+                const embedHtml = getEmbedHtml(contentLink);
+const creatorDataString = encodeURIComponent(JSON.stringify(creator));
+const isShortlisted = shortlistedCreators.has(creator.id);
+
+// Button styling based on state
+const btnContent = isShortlisted 
+    ? `<span class="text-green-400 flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Added</span>`
+    : `<span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Add</span>`;
+
+const btnClasses = isShortlisted
+    ? `bg-green-500/10 border-green-500/30`
+    : `bg-zinc-800 hover:bg-zinc-700 border-zinc-700`;
+
+card.innerHTML = `
+    <div class="p-4 flex items-center justify-between border-b border-zinc-800 bg-zinc-900">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-purple to-pink-600 flex items-center justify-center text-sm font-bold text-white">
+                ${creator.name ? creator.name.substring(0,2).toUpperCase() : '??'}
+            </div>
+            <div>
+                <h4 class="font-semibold text-sm text-white">${creator.name}</h4>
+                <div class="flex items-center text-xs text-zinc-400 gap-2">
+                    <span>${creator.location || 'Remote'}</span>
+                    <span>•</span>
+                    <span class="text-brand-purple">${creator.profile_score}% Match</span>
+                </div>
+            </div>
+        </div>
+        <button id="btn-add-${creator.id}" onclick="toggleShortlist(${creator.id}, '${creatorDataString}')" class="px-3 py-1.5 rounded-md border text-xs font-medium transition-colors ${btnClasses}">
+            ${btnContent}
+        </button>
+    </div>
+    
+    <div class="bg-black min-h-[300px] flex flex-col items-center justify-center relative overflow-hidden">
+        ${embedHtml}
+    </div>
+
+    <div class="p-3 bg-zinc-900 grid grid-cols-2 gap-4 border-t border-zinc-800">
+        <div class="text-center">
+            <div class="text-xs text-zinc-500">Category</div>
+            <div class="font-medium text-sm text-white">${creator.category || 'General'}</div>
+        </div>
+        <div class="text-center border-l border-zinc-800">
+            <div class="text-xs text-zinc-500">Platform</div>
+            <div class="font-medium text-sm text-white">
+                ${creator.tik_tok ? 'TikTok' : (creator.youtube ? 'YouTube' : 'Instagram')}
+            </div>
+        </div>
+    </div>
+`;
+                container.appendChild(card);
+            });
+
+            // --- NEW: Refresh Embed Scripts ---
+            refreshEmbeds();
+
+        } catch (error) {
+            console.error("Error fetching creator preview:", error);
+            container.innerHTML = `<div class="text-red-500 text-sm p-4">Error loading preview.</div>`;
+        }
+    }, 500); 
+}
+
+// --- NEW HELPER: Determine Video Type and Return Player HTML ---
+function getEmbedHtml(url) {
+    if (!url) return '<div class="text-zinc-500 text-sm">No content link available</div>';
+
+    // 1. YouTube
+    const ytMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    if (ytMatch) {
+        return `<iframe class="w-full h-[300px]" src="https://www.youtube.com/embed/${ytMatch[1]}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    }
+
+    // 2. TikTok
+    if (url.includes('tiktok.com')) {
+        // Extract video ID for a cleaner embed, or use the raw URL in blockquote
+        const videoIdMatch = url.match(/video\/(\d+)/);
+        const videoId = videoIdMatch ? videoIdMatch[1] : '';
+        return `
+            <div class="w-full flex justify-center bg-black">
+                <blockquote class="tiktok-embed" cite="${url}" data-video-id="${videoId}" style="max-width: 325px; min-width: 325px; margin: 0;">
+                    <section> <a target="_blank" href="${url}">Loading TikTok...</a> </section>
+                </blockquote>
+            </div>
+        `;
+    }
+
+    // 3. Instagram
+    if (url.includes('instagram.com')) {
+        return `
+            <div class="w-full flex justify-center bg-white">
+                <blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                </blockquote>
+            </div>
+        `;
+    }
+
+    // 4. Direct Video Files (.mp4)
+    if (url.match(/\.(mp4|webm|ogg)$/i)) {
+        return `<video class="w-full h-full object-cover" controls><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+    }
+
+    // 5. Fallback (Link Button)
+    return `
+        <div class="text-center p-6">
+            <p class="text-zinc-500 text-xs uppercase tracking-widest mb-4">External Link</p>
+            <a href="${url}" target="_blank" class="inline-flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-full backdrop-blur-sm transition-colors border border-white/10">
+                View Content <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </a>
+        </div>
+    `;
+}
+
+// --- NEW HELPER: Re-initialize Embed Scripts ---
+function refreshEmbeds() {
+    // Reload TikTok
+    if (window.tiktok && window.tiktok.embed && typeof window.tiktok.embed.load === 'function') {
+        window.tiktok.embed.load();
+    } else {
+        // If script hasn't loaded yet, it will auto-load the blockquotes when it arrives
+    }
+
+    // Reload Instagram
+    if (window.instgrm && window.instgrm.Embeds && typeof window.instgrm.Embeds.process === 'function') {
+        window.instgrm.Embeds.process();
+    }
+}
+
+// Helper to get icon (Existing function)
+function getPlatformIcon(creator) {
+    if (creator.tik_tok) return `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>`;
+    if (creator.youtube) return `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`;
+    return `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`;
+}
+
+// Toggle logic for the Creator Preview Column
+function toggleCreatorColumn() {
+    const grid = document.getElementById('step2Grid');
+    const col = document.getElementById('previewCol');
+    const btnText = document.getElementById('toggleBtnText');
+    const hideIcon = document.getElementById('hideIcon');
+    const showIcon = document.getElementById('showIcon');
+    
+    // Check if the column is currently 'active' (visible) for large screens
+    if (col.classList.contains('lg:block')) {
+        // HIDE IT
+        col.classList.remove('lg:block'); // Removes the "block on large" rule
+        col.classList.add('hidden'); // Ensures it is hidden everywhere
+        
+        // Remove grid split (left col becomes full width)
+        grid.classList.remove('lg:grid-cols-2');
+        
+        // Update Button UI
+        btnText.textContent = "Show Preview";
+        hideIcon.classList.add('hidden');
+        showIcon.classList.remove('hidden');
+        
+    } else {
+        // SHOW IT
+        col.classList.remove('hidden');
+        col.classList.add('lg:block'); // Restores "block on large" rule
+        
+        // Restore grid split
+        grid.classList.add('lg:grid-cols-2');
+        
+        // Update Button UI
+        btnText.textContent = "Hide Preview";
+        hideIcon.classList.remove('hidden');
+        showIcon.classList.add('hidden');
+    }
+}
+
+async function logout() {
+    if (!confirm('Are you sure you want to logout?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        // Always redirect to login page regardless of API response
+        window.location.href = '/login';
+    } catch (error) {
+        console.error('Logout error:', error);
+        // Still redirect even if there's an error
+        window.location.href = '/login';
+    }
+}
+
+// --- NEW: Load Campaign Data Function ---
+    async function loadCampaignData(id) {
+        try {
+            const response = await fetch(`/api/campaigns/${id}`);
+            if (!response.ok) throw new Error("Failed to load campaign");
+            
+            const data = await response.json();
+            const c = data.campaign;
+
+            // 1. Populate Standard Fields
+            document.getElementById('campaignTitle').value = c.title || '';
+            document.getElementById('clientCompany').value = c.client_company || '';
+            document.getElementById('campaignDescription').value = c.description || '';
+            
+            // 2. Populate Categories (Checkboxes)
+            if (c.categories && Array.isArray(c.categories)) {
+                c.categories.forEach(cat => {
+                    const checkbox = document.querySelector(`input[name="category"][value="${cat}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+                updateCreatorPreview(); // Trigger preview update
+            }
+
+            // 3. Populate Targeting
+            document.getElementById('ageRangeMin').value = c.age_min || 18;
+            document.getElementById('ageRangeMax').value = c.age_max || 65;
+            document.getElementById('ageMin').innerText = c.age_min || 18;
+            document.getElementById('ageMax').innerText = c.age_max || 65;
+            
+            if (c.gender_split) {
+                document.getElementById('genderSplit').value = c.gender_split;
+            }
+
+            // 4. Populate Platforms
+            if (c.platforms && Array.isArray(c.platforms)) {
+                c.platforms.forEach(plat => {
+                    const checkbox = document.querySelector(`input[name="platform"][value="${plat}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+
+            // 5. Populate Geo (Handle special logic for South Africa/Namibia)
+            if (c.geographic_restriction) {
+                // Determine country based on selection text to populate dropdown correctly
+                const isNamibia = locationData["Namibia"].includes(c.geographic_restriction);
+                const country = isNamibia ? "Namibia" : "South Africa";
+                
+                // Set country manually to ensure options exist
+                localStorage.setItem('campaign_target_country', country);
+                populateLocations(country);
+                
+                // Set value after options are populated
+                document.getElementById('geoRestriction').value = c.geographic_restriction;
+            }
+
+            document.getElementById('vettingSlider').value = c.vetting_score || 70;
+            document.getElementById('vettingScore').innerText = c.vetting_score || 70;
+
+            // 6. Populate Budget
+            document.getElementById('totalBudgetInput').value = c.total_budget || '';
+            document.getElementById('compensationModel').value = c.compensation_model || 'flat_fee';
+            toggleCompensationDetails(); // Show/Hide relevant fields
+
+            if (c.compensation_model === 'cpm') {
+                document.getElementById('cpmRate').value = c.cpm_rate || '';
+                document.getElementById('budgetCapSlider').value = c.budget_cap_percentage || 100;
+                document.getElementById('budgetCapValue').innerText = c.budget_cap_percentage || 100;
+            }
+
+            // 7. Dates
+            if(c.start_date) document.getElementById('startDate').value = c.start_date;
+            if(c.end_date) document.getElementById('endDate').value = c.end_date;
+
+            // Update UI Status
+            document.getElementById('campaignStatus').innerText = c.status === 'draft' ? "Editing Draft" : c.status;
+            
+            // Populate review summary immediately
+            populateReviewSummary();
+
+        } catch (error) {
+            console.error(error);
+            alert("Error loading draft. Redirecting to new campaign.");
+            window.location.href = '/media_dashboard';
+        }
+
+        const c = data.campaign;
+
+        // NEW: Load Shortlist
+        if (c.shortlisted_influencers_details && Array.isArray(c.shortlisted_influencers_details)) {
+            shortlistedCreators.clear();
+            c.shortlisted_influencers_details.forEach(creator => {
+                shortlistedCreators.set(creator.id, creator);
+            });
+            updateShortlistCount();
+            // Render if tab is active, otherwise just update count
+        }
+
+        if (c.shortlisted_influencers_details && Array.isArray(c.shortlisted_influencers_details)) {
+    // 1. Clear current list to avoid duplicates
+    shortlistedCreators.clear();
+    
+    // 2. Re-populate the Map with full creator objects
+    c.shortlisted_influencers_details.forEach(creator => {
+        shortlistedCreators.set(creator.id, creator);
+    });
+    
+    // 3. Update the UI counter
+    updateShortlistCount();
+    
+    // 4. (Optional) Immediately render the list if the user is on that tab
+    renderShortlist(); 
+}
+    }
+
+    // --- UPDATED: Save Draft Function (Handles Create vs Update) ---
+    async function saveDraft() {
+        collectData();
+        campaignData.status = 'draft';
+        
+        // Determine URL and Method based on if ID exists
+        const url = campaignData.id ? `/api/campaigns/${campaignData.id}` : '/api/campaigns/create';
+        const method = campaignData.id ? 'PUT' : 'POST';
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(campaignData)
+            });
+
+            if (response.status === 401) throw new Error('Unauthorized');
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                if (!campaignData.id && data.campaign_id) {
+                    campaignData.id = data.campaign_id;
+                    // Update URL without reload so refresh doesn't create duplicate
+                    window.history.replaceState(null, '', `?id=${data.campaign_id}`);
+                }
+                document.getElementById('campaignStatus').textContent = 'Draft Saved';
+                alert('Campaign saved successfully!');
+            } else {
+                throw new Error(data.message);
+            }
+        } catch (error) {
+            console.error('Error saving:', error);
+            alert(`Error: ${error.message}`);
+        }
+    }
+
+    // --- NEW: T&C Modal Functions ---
+
+    function showTnCModal() {
+        // Reset checkbox
+        document.getElementById('tncCheckbox').checked = false;
+        document.getElementById('tncModal').classList.remove('hidden');
+    }
+
+    function closeTnCModal() {
+        document.getElementById('tncModal').classList.add('hidden');
+    }
+
+    // --- MODIFIED: Launch Function ---
+    async function launchCampaign() {
+        const compliance1 = document.getElementById('compliance1').checked;
+        const compliance2 = document.getElementById('compliance2').checked;
+        const compliance3 = document.getElementById('compliance3').checked;
+        const compliance4 = document.getElementById('compliance4').checked;
+
+        if (!compliance1 || !compliance2 || !compliance3 || !compliance4) {
+            alert('Please confirm all compliance checks first.');
+            return;
+        }
+
+        // Instead of immediate API call, show Modal
+        showTnCModal();
+    }
+
+    // --- NEW: Actual API Call triggered by Modal ---
+    async function confirmLaunch() {
+        const tncChecked = document.getElementById('tncCheckbox').checked;
+
+        if (!tncChecked) {
+            alert("You must agree to the Terms and Conditions to proceed.");
+            return;
+        }
+
+        // Close modal and show loading state if desired
+        closeTnCModal();
+
+        // Original Launch Logic
+        collectData();
+        campaignData.status = 'live';
+        campaignData.tnc_accepted = true; // Add flag for backend tracking
+        
+        const url = campaignData.id ? `/api/campaigns/${campaignData.id}` : '/api/campaigns/create';
+        const method = campaignData.id ? 'PUT' : 'POST';
+        
+        try {
+            // Optional: Change button text to indicate loading
+            const statusBadge = document.getElementById('campaignStatus');
+            const originalText = statusBadge.textContent;
+            statusBadge.textContent = "Launching...";
+
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(campaignData)
+            });
+
+            if (response.status === 401) throw new Error('Unauthorized');
+            const data = await response.json();
+            
+            if (response.ok) {
+                alert('Campaign launched successfully!');
+                window.location.href = '/all_campaigns'; 
+            } else {
+                statusBadge.textContent = originalText;
+                throw new Error(data.message);
+            }
+        } catch (error) {
+            console.error('Error launching:', error);
+            alert(`Error: ${error.message}`);
+        }
+    }
+
+        // Initialize the page
+        updateProgress();
+    </script>
+</body>
+</html>

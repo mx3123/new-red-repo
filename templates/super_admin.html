@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS Super Admin Console</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary-color: #6366f1; --secondary-color: #1e293b; }
+        body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; }
+        .sidebar { background-color: var(--secondary-color); min-height: 100vh; color: white; position: fixed; width: 16.66%; }
+        .main-content { margin-left: 16.66%; padding: 2rem; }
+        .nav-link { color: #94a3b8; margin-bottom: 5px; cursor: pointer; }
+        .nav-link:hover, .nav-link.active { color: white; background-color: rgba(255,255,255,0.1); border-radius: 8px; }
+        .card { border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 12px; }
+        .stat-card { border-left: 4px solid var(--primary-color); }
+        .table-responsive { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 sidebar p-4">
+            <h4 class="mb-4"><i class="fa-solid fa-shield-halved me-2"></i>Super Admin</h4>
+            <ul class="nav flex-column" id="adminTabs" role="tablist">
+                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#dashboard" onclick="loadDashboard()"><i class="fa-solid fa-chart-line me-2"></i> Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#campaigns" onclick="loadCampaigns()"><i class="fa-solid fa-bullhorn me-2"></i> Campaigns</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#affiliate" onclick="loadAffiliate()"><i class="fa-solid fa-tag me-2"></i> Affiliate</a></li> <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#creators" onclick="loadCreators()"><i class="fa-solid fa-users me-2"></i> Creators</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#agencies" onclick="loadAgencies()"><i class="fa-solid fa-building me-2"></i> Agencies</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#payouts" onclick="loadPayouts()"><i class="fa-solid fa-money-bill-transfer me-2"></i> Payouts</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#posts" onclick="loadPosts()"><i class="fa-solid fa-image me-2"></i> Post Review</a></li>
+                <li class="nav-item mt-5"><a class="nav-link text-danger" href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a></li>
+            </ul>
+        </div>
+
+        <div class="col-md-10 main-content">
+            <div class="tab-content">
+                
+                <div class="tab-pane fade show active" id="dashboard">
+                    <h2 class="mb-4">Platform Overview</h2>
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-3"><div class="card stat-card p-4"><h6 class="text-muted">Total Creators</h6><h2 id="stat-creators">...</h2></div></div>
+                        <div class="col-md-3"><div class="card stat-card p-4" style="border-color: #10b981;"><h6 class="text-muted">Total Paid Out</h6><h2 id="stat-revenue">...</h2></div></div>
+                        <div class="col-md-3"><div class="card stat-card p-4" style="border-color: #f59e0b;"><h6 class="text-muted">Active Campaigns</h6><h2 id="stat-campaigns">...</h2></div></div>
+                        <div class="col-md-3"><div class="card stat-card p-4" style="border-color: #ef4444;"><h6 class="text-muted">Total Agencies</h6><h2 id="stat-agencies">...</h2></div></div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="campaigns">
+                    <h2 class="mb-4">Campaign Management</h2>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead><tr><th>ID</th><th>Title</th><th>Company</th><th>Budget</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="campaignsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="affiliate">
+                    <h2 class="mb-4">Affiliate Campaigns</h2>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead><tr><th>Product</th><th>Brand</th><th>Agency</th><th>Commission</th><th>Active Creators</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody id="affiliateTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="creators">
+                    <div class="d-flex justify-content-between mb-4">
+                        <h2>Creator Management</h2>
+                        <button class="btn btn-outline-primary btn-sm" onclick="exportData('influencers')">Export CSV</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Score</th><th>Earnings</th><th>Actions</th></tr></thead>
+                            <tbody id="creatorsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="agencies">
+                    <h2 class="mb-4">Agency Management</h2>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead><tr><th>Company</th><th>Email</th><th>Location</th><th>Active Camps</th><th>Actions</th></tr></thead>
+                            <tbody id="agenciesTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="payouts">
+                    <div class="d-flex justify-content-between mb-4">
+                        <h2>Payout Requests</h2>
+                        <button class="btn btn-outline-primary btn-sm" onclick="exportData('payouts')">Export CSV</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead><tr><th>Date</th><th>Creator</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="payoutsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="posts">
+                    <h2 class="mb-4">Content Monitor</h2>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead><tr><th>Date</th><th>Creator</th><th>Campaign</th><th>Metrics</th><th>Earned</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody id="postsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="manageAffiliateModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Manage Affiliate Creators</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <input type="hidden" id="manageAffiliateId">
+                <p class="text-muted">Revoke access to remove a creator from this campaign. This deletes their code.</p>
+                <table class="table table-sm">
+                    <thead><tr><th>Creator</th><th>Email</th><th>Code</th><th>Uses</th><th>Action</th></tr></thead>
+                    <tbody id="affiliateCreatorsBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="manageCampaignModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Manage Campaign Creators</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <input type="hidden" id="manageCampaignId">
+                <table class="table table-sm">
+                    <thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody id="campaignCreatorsBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editCreatorModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Creator Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editCreatorId">
+                
+                <h6 class="text-primary mb-3"><i class="fa-solid fa-user me-2"></i>Account Information</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Full Name</label>
+                        <input type="text" class="form-control" id="editCreatorName">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Email Address</label>
+                        <input type="email" class="form-control" id="editCreatorEmail">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="editCreatorPhone">
+                    </div>
+                     <div class="col-md-6">
+                        <label class="form-label text-danger">Reset Password</label>
+                        <input type="text" class="form-control border-danger" id="editCreatorPassword" placeholder="Leave blank to keep current">
+                    </div>
+                </div>
+
+                <hr class="text-muted">
+                
+                <h6 class="text-primary mb-3"><i class="fa-solid fa-id-card me-2"></i>Public Profile Details</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-control" id="editCreatorLocation" placeholder="e.g. Cape Town">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Category / Niche</label>
+                        <select class="form-select" id="editCreatorCategory">
+                            <option value="">Select Category</option>
+                            <option value="Lifestyle">Lifestyle</option>
+                            <option value="Tech">Tech</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Beauty">Beauty</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Fitness">Fitness</option>
+                            <option value="Food">Food</option>
+                            <option value="Gaming">Gaming</option>
+                            <option value="Comedy">Comedy</option>
+                            <option value="Business">Business</option>
+                            <option value="Music">Music</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Bio</label>
+                        <textarea class="form-control" id="editCreatorBio" rows="3"></textarea>
+                    </div>
+                    <div class="col-12">
+                         <label class="form-label">Best Content Link</label>
+                         <input type="url" class="form-control" id="editCreatorBestLink" placeholder="https://instagram.com/...">
+                         <div class="form-text">Link to their best performing post.</div>
+                    </div>
+                </div>
+
+                <hr class="text-muted">
+
+                <h6 class="text-primary mb-3"><i class="fa-solid fa-share-nodes me-2"></i>Socials & Metrics</h6>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Instagram</label>
+                        <input type="text" class="form-control" id="editCreatorIg">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">TikTok</label>
+                        <input type="text" class="form-control" id="editCreatorTt">
+                    </div>
+                     <div class="col-md-4">
+                        <label class="form-label">YouTube</label>
+                        <input type="text" class="form-control" id="editCreatorYt">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Internal Profile Score</label>
+                        <input type="number" class="form-control" id="editCreatorScore">
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveCreatorChanges()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editAgencyModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Edit Agency</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <input type="hidden" id="editAgencyId">
+                <div class="mb-2"><label>Company Name</label><input type="text" class="form-control" id="editAgencyCompany"></div>
+                <div class="mb-2"><label>Email</label><input type="email" class="form-control" id="editAgencyEmail"></div>
+                <div class="mb-2"><label>Location</label><input type="text" class="form-control" id="editAgencyLocation"></div>
+                <div class="mb-2"><label>Category</label><input type="text" class="form-control" id="editAgencyCategory"></div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-primary" onclick="saveAgencyChanges()">Save Changes</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editPayoutModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Manage Payout</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <input type="hidden" id="editPayoutId">
+                <div class="mb-3">
+                    <label>Amount (R)</label>
+                    <input type="number" class="form-control" id="editPayoutAmount">
+                </div>
+                <div class="mb-3">
+                    <label>Status</label>
+                    <select class="form-select" id="editPayoutStatus">
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Completed">Completed (Paid)</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-primary" onclick="savePayoutChanges()">Update Payout</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editPostModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Manage Post</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <input type="hidden" id="editPostId">
+                <div class="mb-3"><label>Status</label><select class="form-select" id="editPostStatus"><option value="pending_review">Pending Review</option><option value="approved">Approved</option><option value="paid">Paid</option><option value="rejected">Rejected</option></select></div>
+                <div class="row"><div class="col-6 mb-3"><label>Views</label><input type="number" class="form-control" id="editPostViews"></div><div class="col-6 mb-3"><label>Engagement</label><input type="number" class="form-control" id="editPostEngagement"></div></div>
+                <div class="mb-3"><label>Earnings</label><input type="number" class="form-control" id="editPostEarnings"></div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-primary" onclick="savePostChanges()">Save Changes</button></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // --- 1. Dashboard ---
+    async function loadDashboard() {
+        const res = await fetch('/api/admin/stats');
+        const data = await res.json();
+        document.getElementById('stat-creators').innerText = data.total_creators;
+        document.getElementById('stat-agencies').innerText = data.total_marketers;
+        document.getElementById('stat-revenue').innerText = 'R ' + data.total_paid_out.toLocaleString();
+        document.getElementById('stat-campaigns').innerText = data.active_campaigns;
+    }
+
+    // --- 2. Campaigns & Creator Management ---
+    async function loadCampaigns() {
+        const res = await fetch('/api/admin/campaigns');
+        const campaigns = await res.json();
+        const tbody = document.getElementById('campaignsTableBody');
+        tbody.innerHTML = '';
+        campaigns.forEach(c => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${c.id}</td>
+                    <td>${c.title}</td>
+                    <td>${c.client_company}</td>
+                    <td>R ${c.total_budget.toLocaleString()}</td>
+                    <td><span class="badge bg-${c.status === 'live' ? 'success' : 'secondary'}">${c.status}</span></td>
+                    <td><button class="btn btn-sm btn-dark" onclick="openCampaignManager(${c.id})">Manage Creators</button></td>
+                </tr>
+            `;
+        });
+    }
+
+    async function openCampaignManager(campaignId) {
+        document.getElementById('manageCampaignId').value = campaignId;
+        const res = await fetch(`/api/admin/campaigns/${campaignId}/creators`);
+        const creators = await res.json();
+        const tbody = document.getElementById('campaignCreatorsBody');
+        tbody.innerHTML = '';
+        
+        if(creators.length === 0) tbody.innerHTML = '<tr><td colspan="4">No creators found.</td></tr>';
+
+        creators.forEach(c => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${c.name}</td>
+                    <td>${c.email}</td>
+                    <td>${c.status}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="removeCreatorFromCampaign(${campaignId}, ${c.influencer_id})">Kick</button>
+                    </td>
+                </tr>
+            `;
+        });
+        new bootstrap.Modal(document.getElementById('manageCampaignModal')).show();
+    }
+
+    async function removeCreatorFromCampaign(campId, infId) {
+        if(!confirm("Are you sure you want to remove this creator from the campaign?")) return;
+        
+        const res = await fetch(`/api/admin/campaigns/${campId}/remove-creator`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ influencer_id: infId })
+        });
+        
+        if (res.ok) {
+            openCampaignManager(campId); // Refresh list
+        } else {
+            alert("Failed to remove creator");
+        }
+    }
+
+    // --- 3. Affiliate Management (NEW) ---
+    async function loadAffiliate() {
+        const res = await fetch('/api/admin/affiliate-campaigns');
+        const campaigns = await res.json();
+        const tbody = document.getElementById('affiliateTableBody');
+        tbody.innerHTML = '';
+
+        campaigns.forEach(c => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${c.product_name}</td>
+                    <td>${c.brand}</td>
+                    <td>${c.agency_name}</td>
+                    <td>R ${c.commission}</td>
+                    <td>${c.creator_count}</td>
+                    <td><span class="badge bg-${c.status === 'live' ? 'success' : 'secondary'}">${c.status}</span></td>
+                    <td><button class="btn btn-sm btn-dark" onclick="openAffiliateManager(${c.id})">Manage Codes</button></td>
+                </tr>
+            `;
+        });
+    }
+
+    async function openAffiliateManager(campaignId) {
+        document.getElementById('manageAffiliateId').value = campaignId;
+        const res = await fetch(`/api/admin/affiliate-campaigns/${campaignId}/codes`);
+        const codes = await res.json();
+        const tbody = document.getElementById('affiliateCreatorsBody');
+        tbody.innerHTML = '';
+
+        if(codes.length === 0) tbody.innerHTML = '<tr><td colspan="5">No active codes.</td></tr>';
+
+        codes.forEach(c => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${c.creator_name}</td>
+                    <td>${c.creator_email}</td>
+                    <td class="text-primary">${c.code}</td>
+                    <td>${c.uses}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deactivateAffiliateCode(${c.code_id}, ${campaignId})">Revoke</button>
+                    </td>
+                </tr>
+            `;
+        });
+        new bootstrap.Modal(document.getElementById('manageAffiliateModal')).show();
+    }
+
+    async function deactivateAffiliateCode(codeId, campaignId) {
+        if(!confirm("Are you sure you want to revoke this code? The creator will lose access.")) return;
+
+        const res = await fetch(`/api/admin/affiliate-codes/${codeId}`, { method: 'DELETE' });
+
+        if (res.ok) {
+            openAffiliateManager(campaignId); // Refresh modal list
+        } else {
+            alert("Failed to deactivate code.");
+        }
+    }
+
+    // --- 4. Creator Editing ---
+    async function loadCreators() {
+        const res = await fetch('/api/admin/influencers');
+        const creators = await res.json();
+        const tbody = document.getElementById('creatorsTableBody');
+        tbody.innerHTML = '';
+        creators.forEach(c => {
+            const safeData = JSON.stringify(c).replace(/"/g, '&quot;');
+            tbody.innerHTML += `
+                <tr>
+                    <td>${c.id}</td>
+                    <td>${c.name}</td>
+                    <td>${c.email}</td>
+                    <td>${c.profile_score || 0}</td>
+                    <td>R ${c.total_earnings}</td>
+                    <td><button class="btn btn-sm btn-outline-dark" onclick="openEditCreator(${safeData})"><i class="fa-solid fa-pen"></i></button></td>
+                </tr>
+            `;
+        });
+    }
+
+function openEditCreator(data) {
+        // ID
+        document.getElementById('editCreatorId').value = data.id;
+        
+        // Basic Info
+        document.getElementById('editCreatorName').value = data.name;
+        document.getElementById('editCreatorEmail').value = data.email;
+        document.getElementById('editCreatorPhone').value = data.number || '';
+        document.getElementById('editCreatorPassword').value = ''; // Always clear password field
+        
+        // Profile Details (New Fields aligned with Settings page)
+        document.getElementById('editCreatorLocation').value = data.location || '';
+        document.getElementById('editCreatorCategory').value = data.category || ''; // Dropdown will select matching value
+        document.getElementById('editCreatorBio').value = data.bio || '';
+        document.getElementById('editCreatorBestLink').value = data.best_content_link || ''; // Matches settings.html ID
+
+        // Socials & Metrics
+        document.getElementById('editCreatorIg').value = data.instagram || '';
+        document.getElementById('editCreatorTt').value = data.tik_tok || '';
+        document.getElementById('editCreatorYt').value = data.youtube || '';
+        document.getElementById('editCreatorScore').value = data.profile_score || 50;
+        
+        new bootstrap.Modal(document.getElementById('editCreatorModal')).show();
+    }
+
+    async function saveCreatorChanges() {
+        const id = document.getElementById('editCreatorId').value;
+        const passwordInput = document.getElementById('editCreatorPassword').value;
+        
+        // Construct payload with all fields
+        const body = {
+            name: document.getElementById('editCreatorName').value,
+            email: document.getElementById('editCreatorEmail').value,
+            number: document.getElementById('editCreatorPhone').value,
+            
+            // New Fields
+            location: document.getElementById('editCreatorLocation').value,
+            category: document.getElementById('editCreatorCategory').value,
+            bio: document.getElementById('editCreatorBio').value,
+            best_content_link: document.getElementById('editCreatorBestLink').value,
+
+            instagram: document.getElementById('editCreatorIg').value,
+            tik_tok: document.getElementById('editCreatorTt').value,
+            youtube: document.getElementById('editCreatorYt').value,
+            profile_score: document.getElementById('editCreatorScore').value,
+        };
+        
+        // Only include password if the admin actually typed a new one
+        if (passwordInput && passwordInput.trim() !== "") {
+            body.password = passwordInput;
+        }
+
+        try {
+            const res = await fetch(`/api/admin/influencers/${id}`, { 
+                method: 'PUT', 
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify(body) 
+            });
+            
+            if (res.ok) {
+                location.reload(); // Refresh to show changes
+            } else {
+                const err = await res.json();
+                alert("Failed to update creator: " + (err.message || "Unknown error"));
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Error saving changes. Check console for details.");
+        }
+    }
+
+    // --- 5. Agency Editing ---
+    async function loadAgencies() {
+        const res = await fetch('/api/admin/marketers');
+        const agencies = await res.json();
+        const tbody = document.getElementById('agenciesTableBody');
+        tbody.innerHTML = '';
+        agencies.forEach(a => {
+            const safeData = JSON.stringify(a).replace(/"/g, '&quot;');
+            tbody.innerHTML += `
+                <tr>
+                    <td>${a.company}</td>
+                    <td>${a.email}</td>
+                    <td>${a.location || '-'}</td>
+                    <td>${a.campaign_count}</td>
+                    <td><button class="btn btn-sm btn-outline-dark" onclick="openEditAgency(${safeData})"><i class="fa-solid fa-pen"></i></button></td>
+                </tr>
+            `;
+        });
+    }
+
+    function openEditAgency(data) {
+        document.getElementById('editAgencyId').value = data.id;
+        document.getElementById('editAgencyCompany').value = data.company;
+        document.getElementById('editAgencyEmail').value = data.email;
+        document.getElementById('editAgencyLocation').value = data.location || '';
+        document.getElementById('editAgencyCategory').value = data.category || '';
+        new bootstrap.Modal(document.getElementById('editAgencyModal')).show();
+    }
+
+    async function saveAgencyChanges() {
+        const id = document.getElementById('editAgencyId').value;
+        const body = {
+            company: document.getElementById('editAgencyCompany').value,
+            email: document.getElementById('editAgencyEmail').value,
+            location: document.getElementById('editAgencyLocation').value,
+            category: document.getElementById('editAgencyCategory').value,
+        };
+        await fetch(`/api/admin/marketers/${id}`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
+        location.reload();
+    }
+
+    // --- 6. Payout Management ---
+    async function loadPayouts() {
+        const res = await fetch('/api/admin/payouts');
+        const payouts = await res.json();
+        const tbody = document.getElementById('payoutsTableBody');
+        tbody.innerHTML = '';
+        payouts.forEach(p => {
+            let badge = 'bg-warning text-dark';
+            if(p.status === 'Completed') badge = 'bg-success';
+            if(p.status === 'Rejected') badge = 'bg-danger';
+
+            tbody.innerHTML += `
+                <tr>
+                    <td>${p.payout_date}</td>
+                    <td>${p.influencer_name}</td>
+                    <td>R ${p.amount}</td>
+                    <td><span class="badge ${badge}">${p.status}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="openEditPayout(${p.id}, '${p.status}', ${p.amount})">Process</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function openEditPayout(id, status, amount) {
+        document.getElementById('editPayoutId').value = id;
+        document.getElementById('editPayoutStatus').value = status;
+        document.getElementById('editPayoutAmount').value = amount;
+        new bootstrap.Modal(document.getElementById('editPayoutModal')).show();
+    }
+
+    async function savePayoutChanges() {
+        const id = document.getElementById('editPayoutId').value;
+        const body = {
+            status: document.getElementById('editPayoutStatus').value,
+            amount: document.getElementById('editPayoutAmount').value
+        };
+        await fetch(`/api/admin/payouts/${id}`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
+        location.reload();
+    }
+
+    // --- 7. Post Review ---
+    async function loadPosts() {
+        const res = await fetch('/api/admin/submitted-posts');
+        const posts = await res.json();
+        const tbody = document.getElementById('postsTableBody');
+        tbody.innerHTML = '';
+        posts.forEach(p => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${new Date(p.submitted_at).toLocaleDateString()}</td>
+                    <td>${p.influencer_name}</td>
+                    <td>${p.campaign_title}</td>
+                    <td><small>V: ${p.views} | E: ${p.engagement}</small></td>
+                    <td>R ${p.earnings}</td>
+                    <td><span class="badge bg-secondary">${p.status}</span></td>
+                    <td><button class="btn btn-sm btn-light" onclick="openEditPostModal(${p.id}, '${p.status}', ${p.views}, ${p.engagement}, ${p.earnings})"><i class="fa-solid fa-pen"></i></button></td>
+                </tr>`;
+        });
+    }
+    
+    function openEditPostModal(id, status, views, eng, earnings) {
+        document.getElementById('editPostId').value = id;
+        document.getElementById('editPostStatus').value = status;
+        document.getElementById('editPostViews').value = views;
+        document.getElementById('editPostEngagement').value = eng;
+        document.getElementById('editPostEarnings').value = earnings;
+        new bootstrap.Modal(document.getElementById('editPostModal')).show();
+    }
+    
+    async function savePostChanges() {
+        const id = document.getElementById('editPostId').value;
+        const payload = {
+            status: document.getElementById('editPostStatus').value,
+            views: document.getElementById('editPostViews').value,
+            engagement: document.getElementById('editPostEngagement').value,
+            earnings: document.getElementById('editPostEarnings').value
+        };
+        await fetch(`/api/admin/submitted-posts/${id}`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+        location.reload();
+    }
+
+    function logout() { fetch('/api/auth/logout', {method: 'POST'}).then(() => window.location.href = '/login'); }
+    async function exportData(type) { window.open(`/api/admin/export-data?type=${type}`, '_blank'); }
+
+
+// --- Authentication & Initialization Logic ---
+    
+    // Global Auth Check
+    async function checkAdminAuth() {
+        try {
+            const res = await fetch('/api/auth/verify');
+            const data = await res.json();
+            
+            // If session is valid AND role is admin, load dashboard
+            if (res.ok && data.valid && data.role === 'admin') {
+                loadDashboard(); // Load initial data
+            } else {
+                // Otherwise, show the blocking login modal
+                const loginModal = new bootstrap.Modal(document.getElementById('adminLoginModal'));
+                loginModal.show();
+            }
+        } catch (e) {
+            console.error("Auth check failed", e);
+            // Fallback: show modal on error
+            new bootstrap.Modal(document.getElementById('adminLoginModal')).show();
+        }
+    }
+
+    // Handle Login Form Submission
+    async function handleAdminLogin(event) {
+        event.preventDefault();
+        
+        const email = document.getElementById('adminEmail').value;
+        const password = document.getElementById('adminPassword').value;
+        const btn = document.getElementById('adminLoginBtn');
+        const alertBox = document.getElementById('loginAlert');
+        
+        // Reset UI
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Authenticating...';
+        alertBox.classList.add('d-none');
+        
+        try {
+            const res = await fetch('/api/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            
+            const data = await res.json();
+            
+            if (res.ok) {
+                // Success: Reload page to clear modal and init standard view
+                window.location.reload();
+            } else {
+                throw new Error(data.message || 'Login failed');
+            }
+        } catch (error) {
+            alertBox.textContent = error.message;
+            alertBox.classList.remove('d-none');
+            btn.disabled = false;
+            btn.innerText = 'Sign In to Console';
+        }
+    }
+
+    // Init: Replace your existing DOMContentLoaded listener with this:
+    document.addEventListener('DOMContentLoaded', checkAdminAuth);
+</script>
+<div class="modal fade" id="adminLoginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="adminLoginLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-dark text-white border-0 justify-content-center">
+                <h5 class="modal-title" id="adminLoginLabel"><i class="fa-solid fa-lock me-2"></i>Admin Access Required</h5>
+            </div>
+            <div class="modal-body p-5">
+                <div id="loginAlert" class="alert alert-danger d-none text-center"></div>
+                <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+                    <div class="mb-4">
+                        <label for="adminEmail" class="form-label fw-bold text-muted">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-envelope text-secondary"></i></span>
+                            <input type="email" class="form-control border-start-0 ps-0" id="adminEmail" required placeholder="admin@creativeswop.com">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="adminPassword" class="form-label fw-bold text-muted">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-key text-secondary"></i></span>
+                            <input type="password" class="form-control border-start-0 ps-0" id="adminPassword" required placeholder="••••••••">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" id="adminLoginBtn">
+                        Sign In to Console
+                    </button>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center bg-light border-0">
+                <small class="text-muted">Creative Swop Super Admin Console</small>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

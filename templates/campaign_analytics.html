@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Analytics | Creative Swop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .metric-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            border-color: #6B21A8;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #27272a; /* zinc-800 */
+            border-top: 3px solid #6B21A8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-live { background-color: rgba(16, 185, 129, 0.2); color: #4ade80; }
+        .status-paused { background-color: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .status-draft { background-color: rgba(99, 102, 241, 0.2); color: #818cf8; }
+        .status-completed { background-color: #27272a; color: #9ca3af; } /* Zinc-800 / 400 */
+        
+        .health-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        
+        .health-excellent { background-color: #10b981; }
+        .health-good { background-color: #f59e0b; }
+        .health-poor { background-color: #ef4444; }
+
+        /* Custom Scrollbar for Dark Mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #18181b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b; 
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white">
+    <header class="sticky top-0 z-50 bg-zinc-900 border-b border-zinc-800 shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-2xl font-bold text-brand-purple">Creative Swop</span>
+                    </div>
+                    <nav class="hidden md:flex space-x-6 text-sm">
+                        <a href="/all_campaigns" class="text-zinc-400 hover:text-white transition-colors">All Campaigns</a>
+                        <a href="/analytics" class="text-white font-medium border-b-2 border-brand-purple">Analytics</a>
+                        <a href="/affiliate-analytics" class="text-zinc-400 hover:text-white transition-colors">Affiliate Analytics</a>
+                        <a href="/media_dashboard" class="text-zinc-400 hover:text-white transition-colors">New campaign</a>
+                        <a href="/creator-database" class="text-zinc-400 hover:text-white transition-colors">Creator Search</a>
+                    </nav>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.location.href='/all_campaigns'" class="px-4 py-2 border border-zinc-700 text-zinc-300 rounded-lg text-sm font-semibold hover:bg-zinc-800 hover:text-white transition-colors">
+                        Back to Campaigns
+                    </button>
+                    <button id="logoutBtn" class="px-4 py-2 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-lg text-sm font-semibold hover:bg-zinc-700 hover:text-white transition-colors">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        
+        <div id="loadingState" class="flex flex-col items-center justify-center py-20">
+            <div class="loading-spinner mb-4"></div>
+            <p class="text-zinc-500">Loading analytics data...</p>
+        </div>
+
+        <div id="dashboardView" class="hidden">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-white mb-2">Campaign Analytics Dashboard</h1>
+                <p class="text-zinc-400">Comprehensive overview of all your campaign performance</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-sm text-zinc-400">Total Budget Allocated</div>
+                        <svg class="w-5 h-5 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-white" id="totalBudgetAllocated">R0</div>
+                </div>
+                
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-sm text-zinc-400">Budget Spent</div>
+                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-white" id="budgetSpent">R0</div>
+                    <div class="text-sm text-zinc-500 mt-1" id="budgetSpentPercentage">0% of allocated</div>
+                </div>
+                
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-sm text-zinc-400">Active Campaigns</div>
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-white" id="activeCampaigns">0</div>
+                    <div class="text-sm text-zinc-500 mt-1" id="totalCampaigns">of 0 total</div>
+                </div>
+
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-sm text-zinc-400">Compliance Score</div>
+                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-white" id="complianceScore">0%</div>
+                    <div class="text-sm text-zinc-500 mt-1">Approval Rate</div>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6 mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-white">Campaign Performance Overview</h3>
+                    <div class="flex space-x-2">
+                        <button class="chart-view-btn active px-3 py-1 text-sm bg-brand-purple text-white rounded" data-view="bar">
+                            Budget vs Performance
+                        </button>
+                        <button class="chart-view-btn px-3 py-1 text-sm bg-zinc-800 text-zinc-400 border border-zinc-700 hover:text-white rounded transition-colors" data-view="health">
+                            Health Scores
+                        </button>
+                    </div>
+                </div>
+                <div class="h-80">
+                    <canvas id="campaignOverviewChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <div class="text-sm text-zinc-400 mb-2">Total Views</div>
+                    <div class="text-2xl font-bold text-white" id="totalViews">0</div>
+                    <div class="text-sm text-zinc-500 mt-1">Across all campaigns</div>
+                </div>
+                
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <div class="text-sm text-zinc-400 mb-2">Total Engagement</div>
+                    <div class="text-2xl font-bold text-white" id="totalEngagement">0</div>
+                    <div class="text-sm text-zinc-500 mt-1">Likes, comments, shares</div>
+                </div>
+                
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <div class="text-sm text-zinc-400 mb-2">Active Creators</div>
+                    <div class="text-2xl font-bold text-white" id="activeCreators">0</div>
+                    <div class="text-sm text-zinc-500 mt-1">Currently engaged</div>
+                </div>
+                
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <div class="text-sm text-zinc-400 mb-2">Avg eCPM</div>
+                    <div class="text-2xl font-bold text-white" id="averageECPM">R0.00</div>
+                    <div class="text-sm text-zinc-500 mt-1">Effective cost per 1000 views</div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white">Campaign Performance Details</h2>
+                    <div class="flex space-x-2">
+                        <select id="statusFilter" class="px-4 py-2 bg-zinc-900 border border-zinc-700 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple">
+                            <option value="all">All Status</option>
+                            <option value="live">Live</option>
+                            <option value="paused">Paused</option>
+                            <option value="draft">Draft</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <select id="sortFilter" class="px-4 py-2 bg-zinc-900 border border-zinc-700 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple">
+                            <option value="budget">Sort by Budget</option>
+                            <option value="health">Sort by Health Score</option>
+                            <option value="views">Sort by Views</option>
+                            <option value="engagement">Sort by Engagement</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="campaignsGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    </div>
+            </div>
+
+            <div class="bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-zinc-800">
+                    <h3 class="text-lg font-semibold text-white">All Campaigns</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-zinc-800 bg-zinc-800/50">
+                                <th class="text-left py-3 px-4 text-sm font-semibold text-zinc-400">Campaign</th>
+                                <th class="text-left py-3 px-4 text-sm font-semibold text-zinc-400">Client</th>
+                                <th class="text-right py-3 px-4 text-sm font-semibold text-zinc-400">Budget</th>
+                                <th class="text-right py-3 px-4 text-sm font-semibold text-zinc-400">Spent</th>
+                                <th class="text-right py-3 px-4 text-sm font-semibold text-zinc-400">Views</th>
+                                <th class="text-right py-3 px-4 text-sm font-semibold text-zinc-400">Engagement</th>
+                                <th class="text-center py-3 px-4 text-sm font-semibold text-zinc-400">Status</th>
+                                <th class="text-center py-3 px-4 text-sm font-semibold text-zinc-400">Health</th>
+                                <th class="text-center py-3 px-4 text-sm font-semibold text-zinc-400">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="campaignsTable">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-white mb-6">Platform Performance Breakdown</h3>
+                <div class="h-64">
+                    <canvas id="platformPerformanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="detailedView" class="hidden">
+            <button onclick="window.location.href='/campaign_analytics'" class="mb-6 flex items-center text-zinc-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Dashboard
+            </button>
+
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-white mb-2" id="detailTitle">Campaign Title</h1>
+                    <div class="flex items-center space-x-3 text-sm text-zinc-400">
+                        <span class="font-medium" id="detailClient">Client Name</span>
+                        <span>•</span>
+                        <span id="detailDates">Dates</span>
+                        <span class="px-2 py-0.5 rounded-full text-xs font-semibold" id="detailStatus">STATUS</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="text-right">
+                        <div class="text-sm text-zinc-500">Campaign Health</div>
+                        <div class="text-2xl font-bold text-white" id="detailHealth">0/100</div>
+                    </div>
+                    <div class="w-16 h-16 relative">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="32" cy="32" r="28" stroke="#3f3f46" stroke-width="4" fill="none"></circle>
+                            <circle id="healthRing" cx="32" cy="32" r="28" stroke="#6B21A8" stroke-width="4" fill="none" stroke-dasharray="175.9" stroke-dashoffset="0"></circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-800">
+                    <div class="text-sm text-zinc-400 mb-1">Total Spend</div>
+                    <div class="text-2xl font-bold text-white" id="detailSpent">R0.00</div>
+                    <div class="text-xs text-zinc-500 mt-1">of <span id="detailBudget">R0.00</span> (<span id="detailBudgetPercent">0%</span>)</div>
+                    <div class="w-full bg-zinc-800 rounded-full h-1.5 mt-2">
+                        <div id="detailBudgetBar" class="bg-brand-purple h-1.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-800">
+                    <div class="text-sm text-zinc-400 mb-1">Total Views</div>
+                    <div class="text-2xl font-bold text-white" id="detailViews">0</div>
+                    <div class="text-xs text-green-500 mt-1 flex items-center">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        Projected: <span id="detailProjectedViews" class="ml-1">0</span>
+                    </div>
+                </div>
+                <div class="bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-800">
+                    <div class="text-sm text-zinc-400 mb-1">Avg. eCPM</div>
+                    <div class="text-2xl font-bold text-white" id="detailECPM">R0.00</div>
+                    <div class="text-xs text-zinc-500 mt-1">Target: <span id="detailECPMTarget">R0.00</span></div>
+                </div>
+                <div class="bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-800">
+                    <div class="text-sm text-zinc-400 mb-1">Engagement Rate</div>
+                    <div class="text-2xl font-bold text-white" id="detailEngagementRate">0%</div>
+                    <div class="text-xs text-zinc-500 mt-1"><span id="detailEngagements">0</span> total interactions</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 mb-8">
+                <div class="bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-800">
+                    <h3 class="font-semibold text-white mb-4">Views Performance Over Time</h3>
+                    <div class="h-72">
+                        <canvas id="detailViewsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900 rounded-xl shadow-sm border border-zinc-800 overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center">
+                    <h3 class="font-semibold text-white">Creator Performance</h3>
+                    <span class="text-sm text-zinc-500" id="detailCreatorCount">0 Creators</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-zinc-800 text-zinc-400 font-medium border-b border-zinc-800">
+                            <tr>
+                                <th class="px-6 py-3">Creator</th>
+                                <th class="px-6 py-3 text-right">Posts</th>
+                                <th class="px-6 py-3 text-right">Views</th>
+                                <th class="px-6 py-3 text-right">Engagement</th>
+                                <th class="px-6 py-3 text-right">Cost</th>
+                                <th class="px-6 py-3 text-right">eCPM</th>
+                                <th class="px-6 py-3 text-center">Quality Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detailCreatorsTable" class="divide-y divide-zinc-800 text-zinc-300">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Set Default Chart Colors for Dark Mode
+        Chart.defaults.color = '#a1a1aa'; // text-zinc-400
+        Chart.defaults.borderColor = '#27272a'; // border-zinc-800
+
+        // Global variables
+        let allCampaigns = [];
+        let currentChartInstance = null;
+        let platformChartInstance = null;
+        let detailViewsChart = null;
+        let currentSortBy = 'budget';
+        let currentStatusFilter = 'all';
+
+        // Check for Campaign ID in URL
+        document.addEventListener('DOMContentLoaded', async function() {
+            await verifySession();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const campaignId = urlParams.get('campaign_id');
+
+            if (campaignId) {
+                // Load Details View
+                loadCampaignDetails(campaignId);
+            } else {
+                // Load Dashboard View
+                loadAnalyticsData();
+            }
+            
+            setupEventListeners();
+        });
+
+        async function verifySession() {
+            try {
+                const response = await fetch('/api/auth/verify');
+                if (!response.ok || response.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+                const data = await response.json();
+                if (!data.valid || data.role !== 'manager') {
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Session verification failed:', error);
+                window.location.href = '/login';
+            }
+        }
+
+        // ================= DASHBOARD LOGIC =================
+        
+        async function loadAnalyticsData() {
+            document.getElementById('dashboardView').classList.remove('hidden');
+            document.getElementById('detailedView').classList.add('hidden');
+            
+            try {
+                const statsResponse = await fetch('/api/agency-stats');
+                const stats = await statsResponse.json();
+                
+                const campaignsResponse = await fetch('/api/campaigns/all');
+                const campaignsData = await campaignsResponse.json();
+                
+                allCampaigns = campaignsData.campaigns || [];
+                
+                updateAgencyStats(stats, allCampaigns);
+                updatePerformanceMetrics(allCampaigns);
+                renderCampaignsGrid(allCampaigns);
+                renderCampaignsTable(allCampaigns);
+                renderOverviewChart(allCampaigns);
+                renderPlatformPerformanceChart(allCampaigns);
+                
+                document.getElementById('loadingState').classList.add('hidden');
+                
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                document.getElementById('loadingState').innerHTML = '<p class="text-red-400">Error loading data.</p>';
+            }
+        }
+
+        function updateAgencyStats(stats, campaigns) {
+            const totalBudget = campaigns.reduce((sum, campaign) => sum + (campaign.total_budget || 0), 0);
+            const totalSpent = campaigns.reduce((sum, campaign) => sum + ((campaign.analytics?.budget_consumed || 0)), 0);
+            
+            document.getElementById('totalBudgetAllocated').textContent = `R${formatNumber(totalBudget)}`;
+            document.getElementById('budgetSpent').textContent = `R${formatNumber(totalSpent)}`;
+            
+            const spentPercentage = totalBudget > 0 ? (totalSpent / totalBudget * 100).toFixed(1) : 0;
+            document.getElementById('budgetSpentPercentage').textContent = `${spentPercentage}% of allocated`;
+            
+            const activeCampaigns = campaigns.filter(c => c.status === 'live').length;
+            document.getElementById('activeCampaigns').textContent = activeCampaigns;
+            document.getElementById('totalCampaigns').textContent = `of ${campaigns.length} total`;
+            
+            document.getElementById('complianceScore').textContent = `${stats.compliance_score || 0}%`;
+        }
+
+        function updatePerformanceMetrics(campaigns) {
+            const totalViews = campaigns.reduce((sum, campaign) => sum + ((campaign.analytics?.total_views || 0)), 0);
+            const totalEngagement = campaigns.reduce((sum, campaign) => sum + ((campaign.analytics?.total_engagement || 0)), 0);
+            const activeCreators = campaigns.reduce((sum, campaign) => sum + ((campaign.analytics?.creators_active || 0)), 0);
+            
+            const totalECPM = campaigns.reduce((sum, campaign) => {
+                const ecpm = campaign.analytics?.effective_cpm || 0;
+                const views = campaign.analytics?.total_views || 0;
+                return sum + (ecpm * views);
+            }, 0);
+            
+            const averageECPM = totalViews > 0 ? totalECPM / totalViews : 0;
+            
+            document.getElementById('totalViews').textContent = formatNumber(totalViews);
+            document.getElementById('totalEngagement').textContent = formatNumber(totalEngagement);
+            document.getElementById('activeCreators').textContent = formatNumber(activeCreators);
+            document.getElementById('averageECPM').textContent = `R${averageECPM.toFixed(2)}`;
+        }
+
+        function renderCampaignsGrid(campaigns) {
+            const grid = document.getElementById('campaignsGrid');
+            grid.innerHTML = '';
+            
+            const filteredCampaigns = filterCampaigns(campaigns);
+            const sortedCampaigns = sortCampaigns(filteredCampaigns);
+            
+            sortedCampaigns.forEach(campaign => {
+                const card = createCampaignCard(campaign);
+                grid.appendChild(card);
+            });
+        }
+
+        function createCampaignCard(campaign) {
+            const card = document.createElement('div');
+            card.className = 'metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6';
+            
+            const analytics = campaign.analytics || {};
+            const budgetPercentage = analytics.budget_consumed_percentage || 0;
+            const healthScore = analytics.health_score || 0;
+            const healthClass = getHealthClass(healthScore);
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-white mb-1">${campaign.title}</h3>
+                        <p class="text-sm text-zinc-400">${campaign.client_company}</p>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            ${campaign.platforms ? campaign.platforms.map(platform => 
+                                `<span class="text-xs bg-zinc-800 text-zinc-300 px-2 py-1 rounded">${platform}</span>`
+                            ).join('') : ''}
+                        </div>
+                    </div>
+                    <span class="status-badge status-${campaign.status}">${campaign.status.toUpperCase()}</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <div class="text-xs text-zinc-500 mb-1">Budget</div>
+                        <div class="text-lg font-bold text-white">R${formatNumber(campaign.total_budget)}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-zinc-500 mb-1">Spent</div>
+                        <div class="text-lg font-bold text-white">R${formatNumber(analytics.budget_consumed || 0)}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-zinc-500 mb-1">Views</div>
+                        <div class="text-lg font-bold text-white">${formatNumber(analytics.total_views || 0)}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-zinc-500 mb-1">eCPM</div>
+                        <div class="text-lg font-bold text-white">R${(analytics.effective_cpm || 0).toFixed(2)}</div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs text-zinc-500 mb-1">
+                        <span>Budget Progress</span>
+                        <span>${budgetPercentage.toFixed(0)}%</span>
+                    </div>
+                    <div class="w-full bg-zinc-800 rounded-full h-2">
+                        <div class="bg-brand-purple h-2 rounded-full" style="width: ${Math.min(budgetPercentage, 100)}%"></div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between pt-4 border-t border-zinc-800">
+                    <div class="flex items-center space-x-2">
+                        <div class="health-indicator ${healthClass}"></div>
+                        <div class="text-xs text-zinc-500">Health Score:</div>
+                        <div class="text-sm font-semibold ${getHealthColor(healthScore)}">
+                            ${healthScore}%
+                        </div>
+                    </div>
+                    <button onclick="viewCampaignDetails(${campaign.id})" class="text-sm font-medium text-brand-purple hover:text-brand-purple-dark transition-colors">
+                        View Details →
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function renderCampaignsTable(campaigns) {
+            const tbody = document.getElementById('campaignsTable');
+            tbody.innerHTML = '';
+            
+            const filteredCampaigns = filterCampaigns(campaigns);
+            const sortedCampaigns = sortCampaigns(filteredCampaigns);
+            
+            sortedCampaigns.forEach(campaign => {
+                const analytics = campaign.analytics || {};
+                const row = document.createElement('tr');
+                row.className = 'border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors';
+                
+                const healthScore = analytics.health_score || 0;
+                const healthClass = getHealthClass(healthScore);
+                const healthColor = getHealthColor(healthScore);
+                
+                row.innerHTML = `
+                    <td class="py-4 px-4">
+                        <div class="font-medium text-white">${campaign.title}</div>
+                        <div class="text-sm text-zinc-500">${campaign.platforms ? campaign.platforms.join(', ') : 'N/A'}</div>
+                    </td>
+                    <td class="py-4 px-4 text-zinc-300">${campaign.client_company}</td>
+                    <td class="py-4 px-4 text-right font-medium text-white">R${formatNumber(campaign.total_budget)}</td>
+                    <td class="py-4 px-4 text-right text-zinc-300">R${formatNumber(analytics.budget_consumed || 0)}</td>
+                    <td class="py-4 px-4 text-right text-zinc-300">${formatNumber(analytics.total_views || 0)}</td>
+                    <td class="py-4 px-4 text-right text-zinc-300">${formatNumber(analytics.total_engagement || 0)}</td>
+                    <td class="py-4 px-4 text-center">
+                        <span class="status-badge status-${campaign.status}">${campaign.status.toUpperCase()}</span>
+                    </td>
+                    <td class="py-4 px-4 text-center">
+                        <div class="flex items-center justify-center">
+                            <span class="health-indicator ${healthClass}"></span>
+                            <span class="font-semibold ${healthColor}">${healthScore}%</span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-4 text-center">
+                        <button onclick="viewCampaignDetails(${campaign.id})" class="text-brand-purple hover:text-brand-purple-dark text-sm font-medium transition-colors">
+                            View Analytics
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // ================= DETAILED VIEW LOGIC =================
+
+        async function loadCampaignDetails(campaignId) {
+            document.getElementById('dashboardView').classList.add('hidden');
+            document.getElementById('detailedView').classList.remove('hidden');
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('detailedView').classList.add('opacity-50');
+
+            try {
+                const response = await fetch(`/api/campaigns/${campaignId}/analytics`);
+                
+                if (!response.ok) throw new Error('Failed to load details');
+                
+                const data = await response.json();
+                renderDetailView(data);
+                
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('detailedView').classList.remove('opacity-50');
+            } catch (error) {
+                console.error("Details error:", error);
+                alert("Failed to load campaign details.");
+                window.location.href = '/campaign_analytics';
+            }
+        }
+
+        function renderDetailView(data) {
+            const campaign = data.campaign;
+            const metrics = data.totals;
+            const budget = data.budget;
+
+            document.getElementById('detailTitle').textContent = campaign.title;
+            document.getElementById('detailClient').textContent = campaign.client_company;
+            
+            const start = campaign.start_date ? new Date(campaign.start_date).toLocaleDateString() : 'N/A';
+            const end = campaign.end_date ? new Date(campaign.end_date).toLocaleDateString() : 'N/A';
+            document.getElementById('detailDates').textContent = `${start} - ${end}`;
+            
+            const statusEl = document.getElementById('detailStatus');
+            statusEl.textContent = campaign.status.toUpperCase();
+            statusEl.className = `px-2 py-0.5 rounded-full text-xs font-semibold status-${campaign.status}`;
+
+            const healthScore = data.health_score || 0;
+            document.getElementById('detailHealth').textContent = `${healthScore}/100`;
+            const circumference = 2 * Math.PI * 28; 
+            const offset = circumference - (healthScore / 100) * circumference;
+            document.getElementById('healthRing').style.strokeDasharray = `${circumference} ${circumference}`;
+            document.getElementById('healthRing').style.strokeDashoffset = offset;
+            
+            const ringColor = healthScore >= 80 ? '#10b981' : (healthScore >= 60 ? '#f59e0b' : '#ef4444');
+            document.getElementById('healthRing').style.stroke = ringColor;
+            document.getElementById('detailHealth').style.color = ringColor;
+
+            document.getElementById('detailSpent').textContent = `R${formatNumber(budget.consumed)}`;
+            document.getElementById('detailBudget').textContent = `R${formatNumber(budget.total)}`;
+            document.getElementById('detailBudgetPercent').textContent = `${budget.percentage_consumed}%`;
+            document.getElementById('detailBudgetBar').style.width = `${Math.min(budget.percentage_consumed, 100)}%`;
+            
+            document.getElementById('detailViews').textContent = formatNumber(metrics.views);
+            const totalProj = data.time_series.projected_views.length > 0 
+                ? data.time_series.projected_views[data.time_series.projected_views.length - 1] 
+                : 0;
+            document.getElementById('detailProjectedViews').textContent = formatNumber(totalProj);
+            
+            document.getElementById('detailECPM').textContent = `R${data.roi_metrics.ecpm.toFixed(2)}`;
+            document.getElementById('detailECPMTarget').textContent = `R${data.roi_metrics.ecpm_target.toFixed(2)}`;
+            
+            const engagementRate = metrics.views > 0 ? (metrics.engagements / metrics.views * 100).toFixed(2) : 0;
+            document.getElementById('detailEngagementRate').textContent = `${engagementRate}%`;
+            document.getElementById('detailEngagements').textContent = formatNumber(metrics.engagements);
+
+            renderDetailCharts(data);
+
+            const creatorTable = document.getElementById('detailCreatorsTable');
+            creatorTable.innerHTML = '';
+            document.getElementById('detailCreatorCount').textContent = `${metrics.creators} Creators`;
+
+            data.creators.forEach(creator => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-zinc-800/50 transition-colors';
+                tr.innerHTML = `
+                    <td class="px-6 py-4">
+                        <div class="font-medium text-white">${creator.name}</div>
+                        <div class="text-xs text-zinc-500">${creator.handle}</div>
+                    </td>
+                    <td class="px-6 py-4 text-right">${creator.posts_count}</td>
+                    <td class="px-6 py-4 text-right">${formatNumber(creator.views)}</td>
+                    <td class="px-6 py-4 text-right">${formatNumber(creator.engagements)}</td>
+                    <td class="px-6 py-4 text-right">R${formatNumber(creator.cost)}</td>
+                    <td class="px-6 py-4 text-right">R${creator.ecpm}</td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="inline-block px-2 py-1 rounded text-xs font-semibold ${creator.quality_score >= 80 ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}">
+                            ${creator.quality_score}
+                        </span>
+                    </td>
+                `;
+                creatorTable.appendChild(tr);
+            });
+        }
+
+        function renderDetailCharts(data) {
+            const ctxViews = document.getElementById('detailViewsChart').getContext('2d');
+            if (detailViewsChart) detailViewsChart.destroy();
+            
+            const labels = data.time_series.dates.length ? data.time_series.dates : ['No Data'];
+            const actuals = data.time_series.dates.length ? data.time_series.actual_views : [0];
+            const projected = data.time_series.dates.length ? data.time_series.projected_views : [0];
+
+            detailViewsChart = new Chart(ctxViews, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Cumulative Views',
+                            data: actuals,
+                            borderColor: '#6B21A8',
+                            backgroundColor: 'rgba(107, 33, 168, 0.1)',
+                            fill: true,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Trend',
+                            data: projected,
+                            borderColor: '#71717a', // zinc-500
+                            borderDash: [5, 5],
+                            tension: 0.1,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { intersect: false, mode: 'index' },
+                    plugins: { legend: { position: 'top' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        // ================= HELPERS & UTILS =================
+
+        function renderOverviewChart(campaigns) {
+            const ctx = document.getElementById('campaignOverviewChart').getContext('2d');
+            
+            const labels = campaigns.map(c => c.title.substring(0, 15) + '...');
+            const budgetData = campaigns.map(c => c.total_budget);
+            const spentData = campaigns.map(c => (c.analytics?.budget_consumed || 0));
+            const viewsData = campaigns.map(c => (c.analytics?.total_views || 0));
+            
+            if (currentChartInstance) currentChartInstance.destroy();
+            
+            currentChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Total Views',
+                            data: viewsData,
+                            type: 'line', 
+                            borderColor: '#10B981',
+                            backgroundColor: '#10B981',
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            yAxisID: 'y1',
+                            tension: 0.3,
+                            order: 0 
+                        },
+                        {
+                            label: 'Total Budget',
+                            data: budgetData,
+                            backgroundColor: 'rgba(107, 33, 168, 0.2)',
+                            borderColor: 'rgb(107, 33, 168)',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            yAxisID: 'y',
+                            order: 2
+                        }, 
+                        {
+                            label: 'Budget Spent',
+                            data: spentData,
+                            backgroundColor: 'rgba(220, 38, 38, 0.7)',
+                            borderColor: 'rgb(220, 38, 38)',
+                            borderWidth: 0,
+                            borderRadius: 4,
+                            yAxisID: 'y',
+                            order: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Budget (ZAR)'
+                            },
+                            beginAtZero: true,
+                            ticks: { callback: value => 'R' + formatNumber(value) }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Total Views'
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                drawOnChartArea: false 
+                            },
+                            ticks: { callback: value => formatNumber(value) }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderPlatformPerformanceChart(campaigns) {
+            const ctx = document.getElementById('platformPerformanceChart').getContext('2d');
+            const platformData = {};
+            campaigns.forEach(campaign => {
+                const platforms = campaign.platforms || [];
+                const analytics = campaign.analytics || {};
+                platforms.forEach(platform => {
+                    if (!platformData[platform]) platformData[platform] = 0;
+                    platformData[platform] += analytics.total_views || 0;
+                });
+            });
+            
+            if (platformChartInstance) platformChartInstance.destroy();
+            
+            platformChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(platformData),
+                    datasets: [{
+                        data: Object.values(platformData),
+                        backgroundColor: ['#6B21A8', '#DC2626', '#10B981', '#F59E0B', '#3B82F6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right' } }
+                }
+            });
+        }
+
+        function filterCampaigns(campaigns) {
+            return currentStatusFilter === 'all' ? campaigns : campaigns.filter(c => c.status === currentStatusFilter);
+        }
+
+        function sortCampaigns(campaigns) {
+            return [...campaigns].sort((a, b) => {
+                const analyticsA = a.analytics || {};
+                const analyticsB = b.analytics || {};
+                
+                if (currentSortBy === 'budget') return b.total_budget - a.total_budget;
+                if (currentSortBy === 'health') return (analyticsB.health_score || 0) - (analyticsA.health_score || 0);
+                if (currentSortBy === 'views') return (analyticsB.total_views || 0) - (analyticsA.total_views || 0);
+                if (currentSortBy === 'engagement') return (analyticsB.total_engagement || 0) - (analyticsA.total_engagement || 0);
+                return 0;
+            });
+        }
+
+        function getHealthClass(score) {
+            if (score >= 80) return 'health-excellent';
+            if (score >= 60) return 'health-good';
+            return 'health-poor';
+        }
+
+        function getHealthColor(score) {
+            if (score >= 80) return 'text-green-500';
+            if (score >= 60) return 'text-yellow-500';
+            return 'text-red-500';
+        }
+
+        function viewCampaignDetails(campaignId) {
+            window.location.href = `/campaign_analytics?campaign_id=${campaignId}`;
+        }
+
+        function formatNumber(num) {
+            if (num === undefined || num === null) return '0';
+            return new Intl.NumberFormat('en-ZA').format(Math.round(num));
+        }
+
+        function setupEventListeners() {
+            document.getElementById('logoutBtn').addEventListener('click', async function() {
+                try {
+                    await fetch('/api/auth/logout', { method: 'POST' });
+                    window.location.href = '/login';
+                } catch (error) { console.error('Logout error:', error); }
+            });
+
+            const statusFilter = document.getElementById('statusFilter');
+            if (statusFilter) {
+                statusFilter.addEventListener('change', function(e) {
+                    currentStatusFilter = e.target.value;
+                    renderCampaignsGrid(allCampaigns);
+                    renderCampaignsTable(allCampaigns);
+                });
+            }
+
+            const sortFilter = document.getElementById('sortFilter');
+            if (sortFilter) {
+                sortFilter.addEventListener('change', function(e) {
+                    currentSortBy = e.target.value;
+                    renderCampaignsGrid(allCampaigns);
+                    renderCampaignsTable(allCampaigns);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

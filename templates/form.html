@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sign up for R.E.D-Storage Solutions document archiving services in South Africa. Get one free storage unit with our Standard, Business, or Enterprise packages.">
+  <meta name="keywords" content="document archiving signup, South Africa archiving, document storage plans, archive pricing, business document storage">
+  <meta name="author" content="R.E.D-Storage Solutions">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Sign Up for Document Archiving Services | R.E.D-Storage Solutions">
+  <meta property="og:description" content="Register for professional document archiving services in South Africa with our special offer: one free storage unit for new customers.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://redsolutions.vercel.app/form">
+  <link rel="canonical" href="https://redsolutions.vercel.app/form">
+  <title>Sign Up for Document Archiving Services | R.E.D-Storage Solutions South Africa</title>
+  <link rel="icon" href="{{ url_for('static', filename='Images/favicon.ico') }}">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom font */
+    body {
+      font-family: 'Inter', sans-serif; /* Assuming Inter is desired, or remove if not needed */
+    }
+
+    /* Fade-in and Slide-up Animation for content blocks */
+    @keyframes fadeInSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    .animate-on-scroll.is-visible {
+        animation: fadeInSlideUp 0.8s ease-out forwards;
+    }
+
+    /* Specific delays for content cards if needed (adjust as per page structure) */
+    .info-section.is-visible { animation-delay: 0.1s; }
+    .form-section.is-visible { animation-delay: 0.3s; }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-red-400 to-white text-gray-800 min-h-screen flex flex-col items-center">
+  <nav class="fixed top-0 left-0 w-full flex justify-between items-center px-4 py-3 bg-white shadow-lg z-50 flex-wrap rounded-b-xl">
+    <div class="text-2xl font-bold text-red-600">R.E.D - Solutions</div>
+    <div class="md:hidden">
+        <button id="menu-toggle" class="text-gray-700 hover:text-red-500 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+    <div id="nav-links" class="hidden md:flex flex-col md:flex-row md:space-x-8 mt-4 md:mt-0 w-full md:w-auto bg-white md:bg-transparent p-4 md:p-0 rounded-lg md:rounded-none shadow-md md:shadow-none">
+        <a href="/" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out">Home</a>
+        <a href="/form" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out">Enquiries</a>
+        <a href="/services" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out">Services</a>
+    </div>
+  </nav>
+  
+  <div class="container w-11/12 max-w-5xl bg-white rounded-xl shadow-2xl p-8 mt-28 mb-10 flex flex-col md:flex-row gap-8 animate-on-scroll">
+    <div class="info-section flex-1 md:pr-8 md:border-r md:border-gray-200 animate-on-scroll">
+      <h2 class="text-3xl font-extrabold text-red-600 mb-4">Get in Touch</h2>
+      <p class="text-lg text-gray-700 mb-6 leading-relaxed">We're here to help you elevate your business. Feel free to reach out to us through the contact form, or use the direct contact details below.</p>
+      <ul class="list-none p-0">
+        <li class="mb-3 text-gray-700"><strong class="text-red-500">Email:</strong> mchimwaza@redsystems.co.za</li>
+        <li class="mb-3 text-gray-700"><strong class="text-red-500">Sales:</strong> smotha@redsystems.co.za</li>
+        <li class="mb-3 text-gray-700"><strong class="text-red-500">Support:</strong> keabetswe.ntseare@redsystems.co.za</li>
+        <li class="mb-3 text-gray-700"><strong class="text-red-500">Phone:</strong> 068 192 1941</li>
+        <li class="mb-3 text-gray-700"><strong class="text-red-500">Alternative:</strong> 082 686 7886</li>
+      </ul>
+      <p class="text-md text-gray-600 mt-6">Our team is available Monday to Friday, 8:00 AM - 5:00 PM SAST.</p>
+    </div>
+
+    <div class="form-section flex-1 animate-on-scroll">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-extrabold text-red-600 mb-3">Contact Us</h1>
+        <p class="text-lg text-gray-700">Fill out the form below and we'll get back to you shortly.</p>
+      </div>
+      <form id="signupForm" action="/submit-signup" method="post" class="space-y-6">
+        <div class="form-group">
+          <label for="name" class="block text-gray-800 text-sm font-bold mb-2">Full Name</label>
+          <input type="text" id="name" name="name" required placeholder="Enter your full name"
+                 class="shadow-sm appearance-none border border-gray-300 rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition duration-200">
+        </div>
+        <div class="form-group">
+          <label for="company" class="block text-gray-800 text-sm font-bold mb-2">Company Name (Optional)</label>
+          <input type="text" id="company" name="company" placeholder="Enter your company name"
+                 class="shadow-sm appearance-none border border-gray-300 rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition duration-200">
+        </div>
+        <div class="form-group">
+          <label for="email" class="block text-gray-800 text-sm font-bold mb-2">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="Enter your email address"
+                 class="shadow-sm appearance-none border border-gray-300 rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition duration-200">
+        </div>
+        <div class="form-group">
+          <label for="phone" class="block text-gray-800 text-sm font-bold mb-2">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="Enter your phone number"
+                 class="shadow-sm appearance-none border border-gray-300 rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition duration-200">
+        </div>
+        <div class="form-group">
+          <label for="package" class="block text-gray-800 text-sm font-bold mb-2">Service</label>
+          <select id="package" name="package" required
+                  class="shadow-sm appearance-none border border-gray-300 rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition duration-200 bg-white">
+            <option value="">Choose The Service</option>
+            <option value="standard">Client Acquisition</option>
+            <option value="business">Business Development & Client Relations</option>
+            <option value="enterprise">Marketing & Brand Awareness</option>
+            <option value="consulting">Full service</option>
+          </select>
+          <div class="package-info text-sm text-gray-600 mt-2" id="packageInfo"></div>
+        </div>
+        <button type="submit"
+                class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105">
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle
+      const menuToggle = document.getElementById('menu-toggle');
+      const navLinks = document.getElementById('nav-links');
+      
+      menuToggle.addEventListener('click', function() {
+        navLinks.classList.toggle('hidden');
+        navLinks.classList.toggle('flex');
+      });
+      
+      // Close menu when clicking a link
+      const links = document.querySelectorAll('#nav-links a');
+      links.forEach(link => {
+        link.addEventListener('click', function() {
+          if (!navLinks.classList.contains('hidden')) {
+            navLinks.classList.add('hidden');
+            navLinks.classList.remove('flex');
+          }
+        });
+      });
+
+      // Package details
+      const packageDetails = {
+        standard: "We specialize in identifying and acquiring new clients for manufacturers and similar industries, expanding your market reach and increasing your customer base. Our tailored approaches ensure high-quality leads and successful conversions.",
+        business: "Our consultants develop strategies to enhance your interactions with existing clients, foster loyalty, and convert potential leads into lasting relationships.",
+        enterprise: "We craft comprehensive marketing strategies designed to improve public perception, elevate your brand's presence, and create widespread brand awareness.",
+        consulting: "Red solutions full consulting service."
+      };
+      
+      document.getElementById('package').addEventListener('change', function() {
+        document.getElementById('packageInfo').textContent = packageDetails[this.value] || '';
+      });
+
+      // Intersection Observer for fade-in-slide-up animation
+      const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
+
+      const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                  entry.target.classList.add('is-visible');
+                  observer.unobserve(entry.target); // Stop observing once visible
+              }
+          });
+      }, {
+          threshold: 0.1, // Trigger when 10% of the element is visible
+          rootMargin: '0px 0px -50px 0px' // Adjust when elements become visible
+      });
+
+      animateOnScrollElements.forEach(element => {
+          observer.observe(element);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='Images/favicon.ico') }}">
+    
+    <title>Hire Vetted global Creators | Creative Swop Influencer Marketing</title>
+    <meta name="description" content="Maximize your influencer marketing ROI with Creative Swop. Hire vetted SA creators, manage compliance, and book campaigns. The best micro influencer platform for agencies.">
+    <meta name="keywords" content="hire influencers, influencer marketing ROI calculation, best micro influencer platform, enterprise-grade compliance, book creators, buy media, Creative Swop">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://redsystems.co.za/creative-swop/home">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://redsystems.co.za/creative-swop/home">
+    <meta property="og:title" content="Creative Swop | Precision Influencer Marketing for Agencies">
+    <meta property="og:description" content="Stop wasting budget on impressions. Hire vetted creators and track real ROI. Schedule a demo today.">
+    <meta property="og:image" content="https://redsystems.co.za/static/Images/favicon.ico">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Creative Swop",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "ZAR",
+        "description": "Free pilot campaign consultation for agencies."
+      },
+      "description": "An enterprise-grade influencer management platform connecting agencies with vetted global creators.",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "120"
+      }
+    }
+    </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Creative Swop",
+  "alternateName": "Creative Swop global",
+  "url": "https://redsystems.co.za/creative-swop/home",
+  "logo": "https://redsystems.co.za/static/Images/favicon.ico",
+  "description": "The premier influencer marketing platform , connecting agencies with vetted creators for precision campaigns and ROI.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Centurion",
+    "addressRegion": "Gauteng",
+    "addressCountry": "ZA"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "areaServed": "ZA",
+    "availableLanguage": "en"
+  }
+}
+</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #6B21A8 0%, #DC2626 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-gradient {
+            background: radial-gradient(ellipse at top, rgba(107, 33, 168, 0.15) 0%, transparent 50%);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .comparison-card {
+            transition: all 0.3s ease;
+        }
+        
+        .comparison-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="bg-white text-zinc-900">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-lg border-b border-zinc-200 z-50">
+    <div class="container mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+            
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <span class="text-2xl font-bold text-brand-purple">Creative Swop</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="/creative-swop/home" class="text-zinc-600 hover:text-brand-purple transition-colors">Home</a>
+                <a href="/creative-swop/affiliate" class="text-zinc-600 hover:text-brand-purple transition-colors">Affiliate</a>
+                <a href="/creative-swop/influencers" class="text-zinc-600 hover:text-brand-purple transition-colors">Influencers</a>
+                <a href="/login" class="text-zinc-600 hover:text-brand-purple transition-colors">Login</a>
+                <a href="/join-swop" class="px-6 py-2 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-semibold transition-colors">
+                    Join Creative Swop — It's Free
+                </a>
+            </div>
+
+            <button id="mobileMenuButton" class="md:hidden p-2 rounded-md text-zinc-700 hover:text-brand-purple hover:bg-gray-100 transition-colors" aria-label="Toggle Menu">
+                <svg id="menuIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+                <svg id="closeIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden transition-all duration-300 ease-in-out">
+        <div class="px-2 pt-2 pb-3 space-y-2 border-t border-zinc-200">
+            <a href="/creative-swop/home" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:bg-gray-50 hover:text-brand-purple">Home</a>
+            <a href="/creative-swop/affiliate" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:bg-gray-50 hover:text-brand-purple">Affiliate</a>
+            <a href="/creative-swop/influencers" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:bg-gray-50 hover:text-brand-purple">Influencers</a>
+            <a href="/login" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:bg-gray-50 hover:text-brand-purple">Login</a>
+            <a href="/join-swop" class="block w-full text-center px-4 py-3 mt-4 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-md font-semibold transition-colors">
+                Join Creative Swop — It's Free
+            </a>
+        </div>
+    </div>
+</nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 relative overflow-hidden hero-gradient">
+        <div class="container mx-auto px-6">
+            <div class="max-w-5xl mx-auto text-center">
+                <div class="mb-6 inline-block">
+                    <span class="px-4 py-2 bg-brand-purple/10 text-brand-purple rounded-full text-sm font-semibold">
+                        The Future of Influence Marketing
+                    </span>
+                </div>
+                
+                <h1 class="text-6xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight">
+                    Creative Swop:<br>
+                    <span class="gradient-text">Influence. Elevated.</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-zinc-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+                    Move beyond expensive impressions. Access a rigorously vetted network of authentic global creators designed for precision, performance, and superior ROI.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                    <a href="#cta" class="px-8 py-4 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl">
+                        Launch a Pilot Campaign
+                    </a>
+                    <a href="#features" class="px-8 py-4 border-2 border-brand-purple text-brand-purple hover:bg-brand-purple hover:text-white rounded-lg font-bold text-lg transition-all">
+                        Explore the Network
+                    </a>
+                </div>
+                
+                <!-- Hero Visual -->
+                <div class="relative mt-16">
+                    <div class="absolute inset-0 bg-gradient-to-r from-brand-purple/20 to-brand-red/20 blur-3xl"></div>
+                    <div class="relative bg-zinc-900 rounded-2xl shadow-2xl p-8 float-animation">
+                        <div class="grid grid-cols-3 gap-6">
+                            <div class="text-center">
+                                <div class="text-4xl font-bold text-brand-purple mb-2">94%</div>
+                                <div class="text-sm text-zinc-400">The Aim: Campaign Success</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-4xl font-bold text-white mb-2">2.8x</div>
+                                <div class="text-sm text-zinc-400">The Aim: Better ROI</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-4xl font-bold text-brand-red mb-2">100%</div>
+                                <div class="text-sm text-zinc-400">The Aim: Vetted Creators</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Creative Swop Section -->
+    <section id="why" class="py-20 bg-zinc-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-4">The Digital Divide:</h2>
+                <p class="text-3xl text-zinc-600">Why Your Current Strategy is Failing</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <!-- Problem 1 -->
+                <div class="comparison-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="p-8">
+                        <div class="flex items-start mb-4">
+                            <div class="w-12 h-12 bg-brand-red/10 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-brand-red mb-2">Wasted Impressions & Ad Fatigue</h3>
+                                <p class="text-zinc-600">Traditional ads face blockers and audience apathy, burning budget with minimal engagement.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-brand-purple/5 p-8 border-t border-brand-purple/10">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-brand-purple/10 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-brand-purple mb-2">Precision Engagement</h4>
+                                <p class="text-zinc-700">We bypass ad blockers and fatigue by leveraging trusted micro-voices to deliver your message into niche, highly-engaged communities.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problem 2 -->
+                <div class="comparison-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="p-8">
+                        <div class="flex items-start mb-4">
+                            <div class="w-12 h-12 bg-brand-red/10 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-brand-red mb-2">High Cost Per Acquisition</h3>
+                                <p class="text-zinc-600">Inflated ad exchange rates drain budgets while delivering diminishing returns.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-brand-purple/5 p-8 border-t border-brand-purple/10">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-brand-purple/10 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-brand-purple mb-2">Optimized, Performance-Driven ROI</h4>
+                                <p class="text-zinc-700">Shift from paying for fleeting reach to paying for action. Our model provides superior cost-efficiency compared to inflated ad exchange rates.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problem 3 -->
+                <div class="comparison-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="p-8">
+                        <div class="flex items-start mb-4">
+                            <div class="w-12 h-12 bg-brand-red/10 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-brand-red mb-2">Brand Safety & Compliance Risk</h3>
+                                <p class="text-zinc-600">Unvetted influencers expose brands to reputational damage and regulatory issues.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-brand-purple/5 p-8 border-t border-brand-purple/10">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-brand-purple/10 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-brand-purple mb-2">Hyper-Vetted Network</h4>
+                                <p class="text-zinc-700">Every creator is pre-vetted against strict quality and brand safety metrics. We handle the compliance, so you mitigate the risk.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problem 4 -->
+                <div class="comparison-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="p-8">
+                        <div class="flex items-start mb-4">
+                            <div class="w-12 h-12 bg-brand-red/10 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-brand-red mb-2">Generic, Global Content</h3>
+                                <p class="text-zinc-600">One-size-fits-all approaches fail to resonate with local audiences and cultural nuances.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-brand-purple/5 p-8 border-t border-brand-purple/10">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-brand-purple/10 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-brand-purple mb-2">Cultural Mastery</h4>
+                                <p class="text-zinc-700">Tap into a curated pool of global creators with deep local and cultural relevance, ensuring your content resonates authentically.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-4">Strategic Control.</h2>
+                <p class="text-3xl text-zinc-600">Simplified Execution.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                <!-- Feature 1 -->
+                <div class="group">
+                    <div class="bg-gradient-to-br from-brand-purple to-brand-purple-dark rounded-2xl p-8 mb-6 transform group-hover:scale-105 transition-transform">
+                        <svg class="w-16 h-16 text-white mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                        </svg>
+                        <h3 class="text-2xl font-bold text-white mb-2">Precision Campaign Builder</h3>
+                    </div>
+                    <p class="text-lg text-zinc-600">Our guided setup ensures you define the exact demographic, location, and niche required. Pinpoint your target market using our proprietary filtering tools.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="group">
+                    <div class="bg-gradient-to-br from-brand-red to-red-700 rounded-2xl p-8 mb-6 transform group-hover:scale-105 transition-transform">
+                        <svg class="w-16 h-16 text-white mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <h3 class="text-2xl font-bold text-white mb-2">Transparent Budget Meter</h3>
+                    </div>
+                    <p class="text-lg text-zinc-600">Maintain complete financial oversight. Set your total budget and CPM instantly, and monitor the spending meter in real-time, allowing you to pause or scale based purely on performance metrics.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="group">
+                    <div class="bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-2xl p-8 mb-6 transform group-hover:scale-105 transition-transform">
+                        <svg class="w-16 h-16 text-white mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        <h3 class="text-2xl font-bold text-white mb-2">End-to-End Compliance</h3>
+                    </div>
+                    <p class="text-lg text-zinc-600">From automated creator contracts to mandatory disclosure adherence, we manage the complex legal and administrative burden. Focus on strategy, not paperwork.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="group">
+                    <div class="bg-gradient-to-br from-brand-purple to-brand-red rounded-2xl p-8 mb-6 transform group-hover:scale-105 transition-transform">
+                        <svg class="w-16 h-16 text-white mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                        </svg>
+                        <h3 class="text-2xl font-bold text-white mb-2">Actionable Data Suite</h3>
+                    </div>
+                    <p class="text-lg text-zinc-600">Access rich, consolidated performance data. Move beyond simple likes and impressions to measure genuine engagement, sentiment, and conversion signals, all within one elegant dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof Section -->
+    <section class="py-20 bg-zinc-900 text-white">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-4xl font-black mb-12">Trusted by Forward-Thinking Agencies</h2>
+                
+                <div class="grid md:grid-cols-3 gap-8 mb-12">
+                    <div>
+                        <div class="text-5xl font-black text-brand-purple mb-2">2.8x</div>
+                        <div class="text-zinc-400">The Aim: Better ROI vs Traditional Ads</div>
+                    </div>
+                    <div>
+                        <div class="text-5xl font-black text-brand-purple mb-2">R1M</div>
+                        <div class="text-zinc-400">The Aim: Campaign Value Deployed</div>
+                    </div>
+                    <div>
+                        <div class="text-5xl font-black text-brand-purple mb-2">500+</div>
+                        <div class="text-zinc-400">The Aim: Vetted SA Creators</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section id="cta" class="py-32 bg-gradient-to-br from-brand-purple to-brand-purple-dark text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full filter blur-3xl"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-brand-red rounded-full filter blur-3xl"></div>
+        </div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-5xl md:text-6xl font-black mb-6">
+                    Ready to Transform Your<br>Influence Strategy?
+                </h2>
+                
+                <p class="text-2xl mb-12 text-purple-100">
+                    Join the forward-thinking agencies who are already building authentic, high-impact campaigns across The globe. Your future audience is waiting.
+                </p>
+                
+                <a href="/join-swop" class="inline-block px-12 py-5 bg-white text-brand-purple rounded-lg font-bold text-xl transition-all transform hover:scale-105 shadow-2xl hover:shadow-white/20">
+                    Launch Your First Campaign with Creative Swop
+                </a>
+                
+                <p class="mt-8 text-sm text-purple-200">
+                    No credit card required • Free pilot campaign consultation
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold">Creative Swop</span>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <p class="text-zinc-400 mb-2">The Standard in Creator Marketing.</p>
+                    <div class="flex items-center justify-center md:justify-end space-x-6 text-sm text-zinc-500">
+                        <a href="/terms-and-conditions" class="hover:text-brand-purple transition-colors">Privacy</a>
+                        <a href="/terms-and-conditions" class="hover:text-brand-purple transition-colors">Terms</a>
+                        <a href="/form" class="hover:text-brand-purple transition-colors">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll animation for cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.comparison-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+        const button = document.getElementById('mobileMenuButton');
+        const menu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
+        const closeIcon = document.getElementById('closeIcon');
+
+        button.addEventListener('click', function() {
+            // Toggle menu visibility
+            menu.classList.toggle('hidden');
+            
+            // Toggle icons
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+    });
+    </script>
+    <script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+
+</html>
+
+
+

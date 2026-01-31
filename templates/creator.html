@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunities Board | Creator Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                        'brand-green': '#059669',
+                        'brand-orange': '#EA580C',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white">
+    
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-zinc-900 border-b border-zinc-800">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <div class="text-2xl font-bold text-brand-purple">Creative Swop</div>
+                    <nav class="hidden md:flex space-x-6 text-sm">
+                        <a href="/creator" class="text-white font-medium">Opportunities</a>
+                        <a href="/my_campaign" class="text-zinc-400 hover:text-white">My Campaign</a>
+                        <a href="/analytics" class="text-zinc-400 hover:text-white">Analytics</a>
+                        <a href="/settings" class="text-zinc-400 hover:text-white">settings</a>
+                    </nav>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <div class="hidden lg:flex items-center space-x-6 text-sm">
+                        <div>
+                            <div class="text-zinc-400 text-xs">Total Earnings</div>
+                            <div class="text-brand-purple font-semibold" id="totalEarnings">R 0</div>
+                        </div>
+                        <div class="w-px h-8 bg-zinc-700"></div>
+                        <div>
+                            <div class="text-zinc-400 text-xs">Current Balance</div>
+                            <div class="text-white font-semibold" id="currentBalance">R 0</div>
+                        </div>
+                        <div class="w-px h-8 bg-zinc-700"></div>
+                        <div>
+                            <div class="text-zinc-400 text-xs">Profile Score</div>
+                            <div class="text-white font-semibold"><span id="profileScore">0</span>%</div>
+                        </div>
+                    </div>
+                    
+                    <!-- User Dropdown Menu -->
+                    <div class="relative group">
+                        <button class="w-10 h-10 rounded-full bg-brand-purple flex items-center justify-center font-semibold hover:bg-brand-purple-dark transition-colors">
+                            TC
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 mt-2 w-48 bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="p-2">
+                                <div class="border-t border-zinc-700 mt-2 pt-2">
+                                    <button 
+                                        onclick="logout()" 
+                                        class="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-zinc-700 rounded-md transition-colors flex items-center gap-2"
+                                    >
+                                        <span class="material-symbols-outlined w-4 h-4 text-red-400">
+                                            logout
+                                        </span>
+                                        Log Out
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile Menu Button -->
+    <button class="md:hidden text-zinc-400 hover:text-white" onclick="toggleMobileMenu()">
+    <span class="material-symbols-outlined w-6 h-6 leading-none">
+        menu
+    </span>
+</button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (add this inside the header after the main nav) -->
+<div id="mobileMenu" class="md:hidden mt-4 border-t border-zinc-800 pt-4 hidden">
+    <div class="space-y-2">
+        <a href="/creator" class="block py-2 text-white font-medium">Opportunities</a>
+        <a href="/my_campaign" class="block py-2 text-zinc-400 hover:text-white">My Campaign</a>
+        <a href="/analytics" class="block py-2 text-zinc-400 hover:text-white">Analytics</a>
+        <a href="/settings" class="block py-2 text-zinc-400 hover:text-white">settings</a>
+
+        <button onclick="logout()" class="block py-2 text-red-400 hover:text-red-300 w-full text-left">
+            Log Out
+        </button>
+    </div>
+</div>
+    </header>
+
+    <!-- Campaign Type Tabs -->
+    <div class="bg-zinc-900 border-b border-zinc-800">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex space-x-4 max-w-md mx-auto">
+                <button onclick="switchCampaignType('standard')" id="standardTab" class="campaign-type-tab active flex-1 px-6 py-3 rounded-lg font-semibold bg-brand-purple text-white">
+                    Standard Campaigns
+                </button>
+                <button onclick="switchCampaignType('affiliate')" id="affiliateTab" class="campaign-type-tab flex-1 px-6 py-3 rounded-lg font-semibold bg-zinc-800 text-zinc-400">
+                    Affiliate Campaigns
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search & Filters -->
+    <div id="standardFilters" class="bg-zinc-900 border-b border-zinc-800">
+        <div class="container mx-auto px-6 py-6">
+            <div class="flex flex-col lg:flex-row gap-4">
+                <div class="flex-1">
+                    <input 
+                        type="text" 
+                        id="searchBar"
+                        placeholder="Search campaigns... (e.g., Food, Cape Town, Gaming)"
+                        class="w-full px-6 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple"
+                    >
+                </div>
+                <button 
+    id="filterToggle"
+    class="px-6 py-3 bg-zinc-800 border border-zinc-700 rounded-lg hover:border-brand-purple transition-colors flex items-center justify-center gap-2"
+>
+    <span class="material-symbols-outlined w-5 h-5 leading-none">
+        filter_list
+    </span>
+    Filters
+</button>
+            </div>
+
+            <!-- Filter Panel (Initially Hidden) -->
+            <div id="filterPanel" class="hidden mt-4 p-6 bg-zinc-800 rounded-lg border border-zinc-700">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Niche</label>
+                        <select class="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple" id="filterNiche">
+                            <option value="">All Niches</option>
+                            <option>Food & Lifestyle</option>
+                            <option>Finance</option>
+                            <option>Beauty & Wellness</option>
+                            <option>Comedy & Entertainment</option>
+                            <option>Travel</option>
+                            <option>Tech & Gaming</option>
+                            <option>Fashion</option>
+                            <option>Fitness</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Platform</label>
+                        <select class="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple" id="filterPlatform">
+                            <option value="">All Platforms</option>
+                            <option>TikTok</option>
+                            <option>Instagram</option>
+                            <option>Instagram Reels</option>
+                            <option>YouTube</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Location</label>
+                        <select class="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple" id="filterLocation">
+                            <option value="">All Locations</option>
+                            <option>National</option>
+                            <option>Gauteng</option>
+                            <option>Western Cape</option>
+                            <option>KZN</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Min CPM</label>
+                        <select class="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple" id="filterCPM">
+                            <option value="0">Any</option>
+                            <option value="50">R 50+</option>
+                            <option value="100">R 100+</option>
+                            <option value="150">R 150+</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Affiliate Campaign Filters -->
+    <div id="affiliateFilters" class="bg-zinc-900 border-b border-zinc-800 hidden">
+        <div class="container mx-auto px-6 py-6">
+            <div class="flex flex-col lg:flex-row gap-4">
+                <div class="flex-1">
+                    <input 
+                        type="text" 
+                        id="affiliateSearchBar"
+                        placeholder="Search affiliate campaigns... (e.g., Headphones, Nike, Tech)"
+                        class="w-full px-6 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-brand-purple"
+                    >
+                </div>
+                <div class="flex gap-4">
+                    <select id="affiliateFilterBrand" class="px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                        <option value="">All Brands</option>
+                    </select>
+                    <select id="affiliateFilterKPI" class="px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                        <option value="">All KPIs</option>
+                        <option value="sales">Sales/Conversions</option>
+                        <option value="clicks">Link Clicks</option>
+                        <option value="signups">Sign-ups</option>
+                        <option value="leads">Leads</option>
+                        <option value="downloads">Downloads</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Campaign Grid -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Standard Campaigns Grid -->
+        <div id="standardCampaigns" class="campaign-section">
+            <div id="campaignGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Loading state -->
+                <div class="col-span-full flex items-center justify-center py-20">
+                    <div class="text-zinc-400">Loading campaigns...</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="campaignDetailsModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div class="bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <h2 id="modalCampaignTitle" class="text-xl font-bold text-white"></h2>
+                <p id="modalClientCompany" class="text-zinc-400"></p>
+            </div>
+            <span id="modalCampaignStatus" class="status-badge"></span>
+            <button onclick="closeModal('campaignDetailsModal')" class="text-zinc-400 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-zinc-700 rounded-lg p-4">
+                <div class="text-zinc-400 text-sm">Total Earnings</div>
+                <div id="modalTotalEarnings" class="text-2xl font-bold text-brand-purple"></div>
+            </div>
+            <div class="bg-zinc-700 rounded-lg p-4">
+                <div class="text-zinc-400 text-sm">Pending Payouts</div>
+                <div id="modalPendingPayouts" class="text-2xl font-bold text-brand-orange"></div>
+            </div>
+        </div>
+        
+        <!-- Add other modal content as needed -->
+    </div>
+</div>
+
+        <!-- Affiliate Campaigns Grid -->
+        <div id="affiliateCampaigns" class="campaign-section hidden">
+            <div id="affiliateGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Loading state -->
+                <div class="col-span-full flex items-center justify-center py-20">
+                    <div class="text-zinc-400">Loading affiliate campaigns...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Campaign Details Modal -->
+<div id="campaignModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden p-4 overflow-y-auto">
+    <div class="bg-zinc-900 rounded-lg max-w-3xl w-full my-8 border border-zinc-800 max-h-[90vh] flex flex-col">
+        <div class="flex items-start justify-between p-6 border-b border-zinc-800 flex-shrink-0">
+            <div class="flex-1">
+                <h2 id="modalTitle" class="text-2xl font-bold mb-2"></h2>
+                <p id="modalSubtitle" class="text-zinc-400"></p>
+            </div>
+            <button onclick="closeCampaignModal()" class="text-zinc-400 hover:text-white transition-colors ml-4">
+    <span class="material-symbols-outlined w-6 h-6 leading-none">
+        close
+    </span>
+</button>
+        </div>
+
+        <div class="p-6 overflow-y-auto flex-1">
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-zinc-800 rounded-lg p-4">
+                    <div class="text-zinc-400 text-sm mb-1">Match Rating</div>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-brand-purple" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span id="modalMatchRating" class="text-2xl font-bold text-brand-purple"></span>
+                    </div>
+                </div>
+                <div class="bg-zinc-800 rounded-lg p-4">
+                    <div class="text-zinc-400 text-sm mb-1">Total Budget</div>
+                    <div id="modalBudget" class="text-2xl font-bold"></div>
+                </div>
+            </div>
+
+            <div class="bg-zinc-800 rounded-lg p-4 mb-6">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <div class="text-zinc-400 text-sm">CPM Rate</div>
+                        <div id="modalCPM" class="text-3xl font-bold text-brand-red"></div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-zinc-400 text-sm">Budget Used</div>
+                        <div id="modalBudgetUsed" class="text-xl font-bold"></div>
+                    </div>
+                </div>
+                <div class="w-full h-3 bg-zinc-900 rounded-full overflow-hidden">
+                    <div id="modalBudgetBar" class="h-full bg-brand-purple rounded-full transition-all"></div>
+                </div>
+            </div>
+
+            <div id="modalBudgetCapSection" class="mb-6 hidden">
+                <div class="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        <div>
+                            <div class="text-amber-500 font-semibold text-sm mb-1">Budget Cap Active</div>
+                            <div id="modalBudgetCapText" class="text-zinc-300 text-sm"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                    <div class="text-zinc-400 text-sm mb-1">Campaign Type</div>
+                    <div id="modalCampaignType" class="font-semibold"></div>
+                </div>
+                <div>
+                    <div class="text-zinc-400 text-sm mb-1">Location</div>
+                    <div id="modalLocation" class="font-semibold"></div>
+                </div>
+                <div>
+                    <div class="text-zinc-400 text-sm mb-1">Start Date</div>
+                    <div id="modalStartDate" class="font-semibold"></div>
+                </div>
+                <div>
+                    <div class="text-zinc-400 text-sm mb-1">End Date</div>
+                    <div id="modalEndDate" class="font-semibold"></div>
+                </div>
+                <div>
+                    <div class="text-zinc-400 text-sm mb-1">Age Range</div>
+                    <div id="modalAgeRange" class="font-semibold"></div>
+                </div>
+                <div>
+                    <div class="text-zinc-400 text-sm mb-1">Gender Split</div>
+                    <div id="modalGenderSplit" class="font-semibold"></div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <div class="text-zinc-400 text-sm mb-2">Required Platforms</div>
+                <div id="modalPlatforms" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <div class="mb-6">
+                <div class="text-zinc-400 text-sm mb-2">Categories</div>
+                <div id="modalCategories" class="flex flex-wrap gap-2"></div>
+            </div>
+            
+            <div id="modalComplianceBadge" class="mb-6 hidden">
+                <div class="flex items-center gap-2 text-sm text-green-400">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.352.166-2.001z" clip-rule="evenodd"></path>
+                    </svg>
+                    This campaign has been <b>compliance checked</b> for platform standards.
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <div class="text-zinc-400 text-sm mb-2">Campaign Description</div>
+                <div id="modalDescription" class="bg-zinc-800 rounded-lg p-4 text-sm leading-relaxed whitespace-pre-wrap overflow-y-auto max-h-48"></div>
+            </div>
+        </div>
+
+        <div class="p-6 border-t border-zinc-800 flex-shrink-0">
+            <button 
+                id="modalApplyBtn"
+                onclick="applyToCampaign(selectedCampaignId)"
+                class="w-full py-3 bg-brand-purple hover:bg-brand-purple-dark rounded-lg font-semibold transition-colors"
+            >
+                Apply Now
+            </button>
+        </div>
+    </div>
+</div>
+
+    <!-- Affiliate Campaign Details Modal -->
+    <div id="affiliateModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden p-4 overflow-y-auto">
+        <div class="bg-zinc-900 rounded-lg max-w-3xl w-full my-8 border border-zinc-800 max-h-[90vh] flex flex-col">
+            <!-- Modal Header -->
+            <div class="flex items-start justify-between p-6 border-b border-zinc-800 flex-shrink-0">
+                <div class="flex-1">
+                    <h2 id="affiliateModalTitle" class="text-2xl font-bold mb-2"></h2>
+                    <p id="affiliateModalBrand" class="text-zinc-400 text-lg"></p>
+                </div>
+                <button onclick="closeAffiliateModal()" class="text-zinc-400 hover:text-white transition-colors ml-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 overflow-y-auto flex-1">
+                <!-- Commission & Stats -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-zinc-800 rounded-lg p-4">
+                        <div class="text-zinc-400 text-sm mb-1">Commission Per Sale</div>
+                        <div class="text-2xl font-bold text-brand-orange" id="affiliateModalCommission"></div>
+                    </div>
+                    <div class="bg-zinc-800 rounded-lg p-4">
+                        <div class="text-zinc-400 text-sm mb-1">KPI Target</div>
+                        <div id="affiliateModalKPI" class="text-xl font-bold text-brand-purple"></div>
+                    </div>
+                </div>
+
+                <!-- Product Description -->
+                <div class="mb-6">
+                    <div class="text-zinc-400 text-sm mb-2">Product Description</div>
+                    <div id="affiliateModalDescription" class="bg-zinc-800 rounded-lg p-4 text-sm leading-relaxed break-words whitespace-pre-wrap overflow-y-auto max-h-48"></div>
+                </div>
+
+                <!-- Campaign Details Grid -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <div class="text-zinc-400 text-sm mb-1">Product URL</div>
+                        <a id="affiliateModalProductUrl" target="_blank" class="font-semibold text-brand-purple hover:underline break-all"></a>
+                    </div>
+                    <div>
+                        <div class="text-zinc-400 text-sm mb-1">Max Influencers</div>
+                        <div id="affiliateModalMaxInfluencers" class="font-semibold"></div>
+                    </div>
+                    <div>
+                        <div class="text-zinc-400 text-sm mb-1">Min Profile Score</div>
+                        <div id="affiliateModalMinScore" class="font-semibold"></div>
+                    </div>
+                    <div>
+                        <div class="text-zinc-400 text-sm mb-1">Status</div>
+                        <div id="affiliateModalStatus" class="font-semibold"></div>
+                    </div>
+                </div>
+
+                <!-- Current Stats -->
+                <div class="bg-zinc-800 rounded-lg p-4 mb-6">
+                    <h4 class="text-zinc-400 text-sm mb-3">Campaign Performance</h4>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <div class="text-zinc-400">Current Influencers</div>
+                            <div id="affiliateModalCurrentInfluencers" class="font-semibold"></div>
+                        </div>
+                        <div>
+                            <div class="text-zinc-400">Total Conversions</div>
+                            <div id="affiliateModalTotalConversions" class="font-semibold"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-6 border-t border-zinc-800 flex-shrink-0">
+                <button 
+                    id="affiliateModalApplyBtn"
+                    onclick="applyToAffiliateCampaign()"
+                    class="w-full py-3 bg-brand-orange hover:bg-orange-700 rounded-lg font-semibold transition-colors"
+                >
+                    Generate Affiliate Link
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Affiliate Link Generated Modal -->
+<!-- Affiliate Link Generated Modal -->
+<div id="affiliateLinkModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden p-4">
+    <div class="bg-zinc-800 rounded-lg p-6 max-w-md w-full mx-4">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 bg-brand-green rounded-full flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-semibold">Affiliate Link Generated!</h3>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-zinc-400 text-sm mb-2">Your Affiliate Link:</label>
+            <div class="flex gap-2">
+                <input 
+                    type="text" 
+                    id="generatedAffiliateLink" 
+                    readonly 
+                    class="flex-1 px-3 py-2 bg-zinc-700 border border-zinc-600 rounded text-sm text-white"
+                >
+                <button 
+                    onclick="copyAffiliateLink()" 
+                    class="px-4 py-2 bg-brand-purple hover:bg-brand-purple-dark rounded text-sm font-semibold transition-colors"
+                >
+                    Copy
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-zinc-700/50 rounded p-3 mb-4">
+            <h4 class="text-sm font-semibold text-brand-orange mb-2">How it works:</h4>
+            <ul class="text-xs text-zinc-300 space-y-1">
+                <li>• Share this link with your audience</li>
+                <li>• Earn <span id="commissionAmount" class="font-semibold"></span> for each conversion</li>
+                <li>• Track your performance in Analytics</li>
+                <li>• Payments are processed automatically</li>
+            </ul>
+        </div>
+
+        <button onclick="closeAffiliateLinkModal()" class="w-full py-2 bg-zinc-600 hover:bg-zinc-500 rounded-lg font-semibold transition-colors">
+            Close
+        </button>
+    </div>
+</div>
+
+<div id="tncConfirmationModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[60] hidden backdrop-blur-sm">
+    <div class="bg-zinc-900 rounded-lg p-6 max-w-md w-full mx-4 border border-zinc-700 shadow-2xl">
+        <div class="mb-4 text-center">
+            <div class="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span class="material-symbols-outlined text-brand-purple">gavel</span>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Terms & Conditions</h3>
+            <p class="text-zinc-400 text-sm">Please review and accept the terms to proceed with this application.</p>
+        </div>
+        
+        <div class="bg-zinc-800/50 rounded-lg p-4 mb-6 border border-zinc-700/50">
+            <label class="flex items-start gap-3 cursor-pointer group">
+                <input type="checkbox" id="tncCheckbox" class="mt-1 w-5 h-5 text-brand-purple bg-zinc-700 border-zinc-600 rounded focus:ring-brand-purple cursor-pointer">
+                <span class="text-sm text-zinc-300 group-hover:text-white transition-colors select-none">
+                    I have read and agree to the <a href="/terms-and-conditions" target="_blank" class="text-brand-purple hover:underline hover:text-brand-purple-dark font-medium" onclick="event.stopPropagation()">Terms and Conditions</a>. I understand that applying constitutes a binding agreement.
+                </span>
+            </label>
+        </div>
+
+        <div class="flex gap-3">
+            <button onclick="closeTnCModal()" class="flex-1 py-2.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white rounded-lg font-medium transition-colors">
+                Cancel
+            </button>
+            <button onclick="confirmTnCAndApply()" class="flex-1 py-2.5 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-medium transition-colors shadow-lg shadow-purple-900/20">
+                Confirm & Apply
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Global State ---
+    let allCampaigns = [];
+    let allAffiliateCampaigns = [];
+    const userApplications = new Map();
+    const userAffiliateCodes = new Map();
+    let selectedCampaignId = null;
+    let selectedAffiliateCampaignId = null;
+    let currentCampaignType = 'standard';
+    
+    // Stores the intent while T&C is being accepted
+    // Structure: { type: 'standard' | 'affiliate', id: number }
+    let pendingAction = null;
+
+    // --- Campaign Type Switching ---
+    function switchCampaignType(type) {
+        currentCampaignType = type;
+        
+        // Tab Styling
+        const stdTab = document.getElementById('standardTab');
+        const affTab = document.getElementById('affiliateTab');
+        
+        if (type === 'standard') {
+            stdTab.classList.add('active', 'bg-brand-purple', 'text-white');
+            stdTab.classList.remove('bg-zinc-800', 'text-zinc-400');
+            
+            affTab.classList.remove('active', 'bg-brand-purple', 'text-white');
+            affTab.classList.add('bg-zinc-800', 'text-zinc-400');
+        } else {
+            affTab.classList.add('active', 'bg-brand-purple', 'text-white');
+            affTab.classList.remove('bg-zinc-800', 'text-zinc-400');
+            
+            stdTab.classList.remove('active', 'bg-brand-purple', 'text-white');
+            stdTab.classList.add('bg-zinc-800', 'text-zinc-400');
+        }
+
+        // Content Visibility
+        document.getElementById('standardCampaigns').classList.toggle('hidden', type !== 'standard');
+        document.getElementById('affiliateCampaigns').classList.toggle('hidden', type !== 'affiliate');
+        document.getElementById('standardFilters').classList.toggle('hidden', type !== 'standard');
+        document.getElementById('affiliateFilters').classList.toggle('hidden', type !== 'affiliate');
+
+        if (type === 'affiliate') {
+            loadAffiliateCampaigns();
+        } else {
+            applyFilters();
+        }
+    }
+
+    // --- Authentication ---
+    async function logout() {
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            window.location.href = '/login';
+        } catch (error) {
+            console.error('Error during logout:', error);
+            window.location.href = '/login';
+        }
+    }
+
+    // --- Helper Functions ---
+    function getApplicationStatusText(status) {
+        const statusMap = {
+            'pending': 'Pending Review',
+            'approved': 'Approved',
+            'rejected': 'Application Rejected',
+            'drafting_content': 'Drafting Content',
+            'paid': 'Completed & Paid'
+        };
+        return statusMap[status] || 'Applied';
+    }
+
+    function formatNumber(num) {
+        return new Intl.NumberFormat().format(num);
+    }
+
+    // --- Modal Control Functions ---
+    function closeModal(modalId) {
+        const el = document.getElementById(modalId);
+        if(el) el.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    function closeCampaignModal() {
+        closeModal('campaignModal');
+        selectedCampaignId = null;
+    }
+
+    function closeAffiliateModal() {
+        closeModal('affiliateModal');
+        selectedAffiliateCampaignId = null;
+    }
+
+    function closeAffiliateLinkModal() {
+        closeModal('affiliateLinkModal');
+    }
+
+    // --- NEW: T&C Modal Logic ---
+    function openTnCModal() {
+        const modal = document.getElementById('tncConfirmationModal');
+        const checkbox = document.getElementById('tncCheckbox');
+        if(modal && checkbox) {
+            checkbox.checked = false; 
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function closeTnCModal() {
+        const modal = document.getElementById('tncConfirmationModal');
+        if(modal) modal.classList.add('hidden');
+        pendingAction = null; 
+    }
+
+    async function confirmTnCAndApply() {
+        const checkbox = document.getElementById('tncCheckbox');
+        
+        if (!checkbox.checked) {
+            alert("You must agree to the Terms and Conditions to proceed.");
+            return;
+        }
+
+        // Hide Modal
+        document.getElementById('tncConfirmationModal').classList.add('hidden');
+
+        // Execute the stored action
+        if (pendingAction) {
+            if (pendingAction.type === 'standard') {
+                await executeStandardApplication(pendingAction.id);
+            } else if (pendingAction.type === 'affiliate') {
+                await executeAffiliateApplication(pendingAction.id);
+            }
+        }
+        
+        pendingAction = null;
+    }
+
+    // --- Application Logic (Entry Points) ---
+
+    // 1. Trigger for Standard Campaigns
+    function applyToCampaign(campaignId) {
+        if (userApplications.has(campaignId)) return;
+        
+        // Store intent
+        pendingAction = { type: 'standard', id: campaignId };
+        
+        // Open Confirmation
+        openTnCModal();
+    }
+
+    // 2. Trigger for Affiliate Campaigns
+    function applyToAffiliateCampaign() {
+        if (!selectedAffiliateCampaignId || userAffiliateCodes.has(selectedAffiliateCampaignId)) return;
+        
+        // Store intent
+        pendingAction = { type: 'affiliate', id: selectedAffiliateCampaignId };
+        
+        // Open Confirmation
+        openTnCModal();
+    }
+
+    // --- Application Execution (API Calls) ---
+
+    // 1. Execute Standard Application
+    async function executeStandardApplication(campaignId) {
+        // Optimistic UI updates
+        const cardButton = document.getElementById(`apply-btn-${campaignId}`);
+        const modalButton = document.getElementById('modalApplyBtn');
+        let originalCardText = '';
+        let originalModalText = '';
+
+        if(cardButton) {
+            originalCardText = cardButton.textContent;
+            cardButton.textContent = 'Applying...';
+            cardButton.disabled = true;
+        }
+        if(modalButton) {
+            originalModalText = modalButton.textContent;
+            modalButton.textContent = 'Applying...';
+            modalButton.disabled = true;
+        }
+
+        try {
+            const response = await fetch('/api/creator/apply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    campaign_id: campaignId,
+                    tnc_accepted: true // Flag for backend tracking
+                })
+            });
+
+            if (response.ok) {
+                userApplications.set(campaignId, 'pending');
+                const newStatusText = getApplicationStatusText('pending');
+
+                // Update Buttons
+                if(cardButton) {
+                    cardButton.textContent = newStatusText;
+                    cardButton.className = 'w-full py-3 bg-zinc-600 rounded-lg font-semibold cursor-not-allowed';
+                }
+                if (modalButton && selectedCampaignId === campaignId) {
+                    modalButton.textContent = newStatusText;
+                    modalButton.className = 'w-full py-3 bg-zinc-600 rounded-lg font-semibold cursor-not-allowed';
+                }
+                loadCreatorStats(); 
+            } else {
+                alert('Application failed. Please try again.');
+                if(cardButton) { cardButton.textContent = originalCardText; cardButton.disabled = false; }
+                if(modalButton) { modalButton.textContent = originalModalText; modalButton.disabled = false; }
+            }
+        } catch (error) {
+            console.error('Error applying:', error);
+            alert('Network error. Please try again.');
+            if(cardButton) { cardButton.textContent = originalCardText; cardButton.disabled = false; }
+            if(modalButton) { modalButton.textContent = originalModalText; modalButton.disabled = false; }
+        }
+    }
+
+    // 2. Execute Affiliate Application
+    async function executeAffiliateApplication(campaignId) {
+        const modalButton = document.getElementById('affiliateModalApplyBtn');
+        const originalText = modalButton ? modalButton.textContent : '';
+        
+        if(modalButton) {
+            modalButton.textContent = 'Generating...';
+            modalButton.disabled = true;
+        }
+
+        try {
+            const response = await fetch('/api/creator/generate-affiliate-code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    campaign_id: campaignId,
+                    tnc_accepted: true // Flag for backend tracking
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.affiliate_link) {
+                userAffiliateCodes.set(campaignId, result.affiliate_link);
+
+                // Update Modal UI
+                if(modalButton) {
+                    modalButton.textContent = 'Affiliate Link Active';
+                    modalButton.className = 'w-full py-3 bg-green-600 rounded-lg font-semibold cursor-not-allowed';
+                }
+
+                // Update Card UI
+                const cardButton = document.getElementById(`affiliate-btn-${campaignId}`);
+                if (cardButton) {
+                    cardButton.textContent = 'Affiliate Link Active';
+                    cardButton.className = 'affiliate-apply-button w-full py-3 bg-green-600 rounded-lg font-semibold cursor-not-allowed';
+                    cardButton.disabled = true;
+                }
+                
+                closeAffiliateModal();
+                
+                // Show Success Modal
+                const linkOutput = document.getElementById('generatedAffiliateLink');
+                if (linkOutput) linkOutput.value = result.affiliate_link;
+                
+                const commissionEl = document.getElementById('commissionAmount');
+                if (commissionEl) {
+                    const commissionValue = result.commission || result.flat_fee || 0;
+                    commissionEl.textContent = `R ${commissionValue}`;
+                }
+                
+                const linkModal = document.getElementById('affiliateLinkModal');
+                if (linkModal) {
+                    linkModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                }
+                
+                loadCreatorStats();
+            } else {
+                const errorMsg = result.message || result.error || 'Failed to generate link';
+                alert(`Error: ${errorMsg}`);
+                if(modalButton) { modalButton.textContent = originalText; modalButton.disabled = false; }
+            }
+        } catch (error) {
+            console.error('Error generating link:', error);
+            alert('Network error. Please try again.');
+            if(modalButton) { modalButton.textContent = originalText; modalButton.disabled = false; }
+        }
+    }
+
+    // --- Data Loading & Rendering ---
+
+    async function loadCreatorStats() {
+        try {
+            const response = await fetch('/api/creator/financial-stats');
+            const stats = await response.json();
+
+            const totalEarningsEl = document.getElementById('totalEarnings');
+            const currentBalanceEl = document.getElementById('currentBalance');
+            const profileScoreEl = document.getElementById('profileScore');
+            
+            if (totalEarningsEl) totalEarningsEl.textContent = `R ${stats.total_earnings.toLocaleString()}`;
+            if (currentBalanceEl) currentBalanceEl.textContent = `R ${stats.current_balance.toLocaleString()}`;
+            if (profileScoreEl) profileScoreEl.textContent = stats.profile_score;
+        } catch (error) {
+            console.error('Error loading stats:', error);
+        }
+    }
+
+    async function loadUserApplications() {
+        try {
+            const response = await fetch('/api/creator/applications');
+            const applications = await response.json();
+            applications.forEach(app => {
+                userApplications.set(app.campaign_id, app.status);
+            });
+        } catch (error) {
+            console.error('Error loading applications:', error);
+        }
+    }
+
+    async function loadUserAffiliateCodes() {
+        try {
+            const response = await fetch('/api/creator/affiliate-codes');
+            const codes = await response.json();
+            codes.forEach(code => {
+                userAffiliateCodes.set(code.campaign_id, code.affiliate_link);
+            });
+        } catch (error) {
+            console.error('Error loading affiliate codes:', error);
+        }
+    }
+
+    async function loadCampaigns() {
+        try {
+            const response = await fetch('/api/campaigns/live');
+            allCampaigns = await response.json();
+            
+            allCampaigns.forEach(campaign => {
+                const totalBudget = campaign.budget || 0;
+                const budgetUsed = campaign.budget_used || 0;
+                if (totalBudget > 0) {
+                    campaign.budget_used_percentage = Math.min(100, Math.round((budgetUsed / totalBudget) * 100));
+                } else {
+                    campaign.budget_used_percentage = 0;
+                }
+                campaign.budget_used_amount = budgetUsed;
+            });
+
+            renderCampaigns(allCampaigns);
+        } catch (error) {
+            console.error('Error loading campaigns:', error);
+            document.getElementById('campaignGrid').innerHTML = `
+                <div class="col-span-full flex items-center justify-center py-20">
+                    <div class="text-zinc-400">Error loading campaigns. Please refresh.</div>
+                </div>`;
+        }
+    }
+
+    async function loadAffiliateCampaigns() {
+        try {
+            const response = await fetch('/api/affiliate-campaigns/live');
+            const data = await response.json();
+            allAffiliateCampaigns = data.campaigns || [];
+            renderAffiliateCampaigns(allAffiliateCampaigns);
+        } catch (error) {
+            console.error('Error loading affiliate campaigns:', error);
+            renderAffiliateCampaigns([]);
+        }
+    }
+
+    // --- Rendering Logic ---
+
+    function renderCampaigns(campaigns) {
+        const grid = document.getElementById('campaignGrid');
+        if (campaigns.length === 0) {
+            grid.innerHTML = `<div class="col-span-full flex items-center justify-center py-20"><div class="text-zinc-400">No live campaigns match your filters.</div></div>`;
+            return;
+        }
+
+        grid.innerHTML = campaigns.map(campaign => {
+            const hasApplied = userApplications.has(campaign.id);
+            const applicationStatus = userApplications.get(campaign.id);
+            let buttonText = 'Apply Now';
+            let buttonClass = 'w-full py-3 bg-brand-purple hover:bg-brand-purple-dark rounded-lg font-semibold transition-colors';
+            let buttonDisabled = false;
+
+            if (hasApplied) {
+                buttonText = getApplicationStatusText(applicationStatus);
+                buttonClass = 'w-full py-3 bg-zinc-600 rounded-lg font-semibold cursor-not-allowed';
+                buttonDisabled = true;
+            }
+
+            return `
+                <div data-campaign-id="${campaign.id}" class="campaign-card bg-zinc-900 border border-zinc-800 rounded-lg p-6 hover:border-brand-purple transition-all hover:shadow-lg hover:shadow-purple-500/10 cursor-pointer group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold mb-1 group-hover:text-brand-purple transition-colors">${campaign.title}</h3>
+                            <p class="text-zinc-400">${campaign.agency} · ${campaign.brand}</p>
+                        </div>
+                        <div class="ml-4 text-right">
+                            <div class="text-zinc-400 text-sm">Match Rating</div>
+                            <div class="text-2xl font-bold text-brand-purple">${campaign.match_rating}%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="material-symbols-outlined w-4 h-4 text-zinc-400 flex-shrink-0 text-[16px] leading-none">location_on</span>
+                            <span class="text-zinc-400">Location:</span>
+                            <span class="font-semibold">${campaign.location}</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="material-symbols-outlined w-4 h-4 text-zinc-400 flex-shrink-0 text-[16px] leading-none">payments</span>
+                            <span class="text-zinc-400">Budget:</span>
+                            <span class="font-semibold">R ${campaign.budget.toLocaleString()}</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between text-xs mb-1">
+                                <span class="text-zinc-400">Budget Utilization</span>
+                                <span class="font-semibold ${campaign.budget_used_percentage > 70 ? 'text-brand-red' : 'text-brand-purple'}">
+                                    ${campaign.budget_used_percentage}% used (R ${campaign.budget_used_amount.toLocaleString()})
+                                </span>
+                            </div>
+                            <div class="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-brand-purple rounded-full transition-all" style="width: ${campaign.budget_used_percentage}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-zinc-800 rounded-full text-xs text-zinc-300">${campaign.niche}</span>
+                        <span class="px-3 py-1 bg-zinc-800 rounded-full text-xs text-zinc-300">${campaign.platforms[0] || 'Multiple'}</span>
+                    </div>
+
+                    <button 
+                        id="apply-btn-${campaign.id}"
+                        data-campaign-id="${campaign.id}"
+                        class="apply-button ${buttonClass}" 
+                        ${buttonDisabled ? 'disabled' : ''}
+                    >
+                        ${buttonText}
+                    </button>
+                </div>
+            `;
+        }).join('');
+
+        // Event listeners for cards
+        setTimeout(() => {
+            document.querySelectorAll('#campaignGrid .campaign-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    const campaignId = parseInt(card.dataset.campaignId);
+                    showCampaignDetails(campaignId);
+                });
+            });
+
+            document.querySelectorAll('.apply-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    const campaignId = parseInt(button.dataset.campaignId);
+                    if (!button.disabled) {
+                        applyToCampaign(campaignId);
+                    }
+                });
+            });
+        }, 0);
+    }
+
+    function renderAffiliateCampaigns(campaigns) {
+        const container = document.getElementById('affiliateGrid');
+        
+        if (!Array.isArray(campaigns) || campaigns.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-full text-center py-8">
+                    <div class="text-zinc-500 mb-2">No affiliate campaigns available</div>
+                </div>`;
+            return;
+        }
+        
+        container.innerHTML = campaigns.map(campaign => {
+            const hasAffiliateCode = userAffiliateCodes.has(campaign.id);
+            const currentInfluencers = campaign.current_influencers || 0;
+            const maxInfluencers = campaign.max_influencers || 0;
+            
+            let buttonText = 'Get Affiliate Link';
+            let buttonClass = 'w-full py-3 bg-brand-orange hover:bg-orange-700 rounded-lg font-semibold transition-colors';
+            let buttonDisabled = false;
+
+            if (hasAffiliateCode) {
+                buttonText = 'Affiliate Link Active';
+                buttonClass = 'w-full py-3 bg-green-600 rounded-lg font-semibold cursor-not-allowed';
+                buttonDisabled = true;
+            } else if (currentInfluencers >= maxInfluencers) {
+                buttonText = 'Campaign Full';
+                buttonClass = 'w-full py-3 bg-zinc-600 rounded-lg font-semibold cursor-not-allowed';
+                buttonDisabled = true;
+            }
+
+            return `
+                <div data-campaign-id="${campaign.id}" class="campaign-card bg-zinc-900 border border-zinc-800 rounded-lg p-6 hover:border-brand-orange transition-all hover:shadow-lg hover:shadow-orange-500/10 cursor-pointer group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold mb-1 group-hover:text-brand-orange transition-colors">${campaign.product_name || 'Untitled'}</h3>
+                            <p class="text-lg text-brand-purple font-semibold mb-1">${campaign.brand || 'Unknown'}</p>
+                        </div>
+                        <div class="ml-4 text-right">
+                            <div class="text-zinc-400 text-sm">Commission</div>
+                            <div class="text-2xl font-bold text-brand-orange">R ${campaign.commission || campaign.flat_fee || 0}</div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="material-symbols-outlined w-4 h-4 text-zinc-400 flex-shrink-0 text-[16px] leading-none">local_mall</span>
+                            <span class="text-zinc-400">KPI Target:</span>
+                            <span class="font-semibold">${(campaign.kpi || '').replace('_', ' ').toUpperCase()}</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="material-symbols-outlined w-4 h-4 text-zinc-400 flex-shrink-0 text-[16px] leading-none">group</span>
+                            <span class="text-zinc-400">Influencers:</span>
+                            <span class="font-semibold">${currentInfluencers} / ${maxInfluencers}</span>
+                        </div>
+                    </div>
+                    
+                    <button 
+                        id="affiliate-btn-${campaign.id}"
+                        data-campaign-id="${campaign.id}"
+                        class="affiliate-apply-button ${buttonClass}" 
+                        ${buttonDisabled ? 'disabled' : ''}
+                    >
+                        ${buttonText}
+                    </button>
+                </div>
+            `;
+        }).join('');
+
+        setTimeout(() => {
+            document.querySelectorAll('#affiliateGrid .campaign-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    const campaignId = parseInt(card.dataset.campaignId);
+                    showAffiliateCampaignDetails(campaignId);
+                });
+            });
+
+            document.querySelectorAll('.affiliate-apply-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const campaignId = parseInt(button.dataset.campaignId);
+                    if (!button.disabled) {
+                        showAffiliateCampaignDetails(campaignId);
+                    }
+                });
+            });
+        }, 0);
+    }
+
+    // --- Detail Modals ---
+
+    function showCampaignDetails(campaignId) {
+        const campaign = allCampaigns.find(c => c.id === campaignId);
+        if (!campaign) return;
+        selectedCampaignId = campaignId;
+
+        // Set Text Content Safely
+        const setText = (id, text) => {
+            const el = document.getElementById(id);
+            if(el) el.textContent = text;
+        };
+
+        setText('modalTitle', campaign.title);
+        setText('modalSubtitle', `${campaign.agency} · ${campaign.brand}`);
+        setText('modalMatchRating', `${campaign.match_rating}%`);
+        setText('modalBudget', `R ${campaign.budget.toLocaleString()}`);
+        setText('modalCPM', `R ${campaign.cpm}`);
+        setText('modalBudgetUsed', `${campaign.budget_used_percentage}% (R ${campaign.budget_used_amount.toLocaleString()})`);
+        
+        const budgetBar = document.getElementById('modalBudgetBar');
+        if (budgetBar) budgetBar.style.width = `${campaign.budget_used_percentage}%`;
+
+        setText('modalCampaignType', campaign.campaign_type);
+        setText('modalLocation', campaign.location);
+        
+        // Dates
+        const formatDate = (str) => {
+            try { return new Date(str).toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: 'numeric' }); }
+            catch { return str; }
+        };
+        setText('modalStartDate', formatDate(campaign.start_date));
+        setText('modalEndDate', formatDate(campaign.end_date));
+        
+        // Arrays (Platforms, Categories)
+        const platEl = document.getElementById('modalPlatforms');
+        if(platEl) platEl.innerHTML = campaign.platforms.map(p => `<span class="px-3 py-1 bg-zinc-800 rounded-full text-sm">${p}</span>`).join('');
+        
+        const catEl = document.getElementById('modalCategories');
+        if(catEl) catEl.innerHTML = campaign.categories.map(c => `<span class="px-3 py-1 bg-brand-purple/20 text-brand-purple rounded-lg text-sm font-semibold">${c}</span>`).join('');
+
+        setText('modalDescription', campaign.description);
+
+        // Apply Button State
+        const hasApplied = userApplications.has(campaignId);
+        const applyBtn = document.getElementById('modalApplyBtn');
+        if (applyBtn) {
+            if (hasApplied) {
+                applyBtn.textContent = getApplicationStatusText(userApplications.get(campaignId));
+                applyBtn.className = 'w-full py-3 bg-zinc-600 rounded-lg font-semibold cursor-not-allowed';
+                applyBtn.disabled = true;
+                applyBtn.onclick = null;
+            } else {
+                applyBtn.textContent = 'Apply Now';
+                applyBtn.className = 'w-full py-3 bg-brand-purple hover:bg-brand-purple-dark rounded-lg font-semibold transition-colors';
+                applyBtn.disabled = false;
+                applyBtn.onclick = () => applyToCampaign(campaignId);
+            }
+        }
+
+        document.getElementById('campaignModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function showAffiliateCampaignDetails(campaignId) {
+        const campaign = allAffiliateCampaigns.find(c => c.id === campaignId);
+        if (!campaign) return;
+        selectedAffiliateCampaignId = campaignId;
+
+        const setText = (id, text) => {
+            const el = document.getElementById(id);
+            if(el) el.textContent = text;
+        };
+
+        setText('affiliateModalTitle', campaign.product_name || 'Untitled');
+        setText('affiliateModalBrand', campaign.brand || 'Unknown');
+        setText('affiliateModalCommission', `R ${campaign.commission || campaign.flat_fee || 0}`);
+        setText('affiliateModalKPI', (campaign.kpi || '').replace('_', ' ').toUpperCase());
+        setText('affiliateModalDescription', campaign.product_description);
+        
+        const urlLink = document.getElementById('affiliateModalProductUrl');
+        if(urlLink) {
+            urlLink.href = campaign.product_url || '#';
+            urlLink.textContent = campaign.product_url || 'No URL';
+        }
+
+        const current = campaign.current_influencers || 0;
+        const max = campaign.max_influencers || 0;
+        setText('affiliateModalMaxInfluencers', `${current} / ${max}`);
+        setText('affiliateModalMinScore', `${campaign.min_profile_score || 0}%`);
+        setText('affiliateModalStatus', campaign.status);
+        setText('affiliateModalCurrentInfluencers', current);
+        setText('affiliateModalTotalConversions', campaign.total_conversions || 0);
+
+        const hasCode = userAffiliateCodes.has(campaignId);
+        const applyBtn = document.getElementById('affiliateModalApplyBtn');
+
+        if (hasCode) {
+            applyBtn.textContent = 'Affiliate Link Active';
+            applyBtn.className = 'w-full py-3 bg-green-600 rounded-lg font-semibold cursor-not-allowed';
+            applyBtn.disabled = true;
+            applyBtn.onclick = null;
+        } else if (current >= max) {
+            applyBtn.textContent = 'Campaign Full';
+            applyBtn.className = 'w-full py-3 bg-zinc-600 rounded-lg font-semibold cursor-not-allowed';
+            applyBtn.disabled = true;
+            applyBtn.onclick = null;
+        } else {
+            applyBtn.textContent = 'Generate Affiliate Link';
+            applyBtn.className = 'w-full py-3 bg-brand-orange hover:bg-orange-700 rounded-lg font-semibold transition-colors';
+            applyBtn.disabled = false;
+            applyBtn.onclick = applyToAffiliateCampaign;
+        }
+
+        document.getElementById('affiliateModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function copyAffiliateLink() {
+        const linkInput = document.getElementById('generatedAffiliateLink');
+        linkInput.select();
+        linkInput.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(linkInput.value).then(() => alert('Copied!'));
+    }
+
+    // --- Filters ---
+    function applyFilters() {
+        const search = document.getElementById('searchBar').value.toLowerCase();
+        const niche = document.getElementById('filterNiche').value;
+        const platform = document.getElementById('filterPlatform').value;
+        const location = document.getElementById('filterLocation').value;
+        const minCPM = parseInt(document.getElementById('filterCPM').value);
+
+        const filtered = allCampaigns.filter(c => {
+            const matchesSearch = !search || 
+                c.title.toLowerCase().includes(search) || 
+                c.brand.toLowerCase().includes(search) ||
+                c.categories.some(cat => cat.toLowerCase().includes(search));
+            const matchesNiche = !niche || c.niche === niche;
+            const matchesPlatform = !platform || c.platforms.includes(platform);
+            const matchesLocation = !location || c.location === location;
+            const matchesCPM = c.cpm >= minCPM;
+            return matchesSearch && matchesNiche && matchesPlatform && matchesLocation && matchesCPM;
+        });
+        renderCampaigns(filtered);
+    }
+
+    function applyAffiliateFilters() {
+        const search = document.getElementById('affiliateSearchBar').value.toLowerCase();
+        const brand = document.getElementById('affiliateFilterBrand').value;
+        const kpi = document.getElementById('affiliateFilterKPI').value;
+
+        const filtered = allAffiliateCampaigns.filter(c => {
+            const matchesSearch = !search || 
+                (c.product_name && c.product_name.toLowerCase().includes(search)) || 
+                (c.brand && c.brand.toLowerCase().includes(search));
+            const matchesBrand = !brand || c.brand === brand;
+            const matchesKPI = !kpi || c.kpi === kpi;
+            return matchesSearch && matchesBrand && matchesKPI;
+        });
+        renderAffiliateCampaigns(filtered);
+    }
+
+    // --- Event Listeners ---
+    document.getElementById('filterToggle').addEventListener('click', () => {
+        document.getElementById('filterPanel').classList.toggle('hidden');
+    });
+    
+    // Filter Inputs
+    ['searchBar', 'filterNiche', 'filterPlatform', 'filterLocation', 'filterCPM']
+        .forEach(id => document.getElementById(id).addEventListener('change', applyFilters));
+    document.getElementById('searchBar').addEventListener('input', applyFilters);
+
+    ['affiliateSearchBar', 'affiliateFilterBrand', 'affiliateFilterKPI']
+        .forEach(id => document.getElementById(id).addEventListener('change', applyAffiliateFilters));
+    document.getElementById('affiliateSearchBar').addEventListener('input', applyAffiliateFilters);
+
+    // Escape Key Close
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeCampaignModal();
+            closeAffiliateModal();
+            closeAffiliateLinkModal();
+            closeTnCModal();
+        }
+    });
+
+    // Background Click Close
+    ['campaignModal', 'affiliateModal', 'affiliateLinkModal', 'tncConfirmationModal'].forEach(id => {
+        const modal = document.getElementById(id);
+        if(modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target.id === id) {
+                    if(id === 'tncConfirmationModal') closeTnCModal();
+                    else if(id === 'campaignModal') closeCampaignModal();
+                    else if(id === 'affiliateModal') closeAffiliateModal();
+                    else if(id === 'affiliateLinkModal') closeAffiliateLinkModal();
+                }
+            });
+        }
+    });
+
+    // Mobile Menu
+    function toggleMobileMenu() {
+        document.getElementById('mobileMenu').classList.toggle('hidden');
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCreatorStats();
+        loadUserApplications();
+        loadUserAffiliateCodes();
+        loadCampaigns();
+    });
+</script>
+</body>
+</html>

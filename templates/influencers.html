@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='Images/favicon.ico') }}">
+    
+    <title>Join Creative Swop | Get Paid to Post</title>
+    <meta name="description" content="Stop creating for free. Join Creative Swop to access high-value paid campaigns. A reliable alternative to the TikTok Creator Fund. Sign up now.">
+    <meta name="keywords" content="join creative swop, influencer signup, get paid to post, TikTok creator fund international alternative, reliable income for creators, earn money online">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://redsystems.co.za/creative-swop/influencers"
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://redsystems.co.za/creative-swop/influencers">
+    <meta property="og:title" content="Get Paid for Your Influence | Creative Swop">
+    <meta property="og:description" content="Guaranteed payments and vetted opportunities. Join the platform where all influence gets paid.">
+    <meta property="og:image" content="https://redsystems.co.za/static/Images/favicon.ico">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Is the TikTok Creator Fund available in globaly?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No, the global TikTok Creator Fund currently does not operate in globaly. Creative Swop solves this by offering direct, paid collaborations with local brands, ensuring your influence generates reliable income without relying on global ad-revenue sharing."
+    }
+  }, {
+    "@type": "Question",
+    "name": "Is Creative Swop free for influencers to join?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes, it is absolutely free to sign up, browse campaigns, and apply. Creative Swop does not take a single cent of commission from your earnings. Our model services the agencies, never penalizing the creator."
+    }
+  }, {
+    "@type": "Question",
+    "name": "How do payouts work on Creative Swop?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "You receive payment based on the specific campaign agreement, which is either a CPM (Pay Per 1,000 Views) or a Flat Fee. We ensure funds are secured from the brand before you post, guaranteeing reliable payment upon campaign completion."
+    }
+  }, {
+    "@type": "Question",
+    "name": "What kind of brands can I work with?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Creative Swop connects you with high-value brands globaly and marketing agencies that are rigorously vetted. We focus on connecting you with partners who are serious about investing in authentic local voices."
+    }
+  }]
+}
+</script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Deep Purple for Trust/Accent
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        // Crimson Red for Financial Reward/Disruption
+                        'brand-red': '#DC2626',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        .gradient-text {
+            /* Applied to the main headline - Deep Purple to Crimson Red */
+            background: linear-gradient(135deg, #6B21A8 0%, #DC2626 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-gradient {
+            background: radial-gradient(ellipse at top, rgba(107, 33, 168, 0.15) 0%, transparent 50%);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .comparison-card {
+            transition: all 0.3s ease;
+        }
+        
+        .comparison-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="bg-white text-zinc-900">
+    
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-lg border-b border-zinc-200 z-50">
+    <div class="container mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+            
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <span class="text-2xl font-bold text-brand-purple">Creative Swop</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="/creative-swop/home" class="text-zinc-600 hover:text-brand-purple transition-colors">Home</a>
+                <a href="/creative-swop/affiliate" class="text-zinc-600 hover:text-brand-purple transition-colors">Affiliate</a>
+                <a href="/creative-swop/influencers" class="text-zinc-600 hover:text-brand-purple transition-colors">Influencers</a>
+                <a href="/login" class="text-zinc-600 hover:text-brand-purple transition-colors">Login</a>
+                <a href="/join-swop" class="px-6 py-2 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-semibold transition-colors">
+                    Join Creative Swop — It's Free
+                </a>
+            </div>
+
+            <button id="mobileMenuButton" class="md:hidden p-2 rounded-md text-zinc-700 hover:text-brand-purple hover:bg-gray-100 transition-colors" aria-label="Toggle Menu">
+                <svg id="menuIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+                <svg id="closeIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden transition-all duration-300 ease-in-out">
+        <div class="px-2 pt-2 pb-3 space-y-2 border-t border-zinc-200">
+            <a href="/creative-swop/home" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:bg-gray-50 hover:text-brand-purple">Home</a>
+            <a href="/creative-swop/affiliate" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:bg-gray-50 hover:text-brand-purple">Affiliate</a>
+            <a href="/creative-swop/influencers" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:bg-gray-50 hover:text-brand-purple">Influencers</a>
+            <a href="/login" class="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 hover:bg-gray-50 hover:text-brand-purple">Login</a>
+            <a href="/join-swop" class="block w-full text-center px-4 py-3 mt-4 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-md font-semibold transition-colors">
+                Join Creative Swop — It's Free
+            </a>
+        </div>
+    </div>
+</nav>
+
+    <section class="pt-32 pb-20 relative overflow-hidden hero-gradient">
+        <div class="container mx-auto px-6">
+            <div class="max-w-5xl mx-auto text-center">
+                <div class="mb-6 inline-block">
+                    <span class="px-4 py-2 bg-brand-purple/10 text-brand-purple rounded-full text-sm font-semibold">
+                        The Local Advantage
+                    </span>
+                </div>
+                
+                <h1 class="text-6xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight">
+                    Creative Swop:<br>
+                    <span class="gradient-text">Where all Influence Gets Paid.</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-zinc-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+                <b>Stop creating for free.</b> We connect your authentic voice directly to high-value, paid campaigns from top brands and agencies globaly.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                    <a href="#cta" class="px-8 py-4 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl">
+                        Join Creative Swop — It's Free
+                    </a>
+                    <a href="#features" class="px-8 py-4 border-2 border-purple-500 text-brand-purple hover:bg-brand-purple hover:text-white rounded-lg font-bold text-lg transition-all">
+                        How Payouts Work
+                    </a>
+                </div>
+                
+                <div class="relative mt-16">
+                    <div class="absolute inset-0 bg-gradient-to-r from-brand-purple/20 to-brand-red/20 blur-3xl"></div>
+                    <div class="relative bg-zinc-900 rounded-2xl shadow-2xl p-8 float-animation">
+                        <div class="grid grid-cols-3 gap-6">
+                            <div class="text-center">
+                                <div class="text-4xl font-bold text-brand-purple mb-2">R1M</div>
+                                <div class="text-sm text-zinc-400">The Aim: Paid to all Creators</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-4xl font-bold text-white mb-2">98%</div>
+                                <div class="text-sm text-zinc-400">The Aim: Payment Reliability</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-4xl font-bold text-brand-red mb-2">500+</div>
+                                <div class="text-sm text-zinc-400">The Aim: Active Campaign Briefs</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br></br>
+                <p class="text-xl md:text-2xl text-zinc-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+                 Creative Swop is committed to achieving all <b>three goals</b> and establishing ourselves as the <b>leading platform</b> empowering creators worldwide.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="why" class="py-20 bg-zinc-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-4">The Problem with Global Payouts</h2>
+                <p class="text-3xl text-zinc-600">Why Your Influence Isn't Paying What It's Worth</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <div class="comparison-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="p-8">
+                        <div class="flex items-start mb-4">
+                            <div class="w-12 h-12 bg-brand-red/10 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-brand-red mb-2">Missing Creator Fund</h3>
+                                <p class="text-zinc-600">The global <b>TikTok Creator Fund</b> does not operate in all countries globaly. Your high-performing videos here do not translate into direct funding.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-brand-purple/5 p-8 border-t border-brand-purple/10">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-brand-purple/10 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-brand-purple mb-2">The Creative Swop Solution</h4>
+                                <p class="text-zinc-700">We don't rely on global revenue shares. We offer direct, paid collaborations with local brands, ensuring your influence generates <b>>reliable income</b>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="p-8">
+                        <div class="flex items-start mb-4">
+                            <div class="w-12 h-12 bg-brand-red/10 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-brand-red mb-2">Inconsistent Monetisation</h3>
+                                <p class="text-zinc-600">creators often find the available payment programs and direct ad-revenue sharing to be <b>non-existent or inconsistent</b> when compared to international markets.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-brand-purple/5 p-8 border-t border-brand-purple/10">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-brand-purple/10 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-brand-purple mb-2">Guaranteed, Transparent Income</h4>
+                                <p class="text-zinc-700">Creative Swop is built for the global ecosystem, ensuring your local influence translates directly into <b>reliable, transparent income</b>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 text-center mt-8">
+                    <p class="text-2xl font-semibold text-brand-purple-dark italic max-w-4xl mx-auto">
+                        "The Result: Your influence is valuable, but the platforms built for global scale leave you behind."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-4">Focus on Creating.</h2>
+                <p class="text-3xl text-zinc-600">We Handle the Business.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+                <div class="group text-center">
+                    <div class="bg-gradient-to-br from-brand-purple to-brand-purple-dark rounded-2xl p-8 mb-6 inline-block transform group-hover:scale-105 transition-transform">
+                        <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Vetted Opportunities</h3>
+                    <p class="text-lg text-zinc-600">Your profile is matched against high-quality campaign briefs from pre-vetted agencies and brands who are serious about investing in authentic SA voices.</p>
+                </div>
+
+                <div class="group text-center">
+                    <div class="bg-gradient-to-br from-brand-red to-red-700 rounded-2xl p-8 mb-6 inline-block transform group-hover:scale-105 transition-transform">
+                        <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Transparent Payouts</h3>
+                    <p class="text-lg text-zinc-600">You clearly see the campaign budget, the company involved, and the <b>Pay Per 1,000 Views (CPM)</b> or flat fee structure <i>before</i> you apply.</p>
+                </div>
+
+                <div class="group text-center">
+                    <div class="bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-2xl p-8 mb-6 inline-block transform group-hover:scale-105 transition-transform">
+                        <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Create & Get Paid</h3>
+                    <p class="text-lg text-zinc-600">Once approved, you create and post your content. Our system verifies the delivery and tracks performance, ensuring you receive your payment reliably and quickly upon campaign completion.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="commitment" class="py-20 bg-zinc-900 text-white">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-5xl font-black mb-12">Our Pledge: Transparent, Fair, and Free.</h2>
+                
+                <div class="grid md:grid-cols-3 gap-12 mb-12">
+                    <div class="border-b-4 border-brand-purple pb-4">
+                        <div class="text-5xl font-black text-brand-purple mb-2">ZERO Fees, EVER.</div>
+                        <div class="text-xl font-semibold mb-2">Always Free to Use</div>
+                        <div class="text-zinc-400">It is absolutely free to sign up, browse campaigns, and apply. Creative Swop does not take a single cent of commission from your earnings.</div>
+                    </div>
+                    
+                    <div class="border-b-4 border-brand-red pb-4">
+                        <div class="text-5xl font-black text-brand-red mb-2">Guaranteed</div>
+                        <div class="text-xl font-semibold mb-2">Reliable Payments</div>
+                        <div class="text-zinc-400">You receive payment based on the agreement (CPM or Flat Fee). We ensure funds are secure before content is posted, guaranteeing you get paid for your work.</div>
+                    </div>
+                    
+                    <div class="border-b-4 border-white pb-4">
+                        <div class="text-5xl font-black text-white mb-2">Verified Track Record</div>
+                        <div class="text-xl font-semibold mb-2">Professional Portfolio</div>
+                        <div class="text-zinc-400">Build a credible, verifiable track record of paid brand partnerships that you can use to negotiate future deals and grow your career.</div>
+                    </div>
+                </div>
+                
+                <p class="mt-12 text-lg text-zinc-400">
+                    Our business model is based on servicing the agencies, not penalizing the creator.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="cta" class="py-32 bg-gradient-to-br from-brand-purple to-brand-purple-dark text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full filter blur-3xl"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-brand-red rounded-full filter blur-3xl"></div>
+        </div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-5xl md:text-6xl font-black mb-6">
+                    Ready to Transform Your Passion into a Profession?
+                </h2>
+                
+                <p class="text-2xl mb-12 text-purple-100">
+                    Stop leaving revenue on the table. Join the platform built to recognize, compensate, and elevate your unique influence in the international digital space.
+                </p>
+                
+                <a href="/join-swop" class="inline-block px-12 py-5 bg-white text-brand-purple rounded-lg font-bold text-xl transition-all transform hover:scale-105 shadow-2xl hover:shadow-white/20">
+                    Sign Up Now and Find Your First Paid Campaign
+                </a>
+                
+                <p class="mt-8 text-sm text-purple-200">
+                    It's 100% free to join and start applying.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold">Creative Swop.</span>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <p class="text-zinc-400 mb-2 font-semibold">Creative Swop. Where SA Influence Gets Paid.</p>
+                    <div class="flex items-center justify-center md:justify-end space-x-6 text-sm text-zinc-500">
+                        <a href="/terms-and-conditions" class="hover:text-brand-purple transition-colors">Privacy</a>
+                        <a href="/terms-and-conditions" class="hover:text-brand-purple transition-colors">Terms</a>
+                        <a href="/form" class="hover:text-brand-purple transition-colors">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll animation for cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.comparison-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+
+document.addEventListener('DOMContentLoaded', function() {
+        const button = document.getElementById('mobileMenuButton');
+        const menu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
+        const closeIcon = document.getElementById('closeIcon');
+
+        button.addEventListener('click', function() {
+            // Toggle menu visibility
+            menu.classList.toggle('hidden');
+            
+            // Toggle icons
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+    });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

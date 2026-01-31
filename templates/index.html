@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="description" content="Turn your recyclables into revenue. We are the company for orchestrating sustainable value recovery for properties in Harare and Centurion.">
+    <meta name="keywords" content="recycling, waste management, circular economy, property management, sustainability, Harare, Centurion, Zimbabwe, South Africa, passive income">
+    <meta name="author" content="R.E.D Recycling Solutions">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="How It Works | R.E.D Recycling Solutions">
+    <meta property="og:description" content="Transform waste costs into passive income. Professional recycling orchestration for properties in Harare North & Centurion.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://redsystems.co.za/how-it-works">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='Images/favicon.ico') }}">
+    <title>How It Works | R.E.D Recycling Solutions</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Fade-in and Slide-up Animation for content blocks */
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .animate-on-scroll.is-visible {
+            animation: fadeInSlideUp 0.8s ease-out forwards;
+        }
+
+        /* Specific delays for content cards */
+        .step-card:nth-child(1).is-visible { animation-delay: 0.1s; }
+        .step-card:nth-child(2).is-visible { animation-delay: 0.3s; }
+        .step-card:nth-child(3).is-visible { animation-delay: 0.5s; }
+        .benefit-card:nth-child(1).is-visible { animation-delay: 0.1s; }
+        .benefit-card:nth-child(2).is-visible { animation-delay: 0.2s; }
+        .benefit-card:nth-child(3).is-visible { animation-delay: 0.3s; }
+        .benefit-card:nth-child(4).is-visible { animation-delay: 0.4s; }
+
+        /* Background animation for hero section */
+        @keyframes animateBackground {
+            0%, 100% {
+                transform: translateY(0) rotate(-10deg) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) rotate(-12deg) scale(1.05);
+            }
+        }
+
+        .hero-background-animated {
+            animation: animateBackground 10s ease-in-out infinite;
+        }
+
+        /* Icon styles */
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
+        }
+
+        /* Arrow connector for steps */
+        .step-connector {
+            position: relative;
+        }
+
+        .step-connector::after {
+            content: '→';
+            position: absolute;
+            right: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .step-connector::after {
+                content: '↓';
+                right: auto;
+                left: 50%;
+                top: auto;
+                bottom: -2rem;
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Location badge */
+        .location-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(220, 38, 38, 0.1);
+            border: 2px solid #dc2626;
+            border-radius: 9999px;
+            font-weight: 600;
+            color: #dc2626;
+            margin: 0.25rem;
+        }
+
+        /* Stat counter animation */
+        @keyframes countUp {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .stat-number {
+            animation: countUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-900 bg-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full flex justify-between items-center px-4 py-3 bg-white shadow-lg z-50 flex-wrap rounded-b-xl">
+        <div class="text-2xl font-bold text-red-600">R.E.D Recycling Solutions</div>
+        <div class="md:hidden">
+            <button id="menu-toggle" class="text-gray-700 hover:text-red-500 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
+        <div id="nav-links" class="hidden md:flex flex-col md:flex-row md:space-x-8 mt-4 md:mt-0 w-full md:w-auto bg-white md:bg-transparent p-4 md:p-0 rounded-lg md:rounded-none shadow-md md:shadow-none">
+            <a href="/" class="block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out">Home</a>
+            <a href="/how-it-works" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out">How It Works</a>
+            <a href="/creative-swop/home" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out">Creative Swop</a>
+            <a href="/schools" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out">Schools Initiative</a>
+            <a href="/contact-information" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out">Contact Us</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex flex-col justify-center items-center text-center overflow-hidden pt-24 pb-12 px-4 bg-gradient-to-b from-white to-red-100" id="hero">
+        <div class="absolute inset-0 bottom-[-50%] left-[-50%] w-[200%] h-[150%] bg-gradient-to-t from-red-500/70 via-white to-gray-50 filter blur-3xl z-0 transform -rotate-10 hero-background-animated opacity-70"></div>
+        <div class="relative z-10 max-w-4xl px-4 animate-on-scroll">
+            <div class="mb-6">
+                <span class="inline-block px-4 py-2 bg-red-600 text-white text-sm font-bold rounded-full shadow-lg">THE FUTURE OF VALUE RECOVERY</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6 text-gray-900">
+                Turn Your Waste Stream Into <span class="text-red-600">Passive Income</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
+                We're not another waste company with noisy trucks and hidden fees. We're a <strong>Recycling Aggregator</strong> — think of us as the key to sustainable value recovery. We coordinate licensed partners to collect your separated recyclables and pay you cash rebates for materials like aluminum, PET plastics, and paper.
+            </p>
+            <div class="flex justify-center gap-4 mb-8">
+                <span class="location-badge">🇿🇼 Harare North</span>
+                <span class="location-badge">🇿🇦 Centurion / Pretoria</span>
+            </div>
+            <div class="flex justify-center gap-4 flex-wrap">
+                <a href="/contact-information" class="px-8 py-4 bg-red-600 text-white font-bold rounded-full shadow-lg hover:bg-red-700 transition duration-300 ease-in-out transform hover:scale-105">Start Earning Today</a>
+                <a href="/how-it-works" class="px-8 py-4 bg-white text-red-600 font-bold rounded-full shadow-lg border-2 border-red-600 hover:bg-red-50 transition duration-300 ease-in-out">See How It Works</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Orchestrator Explanation -->
+    <section class="py-16 px-4 bg-white text-center animate-on-scroll" id="orchestrator">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold mb-6 text-red-600">What Makes Us Different?</h2>
+            <div class="p-8 bg-gray-50 rounded-xl shadow-xl">
+                <div class="icon-circle mb-6">
+                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">We're the Smart aggregator You Actually Want</h3>
+                <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                    Traditional waste companies own fleets, charge disposal fees, and leave you with nothing but an invoice. We flip that model entirely. We don't own a single truck — instead, we use technology and partnerships to orchestrate a network of licensed logistics providers who are already servicing your area.
+                </p>
+                <div class="grid md:grid-cols-3 gap-6 text-left">
+                    <div class="p-4 bg-white rounded-lg shadow-md">
+                        <div class="text-3xl mb-2">🚫</div>
+                        <h4 class="font-bold text-gray-800 mb-2">No Heavy Machinery</h4>
+                        <p class="text-gray-600 text-sm">Your property stays clear. Our partners arrive quietly on schedule with light collection vehicles.</p>
+                    </div>
+                    <div class="p-4 bg-white rounded-lg shadow-md">
+                        <div class="text-3xl mb-2">💰</div>
+                        <h4 class="font-bold text-gray-800 mb-2">You Get Paid</h4>
+                        <p class="text-gray-600 text-sm">We pay guaranteed cash rebates for every kilogram of aluminum and plastic you separate.</p>
+                    </div>
+                    <div class="p-4 bg-white rounded-lg shadow-md">
+                        <div class="text-3xl mb-2">📊</div>
+                        <h4 class="font-bold text-gray-800 mb-2">Full Transparency</h4>
+                        <p class="text-gray-600 text-sm">Digital weighing, instant reports, and monthly sustainability data for ESG compliance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works - 3 Steps -->
+    <section class="py-16 px-4 bg-gray-50" id="how-it-works">
+        <h2 class="text-4xl font-bold mb-12 text-red-600 text-center animate-on-scroll">How It Works: Simple as 1-2-3</h2>
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4">
+                <!-- Step 1 -->
+                <div class="step-card step-connector p-8 bg-white rounded-xl shadow-xl text-center animate-on-scroll relative">
+                    <div class="icon-circle">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                    </div>
+                    <div class="text-5xl font-bold text-red-500 mb-4">01</div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Separation Setup</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        We provide digital guides for teaching you how to set up a small holding zone for your property — perfect for <strong>aluminum cans, PET plastics, and paper</strong>. No confusion, no mess. We'll even train your team or residents on what goes where.
+                    </p>
+                    <div class="mt-6 text-sm text-gray-500 font-semibold">
+                        ✓ Free training<br>
+                        ✓ Clear insutuctions<br>
+                        ✓ Quick set up
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-card step-connector p-8 bg-white rounded-xl shadow-xl text-center animate-on-scroll relative">
+                    <div class="icon-circle">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                        </svg>
+                    </div>
+                    <div class="text-5xl font-bold text-red-500 mb-4">02</div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Scheduled "Milk Run" Collection</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Our partner network picks up your materials on a predictable schedule — weekly, bi-weekly, or custom. These are licensed, professional operators who know how to work with minimal disruption. You'll never see a massive garbage truck blocking your entrance.
+                    </p>
+                    <div class="mt-6 text-sm text-gray-500 font-semibold">
+                        ✓ Pre-scheduled pickups<br>
+                        ✓ EMA licensed partners<br>
+                        ✓ SMS/email reminders
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-card p-8 bg-white rounded-xl shadow-xl text-center animate-on-scroll">
+                    <div class="icon-circle">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-5xl font-bold text-red-500 mb-4">03</div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Transparent Weighing & Cash Rebate</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Every collection is digitally weighed and logged. You receive a detailed report and your <strong>guaranteed cash rebate</strong> via mobile money or bank transfer. No hidden deductions, no surprise fees — just transparent value recovery.
+                    </p>
+                    <div class="mt-6 text-sm text-gray-500 font-semibold">
+                        ✓ Digital weight verification<br>
+                        ✓ under 7 day payment turn around<br>
+                        ✓ Monthly sustainability reports
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="py-16 px-4 bg-white" id="why-choose">
+        <h2 class="text-4xl font-bold mb-12 text-red-600 text-center animate-on-scroll">Why Property Managers & Residents Choose Us</h2>
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Benefit 1 -->
+            <div class="benefit-card p-6 bg-gray-50 rounded-xl shadow-lg animate-on-scroll">
+                <div class="text-4xl mb-4">💵</div>
+                <h3 class="text-xl font-semibold mb-3 text-gray-800">Passive Income Stream</h3>
+                <p class="text-gray-600">
+                    Aluminum and PET plastics command premium prices. We guarantee competitive rebates that turn your waste budget into a revenue line item.
+                </p>
+            </div>
+
+            <!-- Benefit 2 -->
+            <div class="benefit-card p-6 bg-gray-50 rounded-xl shadow-lg animate-on-scroll">
+                <div class="text-4xl mb-4">📋</div>
+                <h3 class="text-xl font-semibold mb-3 text-gray-800">Zero Compliance Headaches</h3>
+                <p class="text-gray-600">
+                    We handle all regulatory paperwork — <strong>EMA licenses</strong> in Zimbabwe, <strong>Waste Act compliance</strong> in South Africa. You stay focused on your business.
+                </p>
+            </div>
+
+            <!-- Benefit 3 -->
+            <div class="benefit-card p-6 bg-gray-50 rounded-xl shadow-lg animate-on-scroll">
+                <div class="text-4xl mb-4">🌍</div>
+                <h3 class="text-xl font-semibold mb-3 text-gray-800">ESG & Green Credentials</h3>
+                <p class="text-gray-600">
+                    Receive monthly reports on kilograms diverted, CO₂ saved, and trees preserved. Perfect for corporate sustainability targets and green building certifications.
+                </p>
+            </div>
+
+            <!-- Benefit 4 -->
+            <div class="benefit-card p-6 bg-gray-50 rounded-xl shadow-lg animate-on-scroll">
+                <div class="text-4xl mb-4">🤝</div>
+                <h3 class="text-xl font-semibold mb-3 text-gray-800">Local Partnership, Global Standards</h3>
+                <p class="text-gray-600">
+                    We aggregate materials and sell to trusted industrial processors like Almin and Mpact, ensuring you get the best rates and reliable service.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 px-4 bg-gradient-to-r from-red-600 to-red-500 text-white" id="stats">
+        <div class="max-w-5xl mx-auto text-center animate-on-scroll">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12">Our Impact By The Numbers</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-6">
+                    <div class="stat-number text-5xl md:text-6xl font-extrabold mb-2">2</div>
+                    <p class="text-xl font-semibold">Cities Served</p>
+                    <p class="text-sm opacity-90 mt-2">Harare North & Centurion</p>
+                </div>
+                <div class="p-6">
+                    <div class="stat-number text-5xl md:text-6xl font-extrabold mb-2">100%</div>
+                    <p class="text-xl font-semibold">Transparent Weighing</p>
+                    <p class="text-sm opacity-90 mt-2">Every kilogram accounted for</p>
+                </div>
+                <div class="p-6">
+                    <div class="stat-number text-5xl md:text-6xl font-extrabold mb-2">0</div>
+                    <p class="text-xl font-semibold">Hidden Fees</p>
+                    <p class="text-sm opacity-90 mt-2">What you see is what you get</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Specifics -->
+    <section class="py-16 px-4 bg-gray-50" id="locations">
+        <div class="max-w-5xl mx-auto animate-on-scroll">
+            <h2 class="text-4xl font-bold mb-8 text-red-600 text-center">Proudly Serving Two Nations</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Zimbabwe -->
+                <div class="p-8 bg-white rounded-xl shadow-xl">
+                    <div class="flex items-center mb-4">
+                        <span class="text-4xl mr-3">🇿🇼</span>
+                        <h3 class="text-2xl font-bold text-gray-800">Zimbabwe Operations</h3>
+                    </div>
+                    <p class="text-gray-700 mb-4 leading-relaxed">
+                        Currently active in Harare's northern suburbs including Borrowdale and Mount Pleasant. We work with office parks, shopping centers, and residential clusters to transform waste management costs into sustainable income streams.
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span>Full EMA licensing & compliance</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span>USD payment options available</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span>Partnerships with local processors</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- South Africa -->
+                <div class="p-8 bg-white rounded-xl shadow-xl">
+                    <div class="flex items-center mb-4">
+                        <span class="text-4xl mr-3">🇿🇦</span>
+                        <h3 class="text-2xl font-bold text-gray-800">South Africa Operations</h3>
+                    </div>
+                    <p class="text-gray-700 mb-4 leading-relaxed">
+                        Operating throughout Centurion and Pretoria, serving commercial properties and residential estates with world-class value recovery services. We're expanding rapidly across Gauteng.
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span>Full Waste Act compliance</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span>Direct ZAR bank transfers</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span>Integration with major processors</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 px-4 bg-white text-center" id="cta">
+        <div class="max-w-3xl mx-auto animate-on-scroll">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900">Ready to Transform Waste Into Revenue?</h2>
+            <p class="text-xl text-gray-700 mb-8 leading-relaxed">
+                Join forward-thinking property managers and residents who have already made the switch. No upfront costs, no long-term contracts — just smart recycling that pays you back.
+            </p>
+            <div class="flex justify-center gap-4 flex-wrap mb-8">
+                <a href="/contact-information" class="px-10 py-4 bg-red-600 text-white font-bold text-lg rounded-full shadow-lg hover:bg-red-700 transition duration-300 ease-in-out transform hover:scale-105">Request a Free Consultation</a>
+            </div>
+            <p class="text-gray-500 text-sm">
+                Have questions? Contact us at <a href="mailto:mchimwaza@redsystems.co.za" class="text-red-600 font-semibold hover:underline">mchimwaza@redsystems.co.za</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-red-600 text-white text-center py-8 rounded-t-xl mt-auto">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="mb-4">
+                <h3 class="text-xl font-bold mb-2">R.E.D Recycling Solutions</h3>
+                <p class="text-sm opacity-90">Orchestrating Sustainable Value Recovery</p>
+            </div>
+            <div class="mb-4 flex justify-center gap-6 flex-wrap text-sm">
+                <span>🇿🇼 Harare North</span>
+                <span>🇿🇦 Centurion / Pretoria</span>
+            </div>
+            <p class="mb-2">&copy; 2025 R.E.D Recycling Solutions - A Service of R.E.D Solutions</p>
+            <p>Available on Request | <a href="mailto:smotha@redsystems.co.za" class="text-white hover:underline font-semibold">smotha@redsystems.co.za</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Menu Toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const navLinks = document.getElementById('nav-links');
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('hidden');
+                navLinks.classList.toggle('flex');
+            });
+            
+            // Close menu when clicking a link
+            const links = document.querySelectorAll('#nav-links a');
+            links.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (!navLinks.classList.contains('hidden')) {
+                        navLinks.classList.add('hidden');
+                        navLinks.classList.remove('flex');
+                    }
+                });
+            });
+
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Intersection Observer for fade-in-slide-up animation
+            const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            animateOnScrollElements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+Flask
+python-dotenv
+passlib
+libsql-client
+libsql
+airtable-python-wrapper==0.15.3

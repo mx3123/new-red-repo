@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings | Creative Swop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                        'brand-green': '#059669',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white">
+    
+    <header class="sticky top-0 z-50 bg-zinc-900 border-b border-zinc-800">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <div class="text-2xl font-bold text-brand-purple">Creative Swop</div>
+                    <nav class="hidden md:flex space-x-6 text-sm">
+                        <a href="/creator" class="text-zinc-400 hover:text-white">Opportunities</a>
+                        <a href="/my_campaign" class="text-zinc-400 hover:text-white">My Campaign</a>
+                        <a href="/analytics" class="text-zinc-400 hover:text-white">Analytics</a>
+                        <a href="/settings" class="text-white font-medium">Settings</a>
+                    </nav>
+                </div>
+                
+                <button class="md:hidden text-zinc-400 hover:text-white" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="md:hidden mt-4 border-t border-zinc-800 pt-4 hidden">
+            <div class="space-y-2">
+                <a href="/creator" class="block py-2 text-white font-medium">Opportunities</a>
+                <a href="/my_campaign" class="block py-2 text-zinc-400 hover:text-white">My Campaign</a>
+                <a href="/analytics" class="block py-2 text-zinc-400 hover:text-white">Analytics</a>
+                <a href="/settings" class="block py-2 text-zinc-400 hover:text-white">Settings</a>
+                <button onclick="logout()" class="block py-2 text-red-400 hover:text-red-300 w-full text-left">
+                    Log Out
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 max-w-4xl">
+        
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold mb-2">Account Settings</h1>
+            <p class="text-zinc-400">Manage your profile information and account preferences</p>
+        </div>
+
+        <div class="bg-zinc-900 border border-zinc-800 rounded-lg mb-6">
+            <div class="flex border-b border-zinc-800">
+                <button onclick="switchTab('profile')" id="profileTab" class="settings-tab flex-1 px-6 py-4 font-semibold border-b-2 border-brand-purple text-brand-purple">
+                    Profile Information
+                </button>
+                <button onclick="switchTab('security')" id="securityTab" class="settings-tab flex-1 px-6 py-4 font-semibold border-b-2 border-transparent text-zinc-400 hover:text-white">
+                    Security
+                </button>
+                <button onclick="switchTab('danger')" id="dangerTab" class="settings-tab flex-1 px-6 py-4 font-semibold border-b-2 border-transparent text-zinc-400 hover:text-white">
+                    Danger Zone
+                </button>
+            </div>
+        </div>
+
+        <div id="profileSection" class="settings-section">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-6">
+                <h2 class="text-xl font-bold mb-4">Personal Information</h2>
+                
+                <form id="profileForm" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Full Name</label>
+                            <input type="text" id="name" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email</label>
+                            <input type="email" id="email" disabled class="w-full px-4 py-2 bg-zinc-700 border border-zinc-600 rounded-lg text-zinc-400 cursor-not-allowed">
+                            <p class="text-xs text-zinc-500 mt-1">Email cannot be changed</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Phone Number</label>
+                        <input type="tel" id="number" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                    </div>
+
+                    <div class="pt-4 border-t border-zinc-800">
+                        <h3 class="text-lg font-semibold mb-4">Public Profile Details</h3>
+                        <p class="text-sm text-zinc-500 mb-4">This information will be visible in the Creator Database.</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Location</label>
+                                <input type="text" id="location" placeholder="e.g. Cape Town, South Africa" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Category / Niche</label>
+                                <select id="category" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                                    <option value="">Select a Category</option>
+                                    <option value="Lifestyle">Lifestyle</option>
+                                    <option value="Tech">Tech</option>
+                                    <option value="Fashion">Fashion</option>
+                                    <option value="Beauty">Beauty</option>
+                                    <option value="Travel">Travel</option>
+                                    <option value="Fitness">Fitness</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Gaming">Gaming</option>
+                                    <option value="Business">Business</option>
+                                    <option value="Music">Music</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-2">Bio / About Me</label>
+                            <textarea id="bio" rows="4" placeholder="Tell brands about yourself..." class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple"></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-2">Best Performing Content Link</label>
+                            <input type="url" id="best_content_link" placeholder="https://instagram.com/p/..." class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                            <p class="text-xs text-zinc-500 mt-1">Link to your best post to showcase in your profile popup.</p>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-zinc-800">
+                        <h3 class="text-lg font-semibold mb-4">Social Media Handles</h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Instagram</label>
+                                <div class="flex items-center">
+                                    <span class="px-3 py-2 bg-zinc-800 border border-zinc-700 border-r-0 rounded-l-lg text-zinc-400">@</span>
+                                    <input type="text" id="instagram" class="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-r-lg text-white focus:outline-none focus:border-brand-purple">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-2">TikTok</label>
+                                <div class="flex items-center">
+                                    <span class="px-3 py-2 bg-zinc-800 border border-zinc-700 border-r-0 rounded-l-lg text-zinc-400">@</span>
+                                    <input type="text" id="tik_tok" class="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-r-lg text-white focus:outline-none focus:border-brand-purple">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-2">YouTube</label>
+                                <div class="flex items-center">
+                                    <span class="px-3 py-2 bg-zinc-800 border border-zinc-700 border-r-0 rounded-l-lg text-zinc-400">@</span>
+                                    <input type="text" id="youtube" class="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-r-lg text-white focus:outline-none focus:border-brand-purple">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-zinc-800">
+                        <h3 class="text-lg font-semibold mb-4">Performance Metrics</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Average Views</label>
+                                <input type="number" id="avg_views" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Total Reach</label>
+                                <input type="number" id="reach" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4">
+                        <button type="submit" class="px-6 py-3 bg-brand-purple hover:bg-brand-purple-dark rounded-lg font-semibold transition-colors">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
+                    <div class="text-zinc-400 text-sm mb-1">Profile Score</div>
+                    <div class="text-2xl font-bold text-brand-purple"><span id="profileScore">0</span>%</div>
+                </div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
+                    <div class="text-zinc-400 text-sm mb-1">Total Earnings</div>
+                    <div class="text-2xl font-bold">R <span id="totalEarnings">0</span></div>
+                </div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
+                    <div class="text-zinc-400 text-sm mb-1">Current Balance</div>
+                    <div class="text-2xl font-bold text-brand-green">R <span id="currentBalance">0</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="securitySection" class="settings-section hidden">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+                <h2 class="text-xl font-bold mb-4">Change Password</h2>
+                
+                <form id="passwordForm" class="space-y-4 max-w-md">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Current Password</label>
+                        <input type="password" id="currentPassword" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">New Password</label>
+                        <input type="password" id="newPassword" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                        <p class="text-xs text-zinc-500 mt-1">Must be at least 8 characters</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-brand-purple">
+                    </div>
+
+                    <div class="flex justify-end pt-4">
+                        <button type="submit" class="px-6 py-3 bg-brand-purple hover:bg-brand-purple-dark rounded-lg font-semibold transition-colors">
+                            Update Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="dangerSection" class="settings-section hidden">
+            <div class="bg-red-950/20 border border-red-900/50 rounded-lg p-6">
+                <div class="flex items-start gap-3 mb-6">
+                    <svg class="w-6 h-6 text-red-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    <div>
+                        <h2 class="text-xl font-bold text-red-500 mb-2">Danger Zone</h2>
+                        <p class="text-zinc-300">Once you delete your account, there is no going back. Please be certain.</p>
+                    </div>
+                </div>
+
+                <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+                    <h3 class="font-semibold mb-4">Delete Account</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-amber-900/20 border border-amber-800/50 rounded-lg p-4">
+                            <h4 class="font-semibold text-amber-500 mb-2">This will permanently delete:</h4>
+                            <ul class="text-sm text-zinc-300 space-y-1">
+                                <li>• Your profile and all personal information</li>
+                                <li>• All campaign applications and submissions</li>
+                                <li>• Your content performance history</li>
+                                <li>• Financial records and payout history</li>
+                                <li>• Affiliate links and tracking data</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Confirm Password</label>
+                            <input type="password" id="deletePassword" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-red-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Type "DELETE" to confirm</label>
+                            <input type="text" id="deleteConfirmation" class="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-red-500">
+                        </div>
+
+                        <button onclick="deleteAccount()" class="w-full py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition-colors">
+                            Delete Account Permanently
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="successToast" class="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hidden">
+        <div class="flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span id="successMessage">Changes saved successfully</span>
+        </div>
+    </div>
+
+    <div id="errorToast" class="fixed top-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg hidden">
+        <div class="flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+            <span id="errorMessage">An error occurred</span>
+        </div>
+    </div>
+
+    <script>
+        let userRole = 'creator'; // Will be set dynamically
+
+        // Tab Switching
+        function switchTab(tab) {
+            // Hide all sections
+            document.querySelectorAll('.settings-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Reset all tab styles
+            document.querySelectorAll('.settings-tab').forEach(tabBtn => {
+                tabBtn.classList.remove('border-brand-purple', 'text-brand-purple');
+                tabBtn.classList.add('border-transparent', 'text-zinc-400');
+            });
+            
+            // Show selected section and update tab
+            if (tab === 'profile') {
+                document.getElementById('profileSection').classList.remove('hidden');
+                document.getElementById('profileTab').classList.add('border-brand-purple', 'text-brand-purple');
+            } else if (tab === 'security') {
+                document.getElementById('securitySection').classList.remove('hidden');
+                document.getElementById('securityTab').classList.add('border-brand-purple', 'text-brand-purple');
+            } else if (tab === 'danger') {
+                document.getElementById('dangerSection').classList.remove('hidden');
+                document.getElementById('dangerTab').classList.add('border-brand-purple', 'text-brand-purple');
+            }
+        }
+
+        // Toast Notifications
+        function showToast(type, message) {
+            const toast = document.getElementById(type === 'success' ? 'successToast' : 'errorToast');
+            const messageEl = document.getElementById(type === 'success' ? 'successMessage' : 'errorMessage');
+            
+            messageEl.textContent = message;
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Load Profile Data
+        async function loadProfile() {
+            try {
+                // First verify session to get user role
+                const verifyResponse = await fetch('/api/auth/verify');
+                const verifyData = await verifyResponse.json();
+                userRole = verifyData.role;
+
+                const endpoint = userRole === 'creator' ? '/api/creator/profile' : '/api/manager/profile';
+                const response = await fetch(endpoint);
+                
+                if (!response.ok) throw new Error('Failed to load profile');
+                
+                const profile = await response.json();
+                
+                if (userRole === 'creator') {
+                    document.getElementById('name').value = profile.name || '';
+                    document.getElementById('email').value = profile.email || '';
+                    document.getElementById('number').value = profile.number || '';
+                    
+                    // New Fields Population
+                    document.getElementById('location').value = profile.location || '';
+                    document.getElementById('category').value = profile.category || '';
+                    document.getElementById('bio').value = profile.bio || '';
+                    document.getElementById('best_content_link').value = profile.best_content_link || '';
+
+                    document.getElementById('instagram').value = profile.instagram || '';
+                    document.getElementById('tik_tok').value = profile.tik_tok || '';
+                    document.getElementById('youtube').value = profile.youtube || '';
+                    document.getElementById('avg_views').value = profile.avg_views || 0;
+                    document.getElementById('reach').value = profile.reach || 0;
+                    
+                    document.getElementById('profileScore').textContent = profile.profile_score || 0;
+                    document.getElementById('totalEarnings').textContent = profile.total_earnings.toLocaleString();
+                    document.getElementById('currentBalance').textContent = profile.current_balance.toLocaleString();
+                } else {
+                    // Manager profile - adjust form fields accordingly
+                    document.getElementById('name').value = profile.company || '';
+                    document.getElementById('email').value = profile.log_email || '';
+                    document.getElementById('number').value = profile.ad_number || '';
+                    
+                    // Hide creator-specific fields
+                    document.querySelectorAll('[for="instagram"], [for="tik_tok"], [for="youtube"], [for="bio"], [for="location"], [for="category"], [for="best_content_link"]').forEach(el => {
+                        // Traverse up to the container div to hide it
+                        if(el.parentElement) el.parentElement.style.display = 'none';
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showToast('error', 'Failed to load profile data');
+            }
+        }
+
+        // Update Profile
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const endpoint = userRole === 'creator' ? '/api/creator/profile' : '/api/manager/profile';
+            
+            let data = {};
+            if (userRole === 'creator') {
+                data = {
+                    name: document.getElementById('name').value,
+                    number: document.getElementById('number').value,
+                    // New Fields
+                    location: document.getElementById('location').value,
+                    category: document.getElementById('category').value,
+                    bio: document.getElementById('bio').value,
+                    best_content_link: document.getElementById('best_content_link').value,
+                    
+                    instagram: document.getElementById('instagram').value,
+                    tik_tok: document.getElementById('tik_tok').value,
+                    youtube: document.getElementById('youtube').value,
+                    avg_views: parseInt(document.getElementById('avg_views').value) || 0,
+                    reach: parseInt(document.getElementById('reach').value) || 0
+                };
+            } else {
+                data = {
+                    company: document.getElementById('name').value,
+                    ad_number: document.getElementById('number').value
+                };
+            }
+            
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    showToast('success', 'Profile updated successfully');
+                } else {
+                    const error = await response.json();
+                    showToast('error', error.message || 'Failed to update profile');
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showToast('error', 'An error occurred');
+            }
+        });
+
+        // Change Password
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                showToast('error', 'Passwords do not match');
+                return;
+            }
+            
+            if (newPassword.length < 8) {
+                showToast('error', 'Password must be at least 8 characters');
+                return;
+            }
+            
+            const endpoint = userRole === 'creator' ? '/api/creator/change-password' : '/api/manager/change-password';
+            
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        current_password: currentPassword,
+                        new_password: newPassword
+                    })
+                });
+                
+                if (response.ok) {
+                    showToast('success', 'Password changed successfully');
+                    document.getElementById('passwordForm').reset();
+                } else {
+                    const error = await response.json();
+                    showToast('error', error.message || 'Failed to change password');
+                }
+            } catch (error) {
+                console.error('Error changing password:', error);
+                showToast('error', 'An error occurred');
+            }
+        });
+
+        // Delete Account
+        async function deleteAccount() {
+            const password = document.getElementById('deletePassword').value;
+            const confirmation = document.getElementById('deleteConfirmation').value;
+            
+            if (!password) {
+                showToast('error', 'Please enter your password');
+                return;
+            }
+            
+            if (confirmation !== 'DELETE') {
+                showToast('error', 'Please type DELETE to confirm');
+                return;
+            }
+            
+            if (!confirm('Are you absolutely sure? This action cannot be undone!')) {
+                return;
+            }
+            
+            const endpoint = userRole === 'creator' ? '/api/creator/delete-account' : '/api/manager/delete-account';
+            
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password, confirmation })
+                });
+                
+                if (response.ok) {
+                    alert('Your account has been deleted');
+                    window.location.href = '/login';
+                } else {
+                    const error = await response.json();
+                    showToast('error', error.message || 'Failed to delete account');
+                }
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                showToast('error', 'An error occurred');
+            }
+        }
+
+        // Logout
+        async function logout() {
+            try {
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                });
+                if (response.ok) {
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+                window.location.href = '/login';
+            }
+        }
+        
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProfile();
+        });
+    </script>
+</body>
+</html>

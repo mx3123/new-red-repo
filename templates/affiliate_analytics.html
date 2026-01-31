@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affiliate Analytics | Creative Swop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .metric-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            border-color: #6B21A8;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #27272a; /* zinc-800 */
+            border-top: 3px solid #6B21A8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-live { background-color: rgba(16, 185, 129, 0.2); color: #4ade80; }
+        .status-paused { background-color: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .status-draft { background-color: rgba(99, 102, 241, 0.2); color: #818cf8; }
+        .status-completed { background-color: #27272a; color: #9ca3af; }
+        
+        .performance-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        
+        .performance-excellent { background-color: #10b981; }
+        .performance-good { background-color: #f59e0b; }
+        .performance-poor { background-color: #ef4444; }
+
+        /* Custom Scrollbar for Dark Mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #18181b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b; 
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white">
+    <header class="sticky top-0 z-50 bg-zinc-900 border-b border-zinc-800 shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-2xl font-bold text-brand-purple">Creative Swop</span>
+                    </div>
+                    <nav class="hidden md:flex space-x-6 text-sm">
+                        <a href="/all_campaigns" class="text-zinc-400 hover:text-white transition-colors">Campaigns</a>
+                        <a href="/campaign_analytics" class="text-zinc-400 hover:text-white transition-colors">Analytics</a>
+                        <a href="/affiliate-analytics" class="text-white font-medium border-b-2 border-brand-purple">Affiliate Analytics</a>
+                        <a href="/media_dashboard" class="text-zinc-400 hover:text-white transition-colors">New campaign</a>
+                        <a href="/creator-database" class="text-zinc-400 hover:text-white transition-colors">Creator Search</a>
+                    </nav>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.location.href='/all_campaigns'" class="px-4 py-2 border border-zinc-700 text-zinc-300 rounded-lg text-sm font-semibold hover:bg-zinc-800 hover:text-white transition-colors">
+                        Back to Campaigns
+                    </button>
+                    <button id="logoutBtn" class="px-4 py-2 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-lg text-sm font-semibold hover:bg-zinc-700 hover:text-white transition-colors">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">Affiliate Marketing Analytics</h1>
+            <p class="text-zinc-400">Track performance, conversions, and commission across all your affiliate campaigns</p>
+        </div>
+
+        <div id="loadingState" class="flex flex-col items-center justify-center py-20">
+            <div class="loading-spinner mb-4"></div>
+            <p class="text-zinc-500">Loading affiliate analytics data...</p>
+        </div>
+
+        <div id="mainContent" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-sm text-zinc-400">Total Campaigns</div>
+                        <svg class="w-5 h-5 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-white" id="totalCampaigns">0</div>
+                    <div class="text-sm text-zinc-500 mt-1" id="liveCampaigns">0 live</div>
+                </div>
+                
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-sm text-zinc-400">Total Conversions</div>
+                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-white" id="totalConversions">0</div>
+                    <div class="text-sm text-zinc-500 mt-1" id="conversionRate">0% conversion rate</div>
+                </div>
+                
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-sm text-zinc-400">Total Commission</div>
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-white" id="totalCommission">R0</div>
+                    <div class="text-sm text-zinc-500 mt-1">Paid to influencers</div>
+                </div>
+                
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-sm text-zinc-400">Active Influencers</div>
+                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-white" id="activeInfluencers">0</div>
+                    <div class="text-sm text-zinc-500 mt-1">Generating conversions</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-white mb-6">Conversion Trends (Last 30 Days)</h3>
+                    <div class="h-64">
+                        <canvas id="conversionTrendsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-white mb-6">Campaign Performance</h3>
+                    <div class="h-64">
+                        <canvas id="campaignPerformanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center">
+                    <h3 class="text-lg font-semibold text-white">All Affiliate Campaigns</h3>
+                    <div class="flex space-x-2">
+                        <select id="statusFilter" class="px-4 py-2 bg-zinc-900 border border-zinc-700 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple">
+                            <option value="all">All Status</option>
+                            <option value="live">Live</option>
+                            <option value="paused">Paused</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-zinc-800 bg-zinc-800/50">
+                                <th class="text-left py-3 px-4 text-sm font-semibold text-zinc-400">Campaign</th>
+                                <th class="text-left py-3 px-4 text-sm font-semibold text-zinc-400">Brand</th>
+                                <th class="text-center py-3 px-4 text-sm font-semibold text-zinc-400">Influencers</th>
+                                <th class="text-center py-3 px-4 text-sm font-semibold text-zinc-400">Conversions</th>
+                                <th class="text-center py-3 px-4 text-sm font-semibold text-zinc-400">Commission</th>
+                                <th class="text-center py-3 px-4 text-sm font-semibold text-zinc-400">Conversion Rate</th>
+                                <th class="text-center py-3 px-4 text-sm font-semibold text-zinc-400">Performance</th>
+                                <th class="text-center py-3 px-4 text-sm font-semibold text-zinc-400">Status</th>
+                                <th class="text-center py-3 px-4 text-sm font-semibold text-zinc-400">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="campaignsTable">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-white mb-6">Top Converting Campaigns</h3>
+                    <div id="topCampaignsList">
+                        </div>
+                </div>
+
+                <div class="metric-card bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-white mb-6">Recent Activity</h3>
+                    <div id="recentActivityList">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Set Default Chart Colors for Dark Mode
+        Chart.defaults.color = '#a1a1aa'; // text-zinc-400
+        Chart.defaults.borderColor = '#27272a'; // border-zinc-800
+
+        let affiliateData = {};
+        let conversionTrendsChart = null;
+        let campaignPerformanceChart = null;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            await verifySession();
+            await loadAffiliateAnalyticsData();
+            setupEventListeners();
+        });
+
+        async function verifySession() {
+            try {
+                const response = await fetch('/api/auth/verify');
+                if (!response.ok || response.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+                const data = await response.json();
+                if (!data.valid || data.role !== 'manager') {
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Session verification failed:', error);
+                window.location.href = '/login';
+            }
+        }
+
+        async function loadAffiliateAnalyticsData() {
+            try {
+                // Load overview data
+                const overviewResponse = await fetch('/api/affiliate-analytics/overview');
+                const overviewData = await overviewResponse.json();
+                
+                // Load campaigns data
+                const campaignsResponse = await fetch('/api/affiliate-analytics/campaigns');
+                const campaignsData = await campaignsResponse.json();
+                
+                // Load trends data
+                const trendsResponse = await fetch('/api/affiliate-analytics/conversion-trends');
+                const trendsData = await trendsResponse.json();
+
+                affiliateData = {
+                    overview: overviewData,
+                    campaigns: campaignsData.campaigns || [],
+                    trends: trendsData
+                };
+
+                // Update UI
+                updateOverviewStats(overviewData);
+                renderCampaignsTable(campaignsData.campaigns || []);
+                renderCharts(trendsData, campaignsData.campaigns || []);
+                renderTopCampaigns(campaignsData.campaigns || []);
+                renderRecentActivity(trendsData);
+
+                // Show content
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('Error loading affiliate analytics:', error);
+                alert('Failed to load affiliate analytics data. Please try again.');
+            }
+        }
+
+        function updateOverviewStats(overview) {
+            // These IDs map to the HTML elements above
+            document.getElementById('totalCampaigns').textContent = overview.total_campaigns;
+            document.getElementById('liveCampaigns').textContent = `${overview.live_campaigns} live`;
+            document.getElementById('totalConversions').textContent = formatNumber(overview.total_conversions);
+            document.getElementById('conversionRate').textContent = `${overview.conversion_rate}% conversion rate`;
+            document.getElementById('totalCommission').textContent = `R${formatNumber(overview.total_commission)}`;
+            document.getElementById('activeInfluencers').textContent = overview.active_influencers;
+        }
+
+        function renderCampaignsTable(campaigns) {
+            const tbody = document.getElementById('campaignsTable');
+            tbody.innerHTML = '';
+
+            const filteredCampaigns = filterCampaigns(campaigns);
+
+            filteredCampaigns.forEach(campaign => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors';
+                
+                const performanceClass = getPerformanceClass(campaign.performance_score);
+                const performanceColor = getPerformanceColor(campaign.performance_score);
+
+                row.innerHTML = `
+                    <td class="py-4 px-4">
+                        <div class="font-medium text-white">${campaign.product_name}</div>
+                        <div class="text-sm text-zinc-500">${campaign.kpi}</div>
+                    </td>
+                    <td class="py-4 px-4 text-zinc-300">${campaign.brand}</td>
+                    <td class="py-4 px-4 text-center text-zinc-300">
+                        ${campaign.current_influencers}/${campaign.max_influencers}
+                        <div class="text-xs text-zinc-500">${campaign.fill_rate}% filled</div>
+                    </td>
+                    <td class="py-4 px-4 text-center text-zinc-300">${formatNumber(campaign.total_conversions)}</td>
+                    <td class="py-4 px-4 text-center text-zinc-300">R${formatNumber(campaign.total_commission)}</td>
+                    <td class="py-4 px-4 text-center text-zinc-300">${campaign.conversion_rate}%</td>
+                    <td class="py-4 px-4 text-center">
+                        <div class="flex items-center justify-center">
+                            <span class="performance-indicator ${performanceClass}"></span>
+                            <span class="font-semibold ${performanceColor}">${campaign.performance_score}%</span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-4 text-center">
+                        <span class="status-badge status-${campaign.status}">${campaign.status.toUpperCase()}</span>
+                    </td>
+                    <td class="py-4 px-4 text-center">
+                        <button onclick="viewCampaignDetails(${campaign.id})" class="text-brand-purple hover:text-brand-purple-dark text-sm font-medium transition-colors">
+                            View Details
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderCharts(trendsData, campaigns) {
+            renderConversionTrendsChart(trendsData.daily_trend);
+            renderCampaignPerformanceChart(campaigns);
+        }
+
+        function renderConversionTrendsChart(dailyTrend) {
+            const ctx = document.getElementById('conversionTrendsChart').getContext('2d');
+            
+            if (conversionTrendsChart) {
+                conversionTrendsChart.destroy();
+            }
+
+            const dates = dailyTrend.map(item => {
+                const date = new Date(item.date);
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            });
+            const conversions = dailyTrend.map(item => item.conversions);
+            const clicks = dailyTrend.map(item => item.clicks);
+
+            conversionTrendsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [
+                        {
+                            label: 'Conversions',
+                            data: conversions,
+                            borderColor: 'rgb(107, 33, 168)',
+                            backgroundColor: 'rgba(107, 33, 168, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Clicks',
+                            data: clicks,
+                            borderColor: 'rgb(16, 185, 129)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderCampaignPerformanceChart(campaigns) {
+            const ctx = document.getElementById('campaignPerformanceChart').getContext('2d');
+            
+            if (campaignPerformanceChart) {
+                campaignPerformanceChart.destroy();
+            }
+
+            // Get top 5 campaigns by conversions
+            const topCampaigns = campaigns
+                .sort((a, b) => b.total_conversions - a.total_conversions)
+                .slice(0, 5);
+
+            const campaignNames = topCampaigns.map(campaign => 
+                campaign.product_name.length > 15 
+                    ? campaign.product_name.substring(0, 15) + '...' 
+                    : campaign.product_name
+            );
+            const conversions = topCampaigns.map(campaign => campaign.total_conversions);
+            const commission = topCampaigns.map(campaign => campaign.total_commission);
+
+            campaignPerformanceChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: campaignNames,
+                    datasets: [
+                        {
+                            label: 'Conversions',
+                            data: conversions,
+                            backgroundColor: 'rgba(107, 33, 168, 0.8)',
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Commission (R)',
+                            data: commission,
+                            backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                            yAxisID: 'y1',
+                            type: 'line'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            beginAtZero: true
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            beginAtZero: true,
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTopCampaigns(campaigns) {
+            const container = document.getElementById('topCampaignsList');
+            container.innerHTML = '';
+
+            const topCampaigns = campaigns
+                .sort((a, b) => b.total_conversions - a.total_conversions)
+                .slice(0, 5);
+
+            topCampaigns.forEach((campaign, index) => {
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-between py-3 border-b border-zinc-800 last:border-b-0';
+                
+                item.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-brand-purple text-white rounded-full flex items-center justify-center text-sm font-bold">
+                            ${index + 1}
+                        </div>
+                        <div>
+                            <div class="font-medium text-white">${campaign.product_name}</div>
+                            <div class="text-sm text-zinc-400">${campaign.brand}</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-semibold text-white">${formatNumber(campaign.total_conversions)}</div>
+                        <div class="text-sm text-zinc-500">conversions</div>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+
+        function renderRecentActivity(trendsData) {
+            const container = document.getElementById('recentActivityList');
+            container.innerHTML = '';
+
+            // Sort by date descending (newest first) for the list
+            const recentDays = [...trendsData.daily_trend]
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 10); // Show last 10 days
+
+            if (recentDays.length === 0) {
+                container.innerHTML = '<div class="text-center py-4 text-zinc-500">No recent activity found.</div>';
+                return;
+            }
+
+            recentDays.forEach((day, index) => {
+                const item = document.createElement('div');
+                item.className = 'border-b border-zinc-800 last:border-b-0';
+                
+                const date = new Date(day.date);
+                const formattedDate = date.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+
+                const breakdownId = `breakdown-${index}`;
+                const iconId = `icon-${index}`;
+
+                // Build breakdown HTML
+                let breakdownHtml = '';
+                if (day.breakdown && day.breakdown.length > 0) {
+                    breakdownHtml = `
+                        <div id="${breakdownId}" class="hidden bg-zinc-900 border-t border-zinc-800 px-4 py-3 rounded-b-lg transition-all duration-300">
+                            <div class="text-xs font-semibold text-zinc-500 mb-2 uppercase tracking-wide">Campaign Breakdown</div>
+                            <div class="space-y-2">
+                                ${day.breakdown.map(camp => `
+                                    <div class="flex justify-between items-center text-sm p-2 bg-zinc-900 rounded border border-zinc-700 shadow-sm">
+                                        <span class="text-zinc-300 font-medium truncate w-1/2">${camp.campaign_name}</span>
+                                        <div class="flex items-center space-x-4">
+                                            <span class="text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded text-xs">${camp.clicks} clicks</span>
+                                            <span class="font-bold text-brand-purple text-xs">${camp.conversions} conv.</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    breakdownHtml = `
+                        <div id="${breakdownId}" class="hidden bg-zinc-900 border-t border-zinc-800 px-4 py-3 text-sm text-zinc-500 italic">
+                            No campaign specific data available for this day.
+                        </div>
+                    `;
+                }
+
+                // Main Row HTML
+                item.innerHTML = `
+                    <div class="flex items-center justify-between py-3 cursor-pointer hover:bg-zinc-800/50 transition-colors px-2 rounded-t-lg select-none" 
+                         onclick="toggleBreakdown('${breakdownId}', '${iconId}')">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-zinc-800 text-zinc-400 rounded-full flex items-center justify-center transition-transform duration-200" id="${iconId}">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="font-medium text-white">${formattedDate}</div>
+                                <div class="text-sm text-zinc-400 font-medium">
+                                    <span class="text-white font-bold">${day.clicks}</span> Total Clicks
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-semibold text-brand-purple">${day.conversions} Conv.</div>
+                            <div class="text-xs text-zinc-500">Rate: ${day.conversion_rate}%</div>
+                        </div>
+                    </div>
+                    ${breakdownHtml}
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+
+        // Toggle function for the dropdowns
+        function toggleBreakdown(elementId, iconId) {
+            const content = document.getElementById(elementId);
+            const icon = document.getElementById(iconId);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                // Rotate icon and highlight
+                icon.style.transform = 'rotate(180deg)';
+                icon.classList.add('bg-brand-purple', 'text-white');
+                icon.classList.remove('bg-zinc-800', 'text-zinc-400');
+            } else {
+                content.classList.add('hidden');
+                // Reset icon
+                icon.style.transform = 'rotate(0deg)';
+                icon.classList.remove('bg-brand-purple', 'text-white');
+                icon.classList.add('bg-zinc-800', 'text-zinc-400');
+            }
+        }
+
+        function filterCampaigns(campaigns) {
+            const statusFilter = document.getElementById('statusFilter').value;
+            if (statusFilter === 'all') {
+                return campaigns;
+            }
+            return campaigns.filter(campaign => campaign.status === statusFilter);
+        }
+
+        function getPerformanceClass(score) {
+            if (score >= 80) return 'performance-excellent';
+            if (score >= 60) return 'performance-good';
+            return 'performance-poor';
+        }
+
+        function getPerformanceColor(score) {
+            if (score >= 80) return 'text-green-500';
+            if (score >= 60) return 'text-yellow-500';
+            return 'text-red-500';
+        }
+
+        function setupEventListeners() {
+            // Status filter
+            document.getElementById('statusFilter').addEventListener('change', function() {
+                renderCampaignsTable(affiliateData.campaigns);
+            });
+
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', async function() {
+                try {
+                    await fetch('/api/auth/logout', { method: 'POST' });
+                    window.location.href = '/login';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+            });
+        }
+
+        function viewCampaignDetails(campaignId) {
+            window.location.href = `/affiliate-campaign-details?campaign_id=${campaignId}`;
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('en-ZA').format(Math.round(num));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Creative Swop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .network-bg {
+            background-image: radial-gradient(circle at 20% 50%, rgba(107, 33, 168, 0.05) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 80%, rgba(107, 33, 168, 0.05) 0%, transparent 50%);
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            border-color: #6B21A8;
+            box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.1);
+        }
+        
+        .tab-active {
+            background: linear-gradient(135deg, #6B21A8 0%, #581C87 100%);
+            color: white;
+        }
+        
+        .tab-inactive {
+            background: transparent;
+            color: #71717a;
+            border: 2px solid #e4e4e7;
+        }
+        
+        .form-transition {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .error-message {
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Custom Success Alert */
+        .success-alert {
+            display: none;
+            background-color: #D1FAE5; /* Green-100 */
+            color: #065F46; /* Green-800 */
+            border-left: 4px solid #10B981; /* Green-500 */
+        }
+        .success-alert.show {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="bg-zinc-50 min-h-screen network-bg">
+    
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-lg border-b border-zinc-200 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-2xl font-bold text-brand-purple">Creative Swop</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="text-zinc-600 hover:text-brand-purple transition-colors">Home</a>
+                    <a href="/affiliate" class="text-zinc-600 hover:text-brand-purple transition-colors">Affiliate</a>
+                    <a href="/#cta" class="text-zinc-600 hover:text-brand-purple transition-colors">Influencers</a>
+                    <a href="/login" class="px-6 py-2 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-semibold transition-colors">
+                        Login
+                    </a>
+                </div>
+                
+                <button class="md:hidden text-zinc-600" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="mobileMenu" class="hidden md:hidden mt-4 pb-4 border-t border-zinc-200 pt-4">
+                <div class="flex flex-col space-y-3">
+                    <a href="/" class="text-zinc-600 hover:text-brand-purple transition-colors">Home</a>
+                    <a href="/affiliate" class="text-zinc-600 hover:text-brand-purple transition-colors">Affiliate</a>
+                    <a href="/#cta" class="text-zinc-600 hover:text-brand-purple transition-colors">Influencers</a>
+                    <a href="/login" class="px-6 py-2 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-semibold transition-colors text-center">
+                        Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 pt-32 pb-16 max-w-lg">
+        
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            
+            <div class="grid grid-cols-2 gap-0 p-2 bg-zinc-50">
+                <button 
+                    id="creatorTab" 
+                    class="tab-active py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300"
+                    onclick="switchTab('creator')">
+                    Creator Account
+                </button>
+                <button 
+                    id="managerTab" 
+                    class="tab-inactive py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300"
+                    onclick="switchTab('manager')">
+                    Manager Account
+                </button>
+            </div>
+            
+            <div id="successAlert" class="success-alert p-4 m-4 rounded-lg text-sm transition-all">
+                <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <p>Registration successful! You can now <a href="/login" class="font-bold underline hover:text-green-700">log in</a>.</p>
+            </div>
+
+            <div id="creatorForm" class="p-8 form-transition">
+                <h2 class="text-2xl font-bold text-zinc-900 mb-2">Join as a Creator.</h2>
+                <p class="text-zinc-600 mb-6 text-sm">Create your profile and start landing brand deals.</p>
+                
+                <form id="creatorRegisterForm">
+                    
+                    <div class="mb-4">
+                        <label for="creator-name" class="block text-sm font-semibold text-zinc-700 mb-2">Full Name</label>
+                        <input type="text" id="creator-name" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="Ava Smith" required>
+                        <div id="creator-name-error" class="error-message text-brand-red text-sm mt-1"></div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="creator-email" class="block text-sm font-semibold text-zinc-700 mb-2">Email Address</label>
+                        <input type="email" id="creator-email" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="your@email.com" required>
+                        <div id="creator-email-error" class="error-message text-brand-red text-sm mt-1"></div>
+                    </div>
+
+                    <h3 class="text-md font-bold text-zinc-700 mt-6 mb-4 border-t pt-4">Social Media Handles (Optional)</h3>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="mb-4">
+                            <label for="creator-instagram" class="block text-sm font-semibold text-zinc-700 mb-2">Instagram</label>
+                            <input type="text" id="creator-instagram" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="@handle">
+                        </div>
+                        <div class="mb-4">
+                            <label for="creator-tiktok" class="block text-sm font-semibold text-zinc-700 mb-2">TikTok</label>
+                            <input type="text" id="creator-tiktok" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="@handle">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="creator-youtube" class="block text-sm font-semibold text-zinc-700 mb-2">YouTube Channel URL</label>
+                        <input type="text" id="creator-youtube" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="https://youtube.com/user/...">
+                    </div>
+
+                    <h3 class="text-md font-bold text-zinc-700 mt-6 mb-4 border-t pt-4">Creator Metrics (Optional)</h3>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="mb-4">
+                            <label for="creator-avg-views" class="block text-sm font-semibold text-zinc-700 mb-2">Average Views</label>
+                            <input type="number" id="creator-avg-views" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="e.g. 15000">
+                        </div>
+                        <div class="mb-4">
+                            <label for="creator-reach" class="block text-sm font-semibold text-zinc-700 mb-2">Total Reach</label>
+                            <input type="number" id="creator-reach" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="e.g. 100000">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="creator-number" class="block text-sm font-semibold text-zinc-700 mb-2">Phone Number (Optional)</label>
+                        <input type="tel" id="creator-number" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="123-456-7890">
+                    </div>
+
+                    <h3 class="text-md font-bold text-zinc-700 mt-6 mb-4 border-t pt-4">Security</h3>
+
+                    <div class="mb-6">
+                        <label for="creator-password" class="block text-sm font-semibold text-zinc-700 mb-2">Password</label>
+                        <div class="relative">
+                            <input type="password" id="creator-password" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none pr-12" placeholder="••••••••" required minlength="6">
+                            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600" onclick="togglePassword('creator-password')">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            </button>
+                        </div>
+                        <div id="creator-password-error" class="error-message text-brand-red text-sm mt-1"></div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white py-3 px-6 rounded-lg font-bold transition-all transform hover:scale-[1.02] shadow-lg">
+                        Create Creator Account
+                    </button>
+                    
+                    <div class="mt-6 text-center">
+                        <p class="text-sm text-zinc-600">
+                            Already have an account? 
+                            <a href="/login" class="text-brand-purple hover:text-brand-purple-dark font-semibold">Log In Here</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+            <div id="managerForm" class="p-8 form-transition hidden">
+                <h2 class="text-2xl font-bold text-zinc-900 mb-2">Register as a Manager.</h2>
+                <p class="text-zinc-600 mb-6 text-sm">Get access to the full campaign suite.</p>
+                
+                <form id="managerRegisterForm">
+                    
+                    <div class="mb-4">
+                        <label for="manager-company" class="block text-sm font-semibold text-zinc-700 mb-2">Company Name</label>
+                        <input type="text" id="manager-company" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="Global Brands Inc." required>
+                        <div id="manager-company-error" class="error-message text-brand-red text-sm mt-1"></div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="manager-email" class="block text-sm font-semibold text-zinc-700 mb-2">Business Email (Login)</label>
+                        <input type="email" id="manager-email" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="dan@agency.com" required>
+                        <div id="manager-email-error" class="error-message text-brand-red text-sm mt-1"></div>
+                    </div>
+                    
+                    <h3 class="text-md font-bold text-zinc-700 mt-6 mb-4 border-t pt-4">Contact & Details (Optional)</h3>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="mb-4">
+                            <label for="manager-ad-email" class="block text-sm font-semibold text-zinc-700 mb-2">Admin Email</label>
+                            <input type="email" id="manager-ad-email" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="you@youremail.com">
+                        </div>
+                        <div class="mb-4">
+                            <label for="manager-ad-number" class="block text-sm font-semibold text-zinc-700 mb-2">Phone Number</label>
+                            <input type="tel" id="manager-ad-number" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="+27 555 5555">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="mb-4">
+                            <label for="manager-location" class="block text-sm font-semibold text-zinc-700 mb-2">Location</label>
+                            <input type="text" id="manager-location" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="New York">
+                        </div>
+                        <div class="mb-4">
+                            <label for="manager-category" class="block text-sm font-semibold text-zinc-700 mb-2">Industry</label>
+                            <input type="text" id="manager-category" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="Apparel, Tech, etc.">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="manager-description" class="block text-sm font-semibold text-zinc-700 mb-2">Brand Description</label>
+                        <textarea id="manager-description" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" rows="3" placeholder="A brief description of your brand/company."></textarea>
+                    </div>
+
+                    <h3 class="text-md font-bold text-zinc-700 mt-6 mb-4 border-t pt-4">Campaign Benchmarks (Optional)</h3>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="mb-4">
+                            <label for="manager-camp-spend" class="block text-sm font-semibold text-zinc-700 mb-2">Avg. Campaign Spend</label>
+                            <input type="text" id="manager-camp-spend" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="e.g. $500k">
+                        </div>
+                        <div class="mb-4">
+                            <label for="manager-camp-views" class="block text-sm font-semibold text-zinc-700 mb-2">Avg. Campaign Views</label>
+                            <input type="text" id="manager-camp-views" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none" placeholder="e.g. 5M+">
+                        </div>
+                    </div>
+
+                    <h3 class="text-md font-bold text-zinc-700 mt-6 mb-4 border-t pt-4">Security</h3>
+
+                    <div class="mb-6">
+                        <label for="manager-password" class="block text-sm font-semibold text-zinc-700 mb-2">Password</label>
+                        <div class="relative">
+                            <input type="password" id="manager-password" class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none pr-12" placeholder="••••••••" required minlength="6">
+                            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600" onclick="togglePassword('manager-password')">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            </button>
+                        </div>
+                        <div id="manager-password-error" class="error-message text-brand-red text-sm mt-1"></div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white py-3 px-6 rounded-lg font-bold transition-all transform hover:scale-[1.02] shadow-lg">
+                        Create Manager Account
+                    </button>
+                    
+                    <div class="mt-6 text-center">
+                        <p class="text-sm text-zinc-600">
+                            Already have an account? 
+                            <a href="/login" class="text-brand-purple hover:text-brand-purple-dark font-semibold">Log In Here</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="mt-8 text-center">
+            <div class="inline-flex items-center space-x-2 text-zinc-500 text-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                <span>Secured with 256-bit encryption</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRole = 'creator';
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function switchTab(role) {
+            currentRole = role;
+            
+            const creatorTab = document.getElementById('creatorTab');
+            const managerTab = document.getElementById('managerTab');
+            const creatorForm = document.getElementById('creatorForm');
+            const managerForm = document.getElementById('managerForm');
+            
+            if (role === 'creator') {
+                creatorTab.className = 'tab-active py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300';
+                managerTab.className = 'tab-inactive py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300';
+                creatorForm.classList.remove('hidden');
+                managerForm.classList.add('hidden');
+            } else {
+                managerTab.className = 'tab-active py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300';
+                creatorTab.className = 'tab-inactive py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300';
+                managerForm.classList.remove('hidden');
+                creatorForm.classList.add('hidden');
+            }
+            
+            clearErrors();
+        }
+
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.type = field.type === 'password' ? 'text' : 'password';
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.classList.remove('show');
+                el.textContent = '';
+            });
+            document.getElementById('successAlert').classList.remove('show');
+        }
+        
+        function showError(fieldId, message) {
+            const errorEl = document.getElementById(fieldId + '-error');
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.add('show');
+            }
+        }
+
+        async function handleRegister(event, role) {
+            event.preventDefault();
+            clearErrors();
+            
+            let data = {
+                role: role,
+                password: document.getElementById(role + '-password').value
+            };
+            
+            // --- Collect ALL role-specific data ---
+            if (role === 'creator') {
+                // REQUIRED
+                data.name = document.getElementById('creator-name').value;
+                data.email = document.getElementById('creator-email').value;
+                
+                // OPTIONAL (but must be sent)
+                data.instagram = document.getElementById('creator-instagram').value || '';
+                data.tik_tok = document.getElementById('creator-tiktok').value || '';
+                data.youtube = document.getElementById('creator-youtube').value || '';
+                // Convert to number for the database, default to 0
+                data.avg_views = parseInt(document.getElementById('creator-avg-views').value) || 0; 
+                data.reach = parseInt(document.getElementById('creator-reach').value) || 0;
+                data.number = document.getElementById('creator-number').value || '';
+
+                // Client-side validation (basic, expanded)
+                if (!data.name.trim()) {
+                    showError('creator-name', 'Full Name is required');
+                    return;
+                }
+                if (!data.email.includes('@')) {
+                    showError('creator-email', 'Please enter a valid email address');
+                    return;
+                }
+
+            } else { // manager
+                // REQUIRED
+                data.company = document.getElementById('manager-company').value;
+                data.log_email = document.getElementById('manager-email').value;
+
+                // OPTIONAL (but must be sent)
+                data.ad_number = document.getElementById('manager-ad-number').value || '';
+                data.ad_email = document.getElementById('manager-ad-email').value || '';
+                data.location = document.getElementById('manager-location').value || '';
+                data.category = document.getElementById('manager-category').value || '';
+                data.brand_description = document.getElementById('manager-description').value || '';
+                data.camp_spend = document.getElementById('manager-camp-spend').value || '';
+                data.camp_views = document.getElementById('manager-camp-views').value || '';
+                
+                // Client-side validation
+                if (!data.company.trim()) {
+                    showError('manager-company', 'Company Name is required');
+                    return;
+                }
+                if (!data.log_email.includes('@')) {
+                    showError('manager-email', 'Please enter a valid work email');
+                    return;
+                }
+            }
+
+            if (data.password.length < 6) {
+                showError(role + '-password', 'Password must be at least 6 characters');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const responseData = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('successAlert').classList.add('show');
+                    event.target.reset(); 
+                } else {
+                    // Show error on password field, but it might be due to email conflict
+                    showError(role + '-password', responseData.message || 'Registration failed');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showError(role + '-password', 'Network error. Please try again.');
+            }
+        }
+
+        // Event listeners for forms
+        document.getElementById('creatorRegisterForm').addEventListener('submit', (e) => handleRegister(e, 'creator'));
+        document.getElementById('managerRegisterForm').addEventListener('submit', (e) => handleRegister(e, 'manager'));
+    </script>
+
+  <script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+
+</html>

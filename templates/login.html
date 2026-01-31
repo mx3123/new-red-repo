@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Creative Swop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .network-bg {
+            background-image: radial-gradient(circle at 20% 50%, rgba(107, 33, 168, 0.05) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 80%, rgba(107, 33, 168, 0.05) 0%, transparent 50%);
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            border-color: #6B21A8;
+            box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.1);
+        }
+        
+        .tab-active {
+            background: linear-gradient(135deg, #6B21A8 0%, #581C87 100%);
+            color: white;
+        }
+        
+        .tab-inactive {
+            background: transparent;
+            color: #71717a;
+            border: 2px solid #e4e4e7;
+        }
+        
+        .form-transition {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .error-message {
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-zinc-50 min-h-screen network-bg">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-lg border-b border-zinc-200 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-2xl font-bold text-brand-purple">Creative Swop</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/creative-swop/home" class="text-zinc-600 hover:text-brand-purple transition-colors">Home</a>
+                    <a href="/creative-swop/affiliate" class="text-zinc-600 hover:text-brand-purple transition-colors">Affiliate</a>
+                    <a href="/creative-swop/influencers" class="text-zinc-600 hover:text-brand-purple transition-colors">Influencers</a>
+                    <a href="/login" class="px-6 py-2 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-semibold transition-colors">
+                        Login
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-zinc-600" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="hidden md:hidden mt-4 pb-4 border-t border-zinc-200 pt-4">
+                <div class="flex flex-col space-y-3">
+                    <a href="/" class="text-zinc-600 hover:text-brand-purple transition-colors">Home</a>
+                    <a href="/affiliate" class="text-zinc-600 hover:text-brand-purple transition-colors">Affiliate</a>
+                    <a href="/#cta" class="text-zinc-600 hover:text-brand-purple transition-colors">Influencers</a>
+                    <a href="/media-dash" class="px-6 py-2 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-semibold transition-colors text-center">
+                        Agency Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Login Container -->
+    <div class="container mx-auto px-6 pt-32 pb-16 max-w-md">
+        
+        <!-- Login Card -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            
+            <!-- Role Switcher Tabs -->
+            <div class="grid grid-cols-2 gap-0 p-2 bg-zinc-50">
+                <button 
+                    id="creatorTab" 
+                    class="tab-active py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300"
+                    onclick="switchTab('creator')">
+                    Creator Login
+                </button>
+                <button 
+                    id="managerTab" 
+                    class="tab-inactive py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300"
+                    onclick="switchTab('manager')">
+                    Manager Login
+                </button>
+            </div>
+
+            <!-- Creator Login Form -->
+            <div id="creatorForm" class="p-8 form-transition">
+                <h2 class="text-2xl font-bold text-zinc-900 mb-2">Welcome Back, Creator.</h2>
+                <p class="text-zinc-600 mb-6 text-sm">Access your opportunity board and manage collaborations.</p>
+                
+                <form id="creatorLoginForm">
+                    <div class="mb-4">
+                        <label for="creator-email" class="block text-sm font-semibold text-zinc-700 mb-2">Email Address</label>
+                        <input 
+                            type="email" 
+                            id="creator-email" 
+                            class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none"
+                            placeholder="your@email.com"
+                            required>
+                        <div id="creator-email-error" class="error-message text-brand-red text-sm mt-1"></div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="creator-password" class="block text-sm font-semibold text-zinc-700 mb-2">Password</label>
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                id="creator-password" 
+                                class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none pr-12"
+                                placeholder="••••••••"
+                                required>
+                            <button 
+                                type="button" 
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                                onclick="togglePassword('creator-password')">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="creator-password-error" class="error-message text-brand-red text-sm mt-1"></div>
+                    </div>
+                    
+                    <div class="flex justify-end mb-6">
+                        <a href="#" class="text-sm text-brand-purple hover:text-brand-purple-dark font-medium">Forgot Password?</a>
+                    </div>
+                    
+                    <button 
+                        type="submit" 
+                        class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white py-3 px-6 rounded-lg font-bold transition-all transform hover:scale-[1.02] shadow-lg">
+                        Log In to the Opportunity Board
+                    </button>
+                    
+                    <div class="mt-6 text-center">
+                        <p class="text-sm text-zinc-600">
+                            Need an account? 
+                            <a href="/register" class="text-brand-purple hover:text-brand-purple-dark font-semibold">Registers Creator</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Manager Login Form (Hidden by default) -->
+            <div id="managerForm" class="p-8 form-transition hidden">
+                <h2 class="text-2xl font-bold text-zinc-900 mb-2">Access Your Command Centre.</h2>
+                <p class="text-zinc-600 mb-6 text-sm">Launch campaigns and track performance with precision.</p>
+                
+                <form id="managerLoginForm">
+                    <div class="mb-4">
+                        <label for="manager-email" class="block text-sm font-semibold text-zinc-700 mb-2">Work Email Address</label>
+                        <input 
+                            type="email" 
+                            id="manager-email" 
+                            class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none"
+                            placeholder="manager@agency.com"
+                            required>
+                        <div id="manager-email-error" class="error-message text-brand-red text-sm mt-1"></div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="manager-password" class="block text-sm font-semibold text-zinc-700 mb-2">Password</label>
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                id="manager-password" 
+                                class="input-field w-full px-4 py-3 border-2 border-zinc-200 rounded-lg focus:outline-none pr-12"
+                                placeholder="••••••••"
+                                required>
+                            <button 
+                                type="button" 
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                                onclick="togglePassword('manager-password')">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="manager-password-error" class="error-message text-brand-red text-sm mt-1"></div>
+                    </div>
+                    
+                    <div class="flex justify-end mb-6">
+                        <a href="#" class="text-sm text-brand-purple hover:text-brand-purple-dark font-medium">Forgot Password?</a>
+                    </div>
+                    
+                    <button 
+                        type="submit" 
+                        class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white py-3 px-6 rounded-lg font-bold transition-all transform hover:scale-[1.02] shadow-lg">
+                        Log In to Campaign Suite
+                    </button>
+                    
+                    <div class="mt-6 text-center">
+                        <p class="text-sm text-zinc-600">
+                            New agency? 
+                            <a href="/register" class="text-brand-purple hover:text-brand-purple-dark font-semibold">Register as a Marketer</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Security Badge -->
+        <div class="mt-8 text-center">
+            <div class="inline-flex items-center space-x-2 text-zinc-500 text-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                <span>Secured with 256-bit encryption</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    let currentRole = 'creator';
+
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('hidden');
+    }
+
+    function switchTab(role) {
+        currentRole = role;
+        
+        const creatorTab = document.getElementById('creatorTab');
+        const managerTab = document.getElementById('managerTab');
+        const creatorForm = document.getElementById('creatorForm');
+        const managerForm = document.getElementById('managerForm');
+        
+        if (role === 'creator') {
+            creatorTab.className = 'tab-active py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300';
+            managerTab.className = 'tab-inactive py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300';
+            creatorForm.classList.remove('hidden');
+            managerForm.classList.add('hidden');
+        } else {
+            managerTab.className = 'tab-active py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300';
+            creatorTab.className = 'tab-inactive py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300';
+            managerForm.classList.remove('hidden');
+            creatorForm.classList.add('hidden');
+        }
+        
+        clearErrors();
+    }
+
+    function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        field.type = field.type === 'password' ? 'text' : 'password';
+    }
+
+    function clearErrors() {
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.classList.remove('show');
+            el.textContent = '';
+        });
+    }
+
+    function showError(fieldId, message) {
+        const errorEl = document.getElementById(fieldId + '-error');
+        if (errorEl) {
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+        }
+    }
+
+    async function handleLogin(event, role) {
+        event.preventDefault();
+        clearErrors();
+        
+        const emailField = document.getElementById(role + '-email');
+        const passwordField = document.getElementById(role + '-password');
+        
+        // Basic validation
+        let hasError = false;
+        
+        if (!emailField.value.includes('@')) {
+            showError(role + '-email', 'Please enter a valid email address');
+            hasError = true;
+        }
+        
+        if (passwordField.value.length < 6) {
+            showError(role + '-password', 'Password must be at least 6 characters');
+            hasError = true;
+        }
+        
+        if (hasError) return false;
+        
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include', // Important: include cookies for session
+                body: JSON.stringify({
+                    email: emailField.value,
+                    password: passwordField.value,
+                    role: role
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Session is automatically handled via cookies
+                console.log('Login successful, session created');
+                
+                // Remove any old token storage (cleanup)
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('userRole');
+                
+                // Redirect based on role
+                if (role === 'creator') {
+                    window.location.href = '/creator';
+                } else {
+                    window.location.href = '/media_dashboard';
+                }
+            } else {
+                showError(role + '-password', data.message || 'Login failed');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            showError(role + '-password', 'Network error. Please try again.');
+        }
+    }
+
+    // Check if user is already logged in and redirect
+    async function checkExistingSession() {
+        try {
+            const response = await fetch('/api/auth/verify', {
+                method: 'GET',
+                credentials: 'include' // Include session cookies
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.valid) {
+                    // User is already logged in, redirect to appropriate dashboard
+                    if (data.role === 'creator') {
+                        window.location.href = '/creator';
+                    } else {
+                        window.location.href = '/media_dashboard';
+                    }
+                }
+            }
+        } catch (error) {
+            console.log('No existing session or error checking session:', error);
+            // It's fine if this fails - user just needs to log in
+        }
+    }
+
+    // Event listeners for forms
+    document.getElementById('creatorLoginForm').addEventListener('submit', (e) => handleLogin(e, 'creator'));
+    document.getElementById('managerLoginForm').addEventListener('submit', (e) => handleLogin(e, 'manager'));
+
+    // Check for existing session when page loads
+    document.addEventListener('DOMContentLoaded', checkExistingSession);
+</script>
+  <script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+
+</html>
+
+
+

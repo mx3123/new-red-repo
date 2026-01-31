@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Manager Suite | Creative Swop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-purple-dark': '#581C87',
+                        'brand-red': '#DC2626',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .campaign-card {
+            transition: all 0.3s ease;
+        }
+        
+        .campaign-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); /* Darker shadow */
+            border-color: #6B21A8; /* Brand purple border on hover */
+        }
+        
+        .expanded-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        
+        .expanded-content.open {
+            max-height: 3000px;
+        }
+        
+        .rotate-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .rotate-icon.open {
+            transform: rotate(180deg);
+        }
+        
+        .progress-bar {
+            transition: width 0.6s ease-out;
+        }
+        
+        .ecpm-good {
+            color: #4ade80; /* Brighter green for dark mode */
+        }
+        
+        .ecpm-warning {
+            color: #f87171; /* Brighter red for dark mode */
+        }
+
+        .more-options-menu {
+            transition: all 0.1s ease-out;
+            transform-origin: top right;
+            z-index: 1000;
+        }
+
+        .more-options-menu:not(.hidden) {
+            animation: dropdownFadeIn 0.1s ease-out;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #18181b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b; 
+        }
+
+        .campaign-card {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen">
+    
+    <nav class="fixed top-0 w-full bg-zinc-900/90 backdrop-blur-lg border-b border-zinc-800 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-brand-purple rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-2xl font-bold text-brand-purple">Creative Swop</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/media_dashboard" class="text-zinc-400 hover:text-white transition-colors">New Campaign</a>
+                    <a href="/all_campaigns" class="text-white font-medium">All Campaigns</a>
+                    <a href="/campaign_analytics" class="text-zinc-400 hover:text-white transition-colors">Analytics</a>
+                    <a href="/affiliate-analytics" class="text-zinc-400 hover:text-white transition-colors">Affiliate Analytics</a>
+                    <a href="/creator-database" class="text-zinc-400 hover:text-white transition-colors">Creator Search</a>
+
+                    <button onclick="logout()" class="ml-4 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white rounded-lg text-sm font-medium transition-colors border border-zinc-700">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 pt-32 pb-16">
+        
+        <div class="mb-8">
+            <h1 class="text-5xl font-black text-white mb-2">Campaign Manager Suite.</h1>
+            <p class="text-zinc-400">Strategic oversight and performance intelligence for all campaign activity.</p>
+        </div>
+
+        <div class="mb-8 border-b border-zinc-800">
+            <div class="flex space-x-8">
+                <button 
+                    class="tab-button pb-4 px-2 font-semibold text-brand-purple border-b-2 border-brand-purple"
+                    onclick="filterCampaigns('active')"
+                    data-tab="active">
+                    Active Campaigns
+                    <span class="ml-2 px-2 py-1 bg-brand-purple text-white text-xs rounded-full">0</span>
+                </button>
+                <button 
+                    class="tab-button pb-4 px-2 font-semibold text-zinc-400 border-b-2 border-transparent hover:text-white hover:border-zinc-600 transition-colors"
+                    onclick="filterCampaigns('historical')"
+                    data-tab="historical">
+                    Historical Campaigns
+                    <span class="ml-2 px-2 py-1 bg-zinc-800 text-zinc-400 text-xs rounded-full">0</span>
+                </button>
+                <button 
+                    class="tab-button pb-4 px-2 font-semibold text-zinc-400 border-b-2 border-transparent hover:text-white hover:border-zinc-600 transition-colors"
+                    onclick="filterCampaigns('affiliate')"
+                    data-tab="affiliate">
+                    Affiliate Campaigns
+                    <span class="ml-2 px-2 py-1 bg-zinc-800 text-zinc-400 text-xs rounded-full" id="affiliateCount">0</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="campaignToolbar" class="flex flex-col md:flex-row justify-between items-center mb-6">
+            <div class="text-sm text-zinc-400 font-medium">
+                <span id="showingCount" class="text-white">0</span> campaigns found
+            </div>
+            <div class="flex space-x-3 mt-3 md:mt-0">
+                <div class="relative">
+                    <select id="statusFilter" onchange="renderCampaigns()" class="appearance-none bg-zinc-900 border border-zinc-700 text-white py-2 pl-4 pr-8 rounded-lg text-sm focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple cursor-pointer shadow-sm">
+                        <option value="all">All Statuses</option>
+                        <option value="live">Live Only</option>
+                        <option value="draft">Drafts Only</option>
+                        <option value="paused">Paused Only</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-zinc-400">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <select id="sortOrder" onchange="renderCampaigns()" class="appearance-none bg-zinc-900 border border-zinc-700 text-white py-2 pl-4 pr-8 rounded-lg text-sm focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple cursor-pointer shadow-sm">
+                        <option value="status_priority">Default (Live First)</option>
+                        <option value="newest">Date (Newest First)</option>
+                        <option value="oldest">Date (Oldest First)</option>
+                        <option value="alphabetical">Alphabetical (A-Z)</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-zinc-400">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="activeCampaigns" class="space-y-4">
+            <div class="text-center py-12">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-purple mx-auto mb-4"></div>
+                <p class="text-zinc-500">Loading your campaigns...</p>
+            </div>
+        </div>
+
+        <div id="historicalCampaigns" class="space-y-4 hidden">
+             </div>
+
+        <div id="affiliateCampaigns" class="space-y-4 hidden">
+             </div>
+
+    </div>
+
+    <div id="campaignManagementModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden overflow-y-auto" onclick="if(event.target.id === 'campaignManagementModal') closeCampaignManagementModal()">
+        <div class="flex items-start justify-center min-h-screen pt-12 px-4 pb-20 text-center sm:block sm:p-0">
+            
+            <div class="inline-block align-bottom bg-zinc-900 border border-zinc-700 rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                <div class="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <h3 class="text-2xl leading-6 font-bold text-white" id="managementModalTitle">
+                                Manage Campaign
+                            </h3>
+                            <div class="mt-4 border-b border-zinc-800">
+                                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                                    <button type="button" id="applicationsTab" onclick="switchTab('applications')" 
+                                        class="management-tab whitespace-nowrap pb-3 px-1 border-b-2 font-medium text-sm border-brand-purple text-brand-purple">
+                                        Applications
+                                    </button>
+                                    <button type="button" id="approvedPostsTab" onclick="switchTab('approvedPosts')"
+                                        class="management-tab whitespace-nowrap pb-3 px-1 border-b-2 font-medium text-sm border-transparent text-zinc-400 hover:text-white transition-colors">
+                                        Approved Posts
+                                    </button>
+                                </nav>
+                            </div>
+                            
+                            <div id="applicationsContent" class="mt-6 max-h-[60vh] overflow-y-auto pr-2 space-y-4 custom-scrollbar">
+                                <div class="text-center py-8 text-zinc-500">Loading applications...</div>
+                            </div>
+
+                            <div id="approvedPostsContent" class="mt-6 max-h-[60vh] overflow-y-auto pr-2 space-y-4 hidden custom-scrollbar">
+                                <div class="text-center py-8 text-zinc-500">Loading approved posts...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-zinc-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-zinc-700">
+                    <button type="button" onclick="closeCampaignManagementModal()" class="w-full inline-flex justify-center rounded-md border border-zinc-600 shadow-sm px-4 py-2 bg-zinc-700 text-base font-medium text-white hover:bg-zinc-600 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm transition-colors">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="affiliateCodesModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden overflow-y-auto" onclick="if(event.target.id === 'affiliateCodesModal') closeAffiliateCodesModal()">
+        <div class="flex items-start justify-center min-h-screen pt-12 px-4 pb-20 text-center sm:block sm:p-0">
+            
+            <div class="inline-block align-bottom bg-zinc-900 border border-zinc-700 rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                <div class="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-2xl leading-6 font-bold text-white" id="affiliateCodesModalTitle">
+                                Affiliate Codes
+                            </h3>
+                            <div id="affiliateCodesContent" class="mt-6 max-h-[70vh] overflow-y-auto pr-2 space-y-4 custom-scrollbar">
+                                <div class="text-center py-8 text-zinc-500">Loading affiliate codes...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-zinc-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-zinc-700">
+                    <button type="button" onclick="closeAffiliateCodesModal()" class="w-full inline-flex justify-center rounded-md border border-zinc-600 shadow-sm px-4 py-2 bg-zinc-700 text-base font-medium text-white hover:bg-zinc-600 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm transition-colors">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Global State ---
+        let allCampaigns = []; // Regular Campaigns
+        let affiliateCampaignsData = []; // New Global for Affiliate Campaigns
+        let currentFilter = 'active';
+        let currentCampaignId = null;
+
+        // --- Helper Functions ---
+        function formatNumber(num) {
+            const number = parseFloat(num) || 0; 
+            if (number >= 1000000) return (number / 1000000).toFixed(1) + 'M';
+            if (number >= 1000) return (number / 1000).toFixed(1) + 'K';
+            return number.toFixed(0);
+        }
+        
+        function formatCurrency(amount) {
+            return `R${parseFloat(amount).toFixed(2)}`;
+        }
+
+        function getHealthIcon(score) {
+            if (score >= 85) return '<svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>';
+            if (score >= 50) return '<svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.365 2.506-1.365 3.271 0l3.86 6.924c.765 1.365-.216 3.076-1.745 3.076H6.142c-1.529 0-2.51-1.711-1.745-3.076l3.86-6.924zM10 13a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg>';
+            return '<svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>';
+        }
+
+        async function checkAuthentication() {
+            return true; 
+        }
+
+        // --- Dropdown Functionality ---
+        function initializeDropdowns() {
+            document.addEventListener('click', function(e) {
+                document.querySelectorAll('.campaign-card').forEach(card => {
+                    card.classList.remove('z-50');
+                    card.classList.add('z-1');
+                });
+
+                if (e.target.closest('.more-options-btn')) {
+                    const btn = e.target.closest('.more-options-btn');
+                    const menu = btn.nextElementSibling;
+                    const card = btn.closest('.campaign-card'); 
+                    const isHidden = menu.classList.contains('hidden');
+                    
+                    document.querySelectorAll('.more-options-menu').forEach(m => {
+                        if (m !== menu) {
+                            m.classList.add('hidden');
+                        }
+                    });
+                    
+                    if (isHidden) {
+                        menu.classList.remove('hidden');
+                        if (card) {
+                            card.classList.remove('z-1');
+                            card.classList.add('z-50');
+                        }
+
+                        const rect = menu.getBoundingClientRect();
+                        const viewportHeight = window.innerHeight;
+                        
+                        if (rect.bottom > viewportHeight - 10) {
+                            menu.style.top = 'auto';
+                            menu.style.bottom = '100%';
+                            menu.style.marginTop = '0';
+                            menu.style.marginBottom = '8px';
+                        } else {
+                            menu.style.top = '100%';
+                            menu.style.bottom = 'auto';
+                            menu.style.marginTop = '8px';
+                            menu.style.marginBottom = '0';
+                        }
+                    } else {
+                        menu.classList.add('hidden');
+                    }
+                    
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+                else if (e.target.closest('.review-applications-btn')) {
+                    const btn = e.target.closest('.review-applications-btn');
+                    const menu = btn.closest('.more-options-menu');
+                    const moreOptionsBtn = menu.previousElementSibling;
+                    const campaignId = moreOptionsBtn.getAttribute('data-campaign-id');
+                    const campaignTitle = moreOptionsBtn.getAttribute('data-campaign-title');
+                    
+                    if (campaignId && campaignTitle) {
+                        openCampaignManagementModal(campaignId, campaignTitle);
+                        if (menu) menu.classList.add('hidden');
+                    }
+                }
+                else if (e.target.closest('.mark-completed-btn')) {
+                    const btn = e.target.closest('.mark-completed-btn');
+                    const menu = btn.closest('.more-options-menu');
+                    const moreOptionsBtn = menu.previousElementSibling;
+                    const campaignId = moreOptionsBtn.getAttribute('data-campaign-id');
+                    
+                    updateCampaignStatus(campaignId, 'completed');
+                    menu.classList.add('hidden');
+                }
+                else if (e.target.closest('.end-affiliate-campaign-btn')) {
+                    const btn = e.target.closest('.end-affiliate-campaign-btn');
+                    const menu = btn.closest('.more-options-menu');
+                    const moreOptionsBtn = menu.previousElementSibling;
+                    const campaignId = moreOptionsBtn.getAttribute('data-campaign-id');
+                    const campaignTitle = moreOptionsBtn.getAttribute('data-campaign-title');
+                    
+                    endAffiliateCampaign(campaignId, campaignTitle);
+                    menu.classList.add('hidden');
+                }
+                else if (!e.target.closest('.more-options-menu') && !e.target.closest('.more-options-btn')) {
+                    document.querySelectorAll('.more-options-menu').forEach(menu => {
+                        menu.classList.add('hidden');
+                    });
+                    document.querySelectorAll('.campaign-card').forEach(card => {
+                        card.classList.remove('z-50');
+                    });
+                }
+            });
+
+            document.addEventListener('scroll', function() {
+                document.querySelectorAll('.more-options-menu').forEach(menu => {
+                    menu.classList.add('hidden');
+                });
+                document.querySelectorAll('.campaign-card').forEach(card => {
+                    card.classList.remove('z-50');
+                });
+            }, true);
+        }
+
+        async function endAffiliateCampaign(campaignId, campaignTitle) {
+            if (!confirm(`Are you sure you want to END the affiliate campaign "${campaignTitle}"?\n\nThis will:\n• Mark the campaign as "completed"\n• Remove ALL affiliate codes and tracking links\n• Move the campaign to Historical Campaigns\n\nThis action cannot be undone!`)) {
+                return;
+            }
+
+            try {
+                const statusResponse = await fetch(`/api/affiliate-campaigns/${campaignId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'completed' }),
+                    credentials: 'include'
+                });
+
+                if (!statusResponse.ok) throw new Error('Failed to update campaign status');
+
+                const deactivateResponse = await fetch(`/api/affiliate-campaigns/${campaignId}/deactivate-codes`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                if (!deactivateResponse.ok) throw new Error('Failed to deactivate affiliate codes');
+
+                const deactivateResult = await deactivateResponse.json();
+                
+                alert(`Campaign "${campaignTitle}" has been ended successfully!\n\n${deactivateResult.codes_deleted} affiliate codes were removed.`);
+                await loadCampaigns();
+                
+            } catch (error) {
+                console.error('Error ending affiliate campaign:', error);
+                alert(`Error: Could not end the campaign. ${error.message}`);
+            }
+        }
+
+        // --- Core Campaign Logic ---
+        function showLoadingState() {
+            const loadingHTML = '<div class="text-center py-8 text-zinc-500">Loading campaigns...</div>';
+            document.getElementById('activeCampaigns').innerHTML = loadingHTML;
+            document.getElementById('historicalCampaigns').innerHTML = '';
+            const affiliateContainer = document.getElementById('affiliateCampaigns');
+            if (affiliateContainer) affiliateContainer.innerHTML = loadingHTML;
+        }
+
+        function showErrorState(message) {
+            const errorHTML = `<div class="text-center py-8 text-brand-red">Error: ${message}</div>`;
+            document.getElementById('activeCampaigns').innerHTML = errorHTML;
+            document.getElementById('historicalCampaigns').innerHTML = '';
+            const affiliateContainer = document.getElementById('affiliateCampaigns');
+            if (affiliateContainer) affiliateContainer.innerHTML = errorHTML;
+        }
+
+        async function loadCampaigns() {
+            showLoadingState();
+            
+            let successCount = 0;
+            let errorEncountered = false;
+
+            try {
+                const response = await fetch('/api/campaigns/all', { credentials: 'include' });
+                if (response.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+                if (!response.ok) throw new Error(`Failed to load regular campaigns: ${response.status}`);
+                const data = await response.json();
+                allCampaigns = data.campaigns || [];
+                successCount++;
+            } catch (error) {
+                console.error('Error loading regular campaigns:', error);
+                errorEncountered = true;
+            }
+
+            try {
+                const affiliateResponse = await fetch('/api/affiliate-campaigns/manager', { credentials: 'include' });
+                if (affiliateResponse.ok) {
+                    const data = await affiliateResponse.json();
+                    affiliateCampaignsData = data.campaigns || [];
+                    successCount++;
+                } else {
+                    errorEncountered = true;
+                    affiliateCampaignsData = [];
+                }
+            } catch (e) {
+                errorEncountered = true;
+                affiliateCampaignsData = [];
+            }
+
+            if (errorEncountered && successCount === 0) {
+                showErrorState("Could not load all campaign types.");
+                return;
+            }
+            
+            renderCampaigns();
+        }
+
+        function renderCampaigns() {
+            const activeContainer = document.getElementById('activeCampaigns');
+            const historicalContainer = document.getElementById('historicalCampaigns');
+            const affiliateContainer = document.getElementById('affiliateCampaigns');
+            
+            activeContainer.innerHTML = '';
+            historicalContainer.innerHTML = '';
+            if (affiliateContainer) affiliateContainer.innerHTML = '';
+
+            const statusFilter = document.getElementById('statusFilter').value;
+            const sortOrder = document.getElementById('sortOrder').value;
+
+            let activeCampaignsData = allCampaigns.filter(c => 
+                ['live', 'paused', 'draft'].includes(c.status.toLowerCase())
+            );
+
+            if (statusFilter !== 'all') {
+                activeCampaignsData = activeCampaignsData.filter(c => 
+                    c.status.toLowerCase() === statusFilter
+                );
+            }
+
+            activeCampaignsData.sort((a, b) => {
+                if (sortOrder === 'newest') return new Date(b.created_at) - new Date(a.created_at);
+                else if (sortOrder === 'oldest') return new Date(a.created_at) - new Date(b.created_at);
+                else if (sortOrder === 'alphabetical') return a.title.localeCompare(b.title);
+                else {
+                    const statusPriority = { 'live': 1, 'paused': 2, 'draft': 3 };
+                    const statusDiff = (statusPriority[a.status.toLowerCase()] || 4) - (statusPriority[b.status.toLowerCase()] || 4);
+                    if (statusDiff !== 0) return statusDiff;
+                    return new Date(b.created_at) - new Date(a.created_at);
+                }
+            });
+
+            const historicalCampaignsData = allCampaigns.filter(c => 
+                ['completed'].includes(c.status.toLowerCase())
+            );
+
+            const activeAffiliateCampaigns = affiliateCampaignsData.filter(c => 
+                c.status.toLowerCase() === 'live' || c.status.toLowerCase() === 'draft'
+            );
+            const completedAffiliateCampaigns = affiliateCampaignsData.filter(c => 
+                c.status.toLowerCase() === 'completed'
+            );
+
+            document.querySelector('[data-tab="active"] span').textContent = activeCampaignsData.length;
+            document.querySelector('[data-tab="historical"] span').textContent = historicalCampaignsData.length + completedAffiliateCampaigns.length;
+            const affiliateCountElement = document.querySelector('[data-tab="affiliate"] span');
+            if (affiliateCountElement) affiliateCountElement.textContent = activeAffiliateCampaigns.length;
+
+            const showingCountEl = document.getElementById('showingCount');
+            if (currentFilter === 'active') showingCountEl.textContent = activeCampaignsData.length;
+            else if (currentFilter === 'historical') showingCountEl.textContent = historicalCampaignsData.length + completedAffiliateCampaigns.length;
+            else if (currentFilter === 'affiliate') showingCountEl.textContent = activeAffiliateCampaigns.length;
+
+            activeCampaignsData.forEach(campaign => {
+                activeContainer.innerHTML += createCampaignCard(campaign, 'active');
+            });
+
+            historicalCampaignsData.forEach(campaign => {
+                historicalContainer.innerHTML += createCampaignCard(campaign, 'historical');
+            });
+            completedAffiliateCampaigns.forEach(campaign => {
+                historicalContainer.innerHTML += createAffiliateCampaignCard(campaign);
+            });
+
+            activeAffiliateCampaigns.forEach(campaign => {
+                if (affiliateContainer) affiliateContainer.innerHTML += createAffiliateCampaignCard(campaign);
+            });
+
+            const emptyState = (msg) => `<div class="bg-zinc-900 border border-zinc-700 rounded-xl p-8 text-center text-zinc-500">${msg}</div>`;
+
+            if (activeCampaignsData.length === 0) {
+                let msg = statusFilter !== 'all' ? `No ${statusFilter} campaigns found.` : 'No active campaigns found. Click "New Campaign" to start.';
+                activeContainer.innerHTML = emptyState(msg);
+            }
+            
+            if (historicalCampaignsData.length === 0 && completedAffiliateCampaigns.length === 0) {
+                historicalContainer.innerHTML = emptyState('No historical campaigns found.');
+            }
+            
+            if (activeAffiliateCampaigns.length === 0 && affiliateContainer) {
+                affiliateContainer.innerHTML = emptyState('No active affiliate campaigns found.');
+            }
+
+            filterCampaigns(currentFilter, false);
+        }
+
+        // --- Render Standard Campaign Card (Dark Mode) ---
+        function createCampaignCard(campaign, type) {
+            const budgetConsumedPercentage = Math.round(campaign.analytics?.budget_consumed_percentage || 0);
+            const isBudgetAlert = budgetConsumedPercentage > 90;
+            const isLive = campaign.status.toLowerCase() === 'live';
+            const isDraft = campaign.status.toLowerCase() === 'draft'; 
+            
+            let statusClass = 'bg-zinc-800 text-zinc-400';
+            if (isLive) statusClass = 'bg-brand-purple/20 text-brand-purple';
+            else if (campaign.status.toLowerCase() === 'paused') statusClass = 'bg-yellow-500/20 text-yellow-500';
+            else if (isDraft) statusClass = 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20';
+
+            const budgetClass = isBudgetAlert ? 'bg-brand-red' : 'bg-brand-purple';
+            const daysRemainingText = campaign.analytics?.days_remaining > 0 ? `${campaign.analytics.days_remaining} days remaining` : 'Ended/N/A';
+            const healthScoreColor = campaign.analytics?.health_score >= 85 ? 'text-green-500' : (campaign.analytics?.health_score >= 50 ? 'text-yellow-500' : 'text-brand-red');
+            const ecpmColor = (campaign.analytics?.effective_cpm || 0) <= (campaign.cpm_rate || 999) ? 'text-green-500' : 'text-brand-red';
+            
+            const escapedTitle = campaign.title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+            let actionButtons = '';
+            
+            if (isDraft) {
+                actionButtons = `
+                    <div class="flex items-center justify-end w-full">
+                        <a href="/media_dashboard?id=${campaign.id}" class="flex items-center px-4 py-2 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-semibold transition-all text-sm shadow-sm">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                            Resume Setup
+                        </a>
+                        <button type="button" class="more-options-btn ml-2 px-2 py-2 text-zinc-500 hover:text-red-500 hover:bg-zinc-800 rounded-lg transition-all" data-campaign-id="${campaign.id}" title="Delete Draft">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>
+                `;
+            } else {
+                actionButtons = `
+                    <div class="flex items-center space-x-2 text-sm text-zinc-400">
+                        ${getHealthIcon(campaign.analytics?.health_score || 0)}
+                        <span>Health Score: <span class="font-bold ${healthScoreColor}">${campaign.analytics?.health_score || 0}/100</span></span>
+                    </div>
+                    
+                    <div class="relative inline-block text-left">
+                        <button type="button" class="more-options-btn px-3 py-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg font-semibold transition-all" data-campaign-id="${campaign.id}" data-campaign-title="${escapedTitle}">
+                            More Options
+                            <svg class="inline-block w-4 h-4 ml-1 -mr-1 align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+
+                        <div class="more-options-menu origin-top-right absolute right-0 top-full mt-2 w-64 rounded-md shadow-lg bg-zinc-900 ring-1 ring-black ring-opacity-5 divide-y divide-zinc-800 border border-zinc-700 focus:outline-none z-50 hidden" role="menu">
+                            <div class="py-1" role="none">
+                                <button type="button" class="review-applications-btn text-zinc-300 block w-full text-left px-4 py-2 text-sm hover:bg-zinc-800" role="menuitem">
+                                    Review Applications & Posts
+                                </button>
+                            </div>
+                            ${campaign.status.toLowerCase() !== 'completed' ? `
+                            <div class="py-1" role="none">
+                                <button type="button" class="mark-completed-btn text-red-400 block w-full text-left px-4 py-2 text-sm hover:bg-zinc-800" role="menuitem">
+                                    Mark as Inactive (Completed)
+                                </button>
+                            </div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const cardContent = `
+            <div class="p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <span class="px-3 py-1 ${statusClass} text-xs font-bold rounded-full">
+                                ${campaign.status.toUpperCase()}
+                            </span>
+                            <span class="text-xs text-zinc-500">${isDraft ? 'Not Live' : daysRemainingText}</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1 hover:text-brand-purple cursor-pointer transition-colors">
+                            ${campaign.title}
+                        </h3>
+                        <p class="text-sm text-zinc-400">For: ${campaign.client_company}</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-5 gap-4 mb-4">
+                    <div>
+                        <div class="text-xs text-zinc-500 mb-1">Budget Status</div>
+                        <div class="mb-1">
+                            <div class="w-full bg-zinc-800 rounded-full h-2">
+                                <div class="progress-bar ${budgetClass} rounded-full h-2" style="width: ${budgetConsumedPercentage}%"></div>
+                            </div>
+                        </div>
+                        <div class="text-sm font-bold ${isBudgetAlert ? 'text-brand-red' : 'text-white'}">R${formatNumber(campaign.analytics?.budget_consumed || 0)} / R${formatNumber(campaign.total_budget || 0)}</div>
+                        <div class="text-xs ${isBudgetAlert ? 'text-brand-red' : 'text-zinc-500'}">${budgetConsumedPercentage}% consumed</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-zinc-500 mb-1">Effective eCPM</div>
+                        <div class="text-2xl font-bold ${ecpmColor}">R${(campaign.analytics?.effective_cpm || 0).toFixed(2)}</div>
+                        <div class="text-xs text-zinc-500">Target: R${(parseFloat(campaign.cpm_rate) || 0).toFixed(2)}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-zinc-500 mb-1">Total Views</div>
+                        <div class="text-2xl font-bold text-white">${formatNumber(campaign.analytics?.total_views || 0)}</div>
+                        <div class="text-xs text-zinc-500">${isLive ? 'Live tracking' : (isDraft ? 'Estimates' : 'Final count')}</div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mt-6 pt-4 border-t border-zinc-800">
+                    ${actionButtons}
+                </div>
+            </div>`;
+            
+            return `<div class="campaign-card bg-zinc-900 border border-zinc-800 rounded-xl overflow-visible relative" data-status="${campaign.status.toLowerCase()}">${cardContent}</div>`;
+        }
+
+        // --- Render Affiliate Campaign Card (Dark Mode) ---
+        function createAffiliateCampaignCard(campaign) {
+            const influencersFilled = campaign.current_influencers || 0;
+            const maxInfluencers = campaign.max_influencers || '∞';
+            const statusClass = campaign.status.toLowerCase() === 'live' ? 'bg-brand-purple/20 text-brand-purple' : 
+                            (campaign.status.toLowerCase() === 'draft' ? 'bg-zinc-800 text-zinc-400' : 'bg-green-500/20 text-green-500');
+            const createdAt = new Date(campaign.created_at).toLocaleDateString();
+            
+            const flatFee = parseFloat(campaign.flat_fee || 0);
+            const totalConversions = campaign.total_conversions || 0;
+            const totalPayoutEstimate = flatFee * totalConversions;
+            const escapedTitle = campaign.product_name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+            return `
+                <div class="campaign-card bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow-md">
+                    <div class="p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <span class="px-3 py-1 ${statusClass} text-xs font-bold rounded-full">
+                                        ${campaign.status.toUpperCase()}
+                                    </span>
+                                    <span class="text-xs text-zinc-500">Created: ${createdAt}</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-1">
+                                    ${campaign.product_name}
+                                </h3>
+                                <p class="text-sm text-zinc-400">Brand: ${campaign.brand}</p>
+                            </div>
+                            
+                            ${campaign.status.toLowerCase() === 'live' ? `
+                            <div class="relative inline-block text-left">
+                                <button type="button" class="more-options-btn px-3 py-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg font-semibold transition-all" data-campaign-id="${campaign.id}" data-campaign-title="${escapedTitle}">
+                                    More Options
+                                    <svg class="inline-block w-4 h-4 ml-1 -mr-1 align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+
+                                <div class="more-options-menu origin-top-right absolute right-0 top-full mt-2 w-64 rounded-md shadow-lg bg-zinc-900 ring-1 ring-black ring-opacity-5 divide-y divide-zinc-800 border border-zinc-700 focus:outline-none z-50 hidden" 
+                                    role="menu" aria-labelledby="menu-button" tabindex="-1">
+                                    
+                                    <div class="py-1" role="none">
+                                        <button type="button" class="end-affiliate-campaign-btn text-red-400 block w-full text-left px-4 py-2 text-sm hover:bg-zinc-800" role="menuitem" tabindex="-1">
+                                            End Campaign & Remove Links
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="grid md:grid-cols-5 gap-4 mb-4">
+                            <div>
+                                <div class="text-xs text-zinc-500 mb-1">KPI</div>
+                                <div class="text-lg font-bold text-white">${campaign.kpi}</div>
+                                <div class="text-xs text-zinc-500">${campaign.product_description.substring(0, 30)}...</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-zinc-500 mb-1">Flat Fee Payout</div>
+                                <div class="text-2xl font-bold text-white">${formatCurrency(flatFee)}</div>
+                                <div class="text-xs text-zinc-500">Per Conversion</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-zinc-500 mb-1">Influencers Active</div>
+                                <div class="text-2xl font-bold text-white">${influencersFilled} <span class="text-sm text-zinc-500">${maxInfluencers === '∞' ? '' : `/ ${maxInfluencers}`}</span></div>
+                                <div class="text-xs text-zinc-500">Min Score: ${campaign.min_profile_score || 0}</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-zinc-500 mb-1">Total Clicks</div>
+                                <div class="text-2xl font-bold text-brand-purple">${formatNumber(totalConversions)}</div>
+                                <div class="text-xs text-zinc-500">Lifetime tracking</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-zinc-500 mb-1">Total Payout Est.</div>
+                                <div class="text-2xl font-bold text-brand-red">${formatCurrency(totalPayoutEstimate)}</div>
+                                <div class="text-xs text-zinc-500">Based on flat fee</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-end">
+                            <button onclick="openAffiliateCodesModal(${campaign.id}, '${campaign.product_name.replace(/'/g, "\\'")}')" class="px-6 py-2 border-2 border-brand-purple text-brand-purple hover:bg-brand-purple hover:text-white rounded-lg font-semibold transition-all">
+                                View/Manage Affiliate Codes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function filterCampaigns(type, switchFilter = true) {
+            if (switchFilter) currentFilter = type;
+            
+            const tabs = ['active', 'historical', 'affiliate'];
+            const containers = ['activeCampaigns', 'historicalCampaigns', 'affiliateCampaigns'];
+            
+            tabs.forEach((tab, index) => {
+                const btn = document.querySelector(`[data-tab="${tab}"]`);
+                const container = document.getElementById(containers[index]);
+
+                if (btn && container) {
+                    if (tab === type) {
+                        btn.classList.add('border-brand-purple', 'text-brand-purple');
+                        btn.classList.remove('border-transparent', 'text-zinc-400', 'hover:text-white', 'hover:border-zinc-600');
+                        container.classList.remove('hidden');
+                    } else {
+                        btn.classList.remove('border-brand-purple', 'text-brand-purple');
+                        btn.classList.add('border-transparent', 'text-zinc-400', 'hover:text-white', 'hover:border-zinc-600');
+                        container.classList.add('hidden');
+                    }
+                }
+            });
+            
+            const affiliateCountElement = document.querySelector('[data-tab="affiliate"] span');
+            if (affiliateCountElement) {
+                const liveAffiliateCampaigns = affiliateCampaignsData.filter(c => 
+                    c.status.toLowerCase() === 'live' || c.status.toLowerCase() === 'draft'
+                );
+                affiliateCountElement.textContent = liveAffiliateCampaigns.length;
+            }
+            
+            if (switchFilter) window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function updateCampaignStatus(campaignId, newStatus) {
+            if (!confirm(`Are you sure you want to mark this campaign as ${newStatus.toUpperCase()}? This will move it to the Historical Campaigns tab.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/campaigns/${campaignId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus }),
+                    credentials: 'include'
+                });
+
+                if (!response.ok) throw new Error('Failed to update campaign status.');
+                alert(`Campaign ${campaignId} successfully marked as ${newStatus.toUpperCase()}.`);
+                await loadCampaigns(); 
+            } catch (error) {
+                console.error('Error updating campaign status:', error);
+                alert('Error: Could not update campaign status.');
+            }
+        }
+
+        // --- Modal Functions (Dark Mode Updates) ---
+        function openCampaignManagementModal(campaignId, campaignTitle) {
+            currentCampaignId = campaignId;
+            const modalTitle = document.getElementById('managementModalTitle');
+            const modal = document.getElementById('campaignManagementModal');
+            
+            if (!modalTitle || !modal) return;
+            
+            modalTitle.textContent = `Manage: ${campaignTitle}`;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            switchTab('applications');
+            loadCampaignManagementData(campaignId);
+        }
+
+        function closeCampaignManagementModal() {
+            const modal = document.getElementById('campaignManagementModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+                
+                const appContent = document.getElementById('applicationsContent');
+                const postContent = document.getElementById('approvedPostsContent');
+                
+                if (appContent) appContent.innerHTML = '<div class="text-center py-8 text-zinc-500">Loading applications...</div>';
+                if (postContent) postContent.innerHTML = '<div class="text-center py-8 text-zinc-500">Loading approved posts...</div>';
+            }
+        }
+
+        function switchTab(tabId) {
+            const tabs = ['applications', 'approvedPosts'];
+            tabs.forEach(tab => {
+                const tabElement = document.getElementById(`${tab}Tab`);
+                const contentElement = document.getElementById(`${tab}Content`);
+                
+                if (tabElement && contentElement) {
+                    if (tab === tabId) {
+                        tabElement.classList.add('border-brand-purple', 'text-brand-purple');
+                        tabElement.classList.remove('border-transparent', 'text-zinc-400', 'hover:text-white');
+                        contentElement.classList.remove('hidden');
+                    } else {
+                        tabElement.classList.remove('border-brand-purple', 'text-brand-purple');
+                        tabElement.classList.add('border-transparent', 'text-zinc-400', 'hover:text-white');
+                        contentElement.classList.add('hidden');
+                    }
+                }
+            });
+        }
+
+        async function loadCampaignManagementData(campaignId) {
+            const appContent = document.getElementById('applicationsContent');
+            const postContent = document.getElementById('approvedPostsContent');
+            const loadingSpinner = '<div class="text-center py-8 text-brand-purple"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-purple mx-auto"></div><p class="mt-2 text-zinc-400">Loading...</p></div>';
+            
+            appContent.innerHTML = loadingSpinner;
+            postContent.innerHTML = loadingSpinner;
+
+            try {
+                const response = await fetch(`/api/campaigns/${campaignId}/applications`, { credentials: 'include' });
+                if (!response.ok) throw new Error('Failed to load campaign management data.');
+                const data = await response.json();
+                
+                renderApplications(data.applications);
+                renderApprovedPosts(data.approved_posts);
+
+            } catch (error) {
+                console.error('Error loading campaign management data:', error);
+                const errorMessage = `<div class="text-center py-8 text-red-400">Error loading data: ${error.message}</div>`;
+                appContent.innerHTML = errorMessage;
+                postContent.innerHTML = errorMessage;
+            }
+        }
+
+        function renderApplications(applications) {
+            const container = document.getElementById('applicationsContent');
+            if (applications.length === 0) {
+                container.innerHTML = '<div class="text-center py-8 text-zinc-500">No applications received yet.</div>';
+                return;
+            }
+
+            container.innerHTML = applications.map(app => `
+                <div class="bg-zinc-900 p-4 border border-zinc-700 rounded-lg mb-4" id="app-card-${app.application_id}">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <div class="font-bold text-lg text-white">${app.name} (@${app.instagram || 'N/A'})</div>
+                            <div class="text-sm text-zinc-400">Applied: ${new Date(app.applied_at).toLocaleDateString()} | Status: 
+                                <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                                    app.application_status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' : 
+                                    app.application_status === 'accepted' ? 'bg-green-500/20 text-green-400' : 
+                                    'bg-red-500/20 text-red-400'
+                                }">
+                                    ${app.application_status.toUpperCase()}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="space-x-2 flex-shrink-0">
+                            ${app.application_status === 'pending' ? `
+                                <button onclick="updateApplicationStatus(${app.application_id}, 'accepted', ${currentCampaignId})" 
+                                    class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50">
+                                    Accept
+                                </button>
+                                <button onclick="updateApplicationStatus(${app.application_id}, 'rejected', ${currentCampaignId})" 
+                                    class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50">
+                                    Reject
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-zinc-800 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-zinc-300">
+                        <div><div class="text-xs text-zinc-500">Avg Views</div><div class="font-semibold">${formatNumber(app.avg_views || 0)}</div></div>
+                        <div><div class="text-xs text-zinc-500">Total Reach</div><div class="font-semibold">${formatNumber(app.reach || 0)}</div></div>
+                        <div><div class="text-xs text-zinc-500">Profile Score</div><div class="font-semibold">${app.profile_score || 0}/100</div></div>
+                        <div><div class="text-xs text-zinc-500">TikTok</div><div class="font-semibold">${app.tik_tok || 'N/A'}</div></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderApprovedPosts(posts) {
+            const container = document.getElementById('approvedPostsContent');
+            if (posts.length === 0) {
+                container.innerHTML = '<div class="text-center py-8 text-zinc-500">No approved posts for this campaign yet.</div>';
+                return;
+            }
+
+            container.innerHTML = posts.map(post => `
+                <div class="bg-zinc-900 p-4 border border-zinc-700 rounded-lg mb-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <div class="font-bold text-lg text-white">${post.influencer_name}</div>
+                            <div class="text-sm text-zinc-400">
+                                Post on <strong>${post.platform}</strong> (${new Date(post.submitted_at).toLocaleDateString()}) - 
+                                Status: <span class="text-green-400 font-semibold">${post.post_status.toUpperCase()}</span>
+                            </div>
+                        </div>
+                        <a href="${post.post_url}" target="_blank" class="px-3 py-1 bg-brand-purple text-white text-sm font-medium rounded-lg hover:bg-brand-purple-dark transition-colors">
+                            View Post
+                        </a>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-zinc-800 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-zinc-300">
+                        <div><div class="text-xs text-zinc-500">Views</div><div class="font-semibold">${formatNumber(post.views || 0)}</div></div>
+                        <div><div class="text-xs text-zinc-500">Engagement</div><div class="font-semibold">${formatNumber(post.engagement || 0)}</div></div>
+                        <div><div class="text-xs text-zinc-500">Earnings</div><div class="font-semibold">R${(post.earnings || 0).toFixed(2)}</div></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function updateApplicationStatus(applicationId, newStatus, campaignId) {
+            if (!confirm(`Confirm to set application ${applicationId} status to ${newStatus.toUpperCase()}?`)) return;
+            
+            try {
+                const buttons = document.querySelectorAll(`#app-card-${applicationId} button`);
+                buttons.forEach(btn => btn.disabled = true);
+                
+                const response = await fetch(`/api/applications/${applicationId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus }),
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `Failed to update application status to ${newStatus}.`);
+                }
+
+                alert(`Application status successfully updated to ${newStatus.toUpperCase()}.`);
+                loadCampaignManagementData(campaignId); 
+
+            } catch (error) {
+                console.error('Error updating application status:', error);
+                alert(`Error: Could not update application status. ${error.message}`);
+                const buttons = document.querySelectorAll(`#app-card-${applicationId} button`);
+                buttons.forEach(btn => btn.disabled = false);
+            }
+        }
+
+        // --- Affiliate Codes Modal Functions ---
+        function openAffiliateCodesModal(campaignId, campaignTitle) {
+            const modalTitle = document.getElementById('affiliateCodesModalTitle');
+            const modal = document.getElementById('affiliateCodesModal');
+            if (!modalTitle || !modal) return;
+            
+            modalTitle.textContent = `Affiliate Codes: ${campaignTitle}`;
+            modal.setAttribute('data-campaign-id', campaignId);
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            loadAffiliateCodes(campaignId);
+        }
+
+        function closeAffiliateCodesModal() {
+            const modal = document.getElementById('affiliateCodesModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+                const content = document.getElementById('affiliateCodesContent');
+                if (content) content.innerHTML = '<div class="text-center py-8 text-zinc-500">Loading affiliate codes...</div>';
+            }
+        }
+
+        async function loadAffiliateCodes(campaignId) {
+            const container = document.getElementById('affiliateCodesContent');
+            const loadingSpinner = '<div class="text-center py-8 text-brand-purple"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-purple mx-auto"></div><p class="mt-2 text-zinc-400">Loading...</p></div>';
+            container.innerHTML = loadingSpinner;
+
+            try {
+                const response = await fetch(`/api/affiliate-campaigns/${campaignId}/codes`, { credentials: 'include' });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to load affiliate codes.');
+                }
+                const data = await response.json();
+                renderAffiliateCodes(data.codes, campaignId);
+            } catch (error) {
+                container.innerHTML = `<div class="text-center py-8 text-red-400">Error loading codes: ${error.message}</div>`;
+            }
+        }
+
+        function renderAffiliateCodes(codes, campaignId) {
+            const container = document.getElementById('affiliateCodesContent');
+            if (codes.length === 0) {
+                container.innerHTML = '<div class="text-center py-8 text-zinc-500">No affiliate codes have been assigned for this campaign yet.</div>';
+                return;
+            }
+
+            const codesHtml = codes.map(code => `
+                <div id="code-card-${code.id}" class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-zinc-900 rounded-lg border border-zinc-700">
+                    <div class="flex-1 min-w-0 mb-4 sm:mb-0 sm:mr-4">
+                        <p class="text-lg font-bold text-brand-purple truncate">${code.affiliate_code}</p>
+                        <p class="text-sm text-zinc-300 truncate">Influencer: ${code.influencer_name} (@${code.instagram})</p>
+                        <p class="text-xs text-zinc-500">ID: ${code.id} | Created: ${new Date(code.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <div class="flex items-center space-x-6">
+                        <div class="text-center">
+                            <p class="text-xs text-zinc-500">Clicks</p>
+                            <p class="text-xl font-bold text-white">${code.use_count}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-zinc-500">Payout</p>
+                            <p class="text-xl font-bold text-brand-red">${formatCurrency(code.flat_fee)}</p>
+                        </div>
+                        <button 
+                            onclick="deleteAffiliateCode(${code.id}, ${campaignId})" 
+                            class="delete-code-btn p-3 bg-red-600 hover:bg-red-500 text-white rounded-full transition-colors flex items-center justify-center shadow-md border border-red-700"
+                            title="Remove Code">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = codesHtml;
+        }
+
+        async function deleteAffiliateCode(codeId, campaignId) {
+            if (!confirm(`Are you sure you want to delete affiliate code ID ${codeId}? This action cannot be undone.`)) return;
+
+            const button = document.querySelector(`#code-card-${codeId} .delete-code-btn`);
+            const originalHtml = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mx-auto"></div>';
+
+            try {
+                const response = await fetch(`/api/affiliate-codes/${codeId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to delete code.');
+                }
+
+                alert('Affiliate code deleted successfully.');
+                await loadAffiliateCodes(campaignId); 
+                await loadCampaigns(); 
+
+            } catch (error) {
+                console.error('Error deleting affiliate code:', error);
+                alert(`Error deleting code: ${error.message}`);
+                button.innerHTML = originalHtml;
+                button.disabled = false;
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+                window.location.href = '/login';
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/login';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isAuthenticated = await checkAuthentication();
+            if (isAuthenticated) {
+                await loadCampaigns();
+                initializeDropdowns();
+            }
+        });
+    </script>
+</body>
+</html>
